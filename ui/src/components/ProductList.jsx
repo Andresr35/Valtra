@@ -22,7 +22,7 @@ const ProductList = (props) => {
     },[]);
 
 
-// Event handler for delete products on table
+// Event handler for delete products on tablee
     const handleDelete= async(id)=>{
         try{
             const response=await ProductFinder.delete(`/${id}`);
