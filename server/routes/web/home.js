@@ -16,7 +16,7 @@ router.get("/home",function(req,res){
 router.get("/about",function(req,res){
     res.render("home/about");
 })
-router.get("/login",function(req,res){
+router.get("/loginnnn",function(req,res){
     res.render("home/login");
 })
 router.get("/signup",function(req,res){

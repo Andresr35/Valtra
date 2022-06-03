@@ -2,21 +2,29 @@ const express = require("express");
 var path = require("path");
 var passport = require("passport");
 var cookieparser = require("cookie-parser");
-var session = require("express-session");
+//var session = require("express-session");
 var flash = require("connect-flash");
 var bodyParser = require("body-parser");
 const app = express();
 const cors = require('cors');
 
+app.use(express.json());
+
+const client = require('./utils/shopify');
 //secret stuff
 require('dotenv').config()
+
+// console.log(client.get({path:'orders',
+// },).then(res => console.log(res.body)))
+
+
 
 //setting up the server and views
 app.set("port", process.env.PORT || 3000);
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine", "ejs");
 
-app.use(cors());
+app.use(cors());    
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(cookieparser());
 // app.use(session({
@@ -41,5 +49,3 @@ app.use("/api", require("./routes/api"));
 app.listen(app.get("port"),function(){
     console.log("Server started on port " + app.get("port"));
 })
-
-
