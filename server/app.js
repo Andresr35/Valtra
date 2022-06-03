@@ -6,7 +6,6 @@ var session = require("express-session");
 var flash = require("connect-flash");
 var bodyParser = require("body-parser");
 const app = express();
-const db = require('./db');
 const cors = require('cors');
 
 //secret stuff
