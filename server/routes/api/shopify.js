@@ -3,9 +3,7 @@ var router = express.Router();
 const morgan = require('morgan');
 
 
-const apiKey = process.env.API_KEY;
-const apiSecret = process.env.API_SECRET_KEY;
-const scopes = 'read_orders';
+
 const client = require('../../utils/shopify');
 router.use(express.json());
 
@@ -14,8 +12,26 @@ router.use(express.json());
 router.get('/orders', (req,res) =>{
     client.get({path :'/orders'})
     .then((result) => {
-        res.json({
+        console.table(result.body.orders)
+        res.status(200).json({
+            status: 200,
             result: result.body.orders
+        })
+        
+    })
+    .catch((error) =>{res.json({
+        status: error.response,
+        })
+    });  
+})
+
+// GET ONE ORDER
+router.get('/orders/:id', (req,res) =>{
+    client.get({path :`/orders/${req.params.id}`})
+    .then((result) => {
+        res.json({
+            status:"good job",
+            result: result.body.order
         })
     })
     .catch((error) =>{res.json({
@@ -23,4 +39,17 @@ router.get('/orders', (req,res) =>{
         })
     });  
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
