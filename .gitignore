@@ -25,3 +25,5 @@ server/.env
 ui/node_modules
 server/node_modules
 server/dist
+private.key
+pdfservices-api-credentials.json

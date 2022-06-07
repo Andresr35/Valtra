@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import { useContext } from 'react';
+import React, {useEffect,useContext} from 'react';
+
 import ProductFinder from '../api/ProductFinder';
 import { ProductsContext } from '../context/ProductsContext';
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ const ProductList = (props) => {
             try{
                 const response = await ProductFinder.get("/");
                 setProducts(response.data.data.products);
+                console.log(response)
              }catch(err){}
         };
         fetchData(); 
@@ -43,9 +44,9 @@ const ProductList = (props) => {
 //actual html of the product table
   return (
     <div className='list-group'>
-      <table className="table table-hover table-dark">
-          <thead>
-              <tr className="bg-primary">
+      <table className="table table-hover table-bordered ">
+          <thead className='table-dark'>
+              <tr>
                   <th scope = "col">id</th>
                   <th scope = "col">description</th>
                   <th scope = "col">edit</th>
@@ -62,19 +63,6 @@ const ProductList = (props) => {
                         <td><button onClick={() =>handleDelete(product.id)} className="btn btn-danger">Delete</button></td>
                     </tr>
                   )})}
-
-              {/* <tr>
-                  <td>1</td>
-                  <td>whatever</td>
-                  <td><button className="btn btn-warning">Update</button></td>
-                  <td><button className="btn btn-danger">Delete</button></td>
-              </tr>
-              <tr>
-                  <td>1</td>
-                  <td>whatever</td>
-                  <td><button className="btn btn-warning">Update</button></td>
-                  <td><button className="btn btn-danger">Delete</button></td>
-              </tr> */}
           </tbody>
       </table>
     </div>

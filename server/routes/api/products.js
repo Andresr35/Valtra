@@ -16,7 +16,6 @@ router.use(express.json());
 //GET       testing the first api call
 router.get("/",function(req,res){
     res.json("this is a json status code for the users api");
-    
 });
 
 
@@ -27,7 +26,7 @@ router.get('/products', function (req, res)  {
           if (err) {
             return next(err)
           }
-          console.table(result.rows);
+          console.log("got data from db");
           res.status(200).json({
             status:"success",
             results: result.rows.length,
@@ -46,6 +45,7 @@ router.get('/products/:id', function (req, res)  {
       console.log(err.stack);
       return err
     }
+    console.log("got data from db");
     res.status(200).json({
       status:"success",
       data:{

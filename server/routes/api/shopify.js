@@ -10,9 +10,9 @@ router.use(express.json());
 
 // GET ALL ORDERS
 router.get('/orders', (req,res) =>{
+    console.log("got data from shopify");
     client.get({path :'/orders'})
     .then((result) => {
-        console.table(result.body.orders)
         res.status(200).json({
             status: 200,
             result: result.body.orders
