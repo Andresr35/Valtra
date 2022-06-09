@@ -1,10 +1,14 @@
 var express = require('express');
 var router = express.Router();
 const morgan = require('morgan');
+var { graphql, buildSchema } = require('graphql');
+
+// Construct a schema, using GraphQL schema language
 
 
 
 const client = require('../../utils/shopify');
+const { query } = require('express');
 router.use(express.json());
 
 
@@ -25,36 +29,69 @@ router.get('/orders', (req,res) =>{
     });  
 })
 
-//SAME THING AS LAST BUT WITH GRAPHQL
-router.get('/orderss', (req,res) =>{
-    const data =  client.query({
-        data: {
-          "query": `mutation M($input: InventoryAdjustQuantityInput!) {
-                          inventoryAdjustQuantity(input: $input) {
-                            inventoryLevel {
-                              id
-                              available
-                              incoming
-                              item {
-                                id
-                                sku
-                              }
-                              location {
-                                id
-                                name
-                              }
-                            }
-                          }
-                        }`,
-          "variables": {
-            "input": {
-              "inventoryLevelId": "gid://shopify/InventoryLevel/964427794?inventory_item_id=43729076",
-              "availableDelta": 3
+const querystring =` {
+  orders(first:10) {
+    edges {
+      node {
+        id
+        ...on Order {
+          name
+        }
+        totalWeight
+        fulfillable
+        displayFulfillmentStatus
+        fulfillments(first:10){
+          id
+        }
+        fulfillmentOrders(first:10,displayable:true){
+          edges{
+            node{
+              id
             }
-          },
-        },
+          }
+        }
+      }
+    }
+  }
+}`
+
+
+//SAME THING AS LAST BUT WITH GRAPHQL
+router.get('/orderss', async (req,res) =>{
+   try{
+     const result = await client.client2.query({
+        data: `query ok{
+          orders(first:10) {
+            nodes {
+              id
+              name
+              displayFulfillmentStatus
+              fulfillmentOrders(first:10,displayable:true){
+                  nodes{
+                    id
+                  }
+              }
+            }
+          }
+        }`,
       });
-})
+      for(const orderNode in result.body.data.orders.nodes){
+        for(const node in result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes){
+          console.log(result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes[node].id);
+        }
+      }
+      res.json({
+        points:result.body.extensions.cost,
+        data:result.body.data.orders,
+        length:result.body.data.orders.nodes.length,
+
+      });
+
+    }catch(err){
+      console.log(err.stack);
+    }
+      
+});
 
 
 
