@@ -27,8 +27,14 @@ const OrderList = (props) => {
         
         return obj;
       });
+      
+      for(const obj in array){
+        if(   !(array[obj])[Object.keys(array[obj])[0]]  ){
+          array.splice(obj,1);
+        }
+      }
      setArray(array)
-      sendData(array);
+     sendData(array);
     };
 
     const handleOnSubmit =async(e) =>{
@@ -47,12 +53,24 @@ const OrderList = (props) => {
     const headerKeys = Object.keys(Object.assign({}, ...array));
 
     const sendData = (array) =>{
-      try {OrderFinder.put("/orderss",{
+      
+      try {
+        //array.pop();
+        for(const obj in array){
+
+          (array[obj])["Tracking"] = (array[obj])[Object.keys(array[obj])[1]];
+          delete (array[obj])[Object.keys(array[obj])[1]];
+          var value  = (array[obj])["Tracking"].replace(/(\r\n|\n|\r)/gm, "");
+          (array[obj])["Tracking"] = value;
+          // console.log((array[obj])["Tracking"].replace(/(\r\n|\n|\r)/gm, ""));
+          // console.log((array[obj])["Tracking"]);
+        }
+        console.log(array)
+        OrderFinder.put("/orderss",{
         sent:"success",
-        data: array.map((item) =>
-        {Object.values(item)}
-        )
-      })}catch(err){
+        data:array        
+      })
+    }catch(err){
         console.log(err);
       }
     }
@@ -62,7 +80,6 @@ const OrderList = (props) => {
             try{
                 const response = await OrderFinder.get("/orders");
                 setOrders(response.data.result);
-                console.log(response)
              }catch(err){console.log("didnt work")}
         };
         fetchData(); 

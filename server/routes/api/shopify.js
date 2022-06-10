@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 const morgan = require('morgan');
-var { graphql, buildSchema } = require('graphql');
-
 // Construct a schema, using GraphQL schema language
 
 
@@ -29,71 +27,84 @@ router.get('/orders', (req,res) =>{
     });  
 })
 
-const querystring =` {
-  orders(first:10) {
-    edges {
-      node {
-        id
-        ...on Order {
-          name
-        }
-        totalWeight
-        fulfillable
-        displayFulfillmentStatus
-        fulfillments(first:10){
-          id
-        }
-        fulfillmentOrders(first:10,displayable:true){
-          edges{
-            node{
-              id
-            }
+const querystring = `data: {
+  "query": "query OrderMetafields($ownerId: ID!) {
+    order(id: $ownerId) {
+      metafields(first: 3) {
+        edges {
+          node {
+            namespace
+            key
+            value
           }
         }
       }
     }
-  }
-}`
-
+  }",
+  "variables": {
+    "ownerId": "gid://shopify/Order/148977776"
+  },
+},
+`
 
 //SAME THING AS LAST BUT WITH GRAPHQL
 router.put('/orderss', async (req,res) =>{
+  //start getting data and fulfilment numbers
    try{
-     const result = await client.client2.query({
-        data: `query ok{
-          orders(first:20) {
-            nodes {
-              id
-              name
-              displayFulfillmentStatus
-              fulfillmentOrders(first:10,displayable:true){
-                  nodes{
-                    id
-                  }
-              }
+    const name = "#1003";
+    const result = await client.client2.query({
+      data:
+        `query getFulfillmentOrderbyName{
+        orders(first:10,query:"name:${name}") {
+          nodes {
+            id
+            name
+            displayFulfillmentStatus
+            fulfillmentOrders(first:10,displayable:true){
+                nodes{
+                  id
+                }
             }
           }
-        }`,
-      });
-      for(const orderNode in result.body.data.orders.nodes){
-        for(const node in result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes){
-          console.log(result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes[node].id);
         }
+      }`,
+    })
+    console.log(result.body.data.orders);
+    for(const orderNode in result.body.data.orders.nodes){
+      console.log(result.body.data.orders.nodes[orderNode].name)
+      for(const node in result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes){
+        console.log(result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes[node].id);
       }
-      res.json({
-        points:result.body.extensions.cost,
-        data:result.body.data.orders,
-        length:result.body.data.orders.nodes.length,
+    };
+    try{
+      const mutResult = client.client2.query({
+        
 
-      });
-      console.log(req.body)
-    }catch(err){
+      })
+    }catch(error){
       console.log(err.stack);
+    }
+
+    res.status(200).json(
+      "success"
+    );
+
+      
+  }
+    
+  
+    
+    
+    
+    catch(err){
+      console.log("error at query")
+      console.log(err.stack);
+      res.status(404).json(
+        err
+      );
     }
       
 });
-
-
 
 // GET ONE ORDER
 router.get('/orders/:id', (req,res) =>{
@@ -109,17 +120,5 @@ router.get('/orders/:id', (req,res) =>{
         })
     });  
 })
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;
