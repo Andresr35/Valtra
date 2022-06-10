@@ -1,12 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const morgan = require('morgan');
-// Construct a schema, using GraphQL schema language
-
-
-
 const client = require('../../utils/shopify');
-const { query } = require('express');
 router.use(express.json());
 
 
@@ -19,89 +14,111 @@ router.get('/orders', (req,res) =>{
             status: 200,
             result: result.body.orders
         })
-        
-    })
-    .catch((error) =>{res.json({
+    }).catch((error) =>{res.json({
         status: error.response,
         })
-    });  
+      });  
 })
 
-const querystring = `data: {
-  "query": "query OrderMetafields($ownerId: ID!) {
-    order(id: $ownerId) {
-      metafields(first: 3) {
-        edges {
-          node {
-            namespace
-            key
-            value
-          }
-        }
-      }
-    }
-  }",
-  "variables": {
-    "ownerId": "gid://shopify/Order/148977776"
-  },
-},
-`
 
 //SAME THING AS LAST BUT WITH GRAPHQL
 router.put('/orderss', async (req,res) =>{
+  // console.log(req.body.data[0].Name);
+  // console.log(req.body.data[0].Tracking);
   //start getting data and fulfilment numbers
    try{
-    const name = "#1003";
-    const result = await client.client2.query({
-      data:
-        `query getFulfillmentOrderbyName{
-        orders(first:10,query:"name:${name}") {
-          nodes {
-            id
-            name
-            displayFulfillmentStatus
-            fulfillmentOrders(first:10,displayable:true){
-                nodes{
-                  id
-                }
+    //------------------------------------------these will be the variables that change depending on what order we're on
+    console.log("Fufilling");
+    for(const orderObject in req.body.data){
+      const name = req.body.data[orderObject].Name,
+      shippingCompany = "fedex",
+      trackingNumber = req.body.data[orderObject].Tracking;
+      var jsonString = "",  
+      fulfillmentOrderId = "";
+      const result = await client.client2.query({
+        data:
+          `query getFulfillmentOrderbyName{
+          orders(first:1,query:"name:${name}") {
+            nodes {
+              id
+              name
+              displayFulfillmentStatus
+              fulfillmentOrders(first:10,displayable:true){
+                  nodes{
+                    id
+                  }
+              }
             }
           }
-        }
-      }`,
-    })
-    console.log(result.body.data.orders);
+        }`,
+      });
+      console.log(result.body.data.orders);
+
+    //----------------------------------------------getting the fufillment order id
     for(const orderNode in result.body.data.orders.nodes){
+      //just checking what order name we're looking at
       console.log(result.body.data.orders.nodes[orderNode].name)
       for(const node in result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes){
+        //logging the fufillment id
         console.log(result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes[node].id);
+        fulfillmentOrderId = result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes[node].id
       }
     };
-    try{
-      const mutResult = client.client2.query({
-        
+    //----------------------------------------------Starting to mutate fufillment data
+      try{
+          const mutResult =await client.client2.query({
+          data:{
+            "query": 
+              `mutation fulfillmentCreateV2($fulfillment: FulfillmentV2Input!) {
+                fulfillmentCreateV2(fulfillment: $fulfillment) {
+                  fulfillment {
+                    status
+                    order {
+                      name
+                    }
+                  }
+                  userErrors {
+                    field
+                    message
+                  }
+                }
+              }`,
+            "variables":{
+              "fulfillment": {
+                "lineItemsByFulfillmentOrder": [
+                  {
+                    "fulfillmentOrderId": `${fulfillmentOrderId}`
+                  }
+                ],
+                "notifyCustomer": true,
+                "trackingInfo": {
+                  "company": `${shippingCompany}`,
+                  "number": `${trackingNumber}`
+                }
+              }            
+            },
+          },
+        })
+        jsonString = mutResult;
+        //---------------------------------------------Error catching on mutation
+      }catch(error){
+        console.log(error.stack);
+      }
 
-      })
-    }catch(error){
-      console.log(err.stack);
+            
     }
+    console.log("done")
 
-    res.status(200).json(
-      "success"
-    );
-
-      
-  }
-    
-  
-    
-    
-    
-    catch(err){
+    //-----------------------------------------------json result if everything goes well
+    res.status(200).json({
+        status:"success",
+        mutResult:jsonString.body
+    });
+    //--------------------------------------------------last catfch error
+  }catch(err){
       console.log("error at query")
       console.log(err.stack);
-      res.status(404).json(
-        err
-      );
+      res.status(404).json("something broke");
     }
       
 });

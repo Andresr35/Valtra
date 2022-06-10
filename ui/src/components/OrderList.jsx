@@ -49,7 +49,7 @@ const OrderList = (props) => {
       }
 
     };
-
+//
     const headerKeys = Object.keys(Object.assign({}, ...array));
 
     const sendData = (array) =>{
@@ -57,19 +57,16 @@ const OrderList = (props) => {
       try {
         //array.pop();
         for(const obj in array){
-
           (array[obj])["Tracking"] = (array[obj])[Object.keys(array[obj])[1]];
           delete (array[obj])[Object.keys(array[obj])[1]];
           var value  = (array[obj])["Tracking"].replace(/(\r\n|\n|\r)/gm, "");
           (array[obj])["Tracking"] = value;
-          // console.log((array[obj])["Tracking"].replace(/(\r\n|\n|\r)/gm, ""));
-          // console.log((array[obj])["Tracking"]);
         }
         console.log(array)
         OrderFinder.put("/orderss",{
         sent:"success",
         data:array        
-      })
+      }).then(response => console.log(response.data))
     }catch(err){
         console.log(err);
       }
