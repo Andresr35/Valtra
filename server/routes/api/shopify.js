@@ -15,7 +15,7 @@ router.use(express.json());
 // GET ALL ORDERS
 router.get('/orders', (req,res) =>{
     console.log("got data from shopify");
-    client.get({path :'/orders'})
+    client.client.get({path :'/orders'})
     .then((result) => {
         res.status(200).json({
             status: 200,
@@ -57,11 +57,11 @@ const querystring =` {
 
 
 //SAME THING AS LAST BUT WITH GRAPHQL
-router.get('/orderss', async (req,res) =>{
+router.put('/orderss', async (req,res) =>{
    try{
      const result = await client.client2.query({
         data: `query ok{
-          orders(first:10) {
+          orders(first:20) {
             nodes {
               id
               name
@@ -86,7 +86,7 @@ router.get('/orderss', async (req,res) =>{
         length:result.body.data.orders.nodes.length,
 
       });
-
+      console.log(req.body)
     }catch(err){
       console.log(err.stack);
     }

@@ -1,4 +1,4 @@
-import React, { useContext,useEffect } from 'react'
+import React, { useContext,useEffect, useState } from 'react'
 import OrderFinder from '../api/OrderFinder';
 import PDFFinder from '../api/PDFFinder';
 import { OrdersContext } from '../context/OrdersContext'
@@ -7,7 +7,55 @@ import { writeFile } from 'fs';
 const OrderList = (props) => {
     const {orders,setOrders} = useContext(OrdersContext);
     //get data from backed
+    const [file,setFile] = useState();
+    const [array,setArray] = useState([]);
+    const fileReader = new FileReader();
 
+    const handleOnChange = (e) =>{
+      setFile(e.target.files[0]);
+    };
+    const csvFileToArray = string =>{
+      const csvHeader = string.slice(0,string.indexOf("\n")).split(",");
+      const csvRows = string.slice(string.indexOf("\n")+1).split("\n");
+
+      const array = csvRows.map(i =>{
+        const values = i.split(",");
+        const obj = csvHeader.reduce((object,header,index) =>{
+          object[header] = values[index];
+          return object;
+        },{});
+        
+        return obj;
+      });
+     setArray(array)
+      sendData(array);
+    };
+
+    const handleOnSubmit =async(e) =>{
+      e.preventDefault();
+      if  (file){
+        fileReader.onload = function (event) {
+          const text = event.target.result;
+          csvFileToArray(text);
+        };
+         fileReader.readAsText(file);
+         
+      }
+
+    };
+
+    const headerKeys = Object.keys(Object.assign({}, ...array));
+
+    const sendData = (array) =>{
+      try {OrderFinder.put("/orderss",{
+        sent:"success",
+        data: array.map((item) =>
+        {Object.values(item)}
+        )
+      })}catch(err){
+        console.log(err);
+      }
+    }
     
     useEffect( () => {
         const fetchData = async() => {
@@ -60,15 +108,37 @@ const OrderList = (props) => {
         }catch(err){console.log(err)}
     }
 
-
-
-
   return (
 
     <div className='list-group'>
         <div>
-            <button onClick={()=>{handlePDF()}} type='button' className="btn btn-primary">Dowload PDF</button>
+            <button onClick={()=>{handlePDF()}} type='button' className="btn btn-primary" disabled data-bs-toggle="button">Dowload PDF</button>
+{/*      the second button thing for the csv download       */}
+            <form>
+                <input type={"file"} id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
+                <button onClick={(e) => {handleOnSubmit(e)}}>IMPORT CSV</button>
+            </form>
+            {/* this is the table for the csv values */}
+            <table className="table table-hover table-bordered ">
+              <thead className='table-dark'>
+                <tr key={"header"}>
+                  {headerKeys.map((key) => (
+                    <th scope = "col">{key}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {array.map((item) => (
+                  <tr key={item.id}>
+                    {Object.values(item) &&Object.values(item).map((val) => (
+                      <td>{val}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
         </div>
+
     <table className="table table-hover table-bordered ">
         <thead className='table-dark'>
             <tr>
@@ -79,7 +149,6 @@ const OrderList = (props) => {
                 <th scope = "col">tax</th>
                 <th scope = "col">total</th>
                 <th scope = "col">financial status</th>
-                <th scope = "col">fufillment status</th>
             </tr>
         </thead>
         <tbody>
@@ -93,7 +162,6 @@ const OrderList = (props) => {
                       <td>${order.current_total_tax}</td>
                       <td>${order.current_total_price}</td>
                       <td>{order.financial_status}</td>
-                      <td>{order.fulfillment_status}</td>
 
                   </tr>
                 )})}
