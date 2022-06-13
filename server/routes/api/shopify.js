@@ -37,14 +37,13 @@ router.put('/orderss', async (req,res) =>{
       })
     }
     else{
-      var failedOrders = "",fufilledOrders = "",alreadyFufilled = "",obj=`{"failed":[],"alreadyFufilled":[],"fufilled":[]}`;
+      var obj=`[]`;
       const resData = JSON.parse(obj);
       for(const orderObject in req.body.data){
         const name = req.body.data[orderObject].Name,
         shippingCompany = "fedex",
         trackingNumber = req.body.data[orderObject].Tracking;
-        var jsonString = "",  
-        fulfillmentOrderId = "";
+        var fulfillmentOrderId = "";
         const result = await client.client2.query({
           data:
             `query getFulfillmentOrderbyName{
@@ -65,16 +64,13 @@ router.put('/orderss', async (req,res) =>{
 
         // ----------------------------------------------------checking to see if the order name could be queried
         if(!result.body.data.orders.nodes.length){
-          failedOrders += `${req.body.data[orderObject].Name}, `
-          //console.log(`${req.body.data[orderObject].Name} could not be found or DNE`)
+          resData.push({name:`${req.body.data[orderObject].Name}`,status:"failed"})
         }else{
           //----------------------------------------------getting the fufillment order id
           for(const orderNode in result.body.data.orders.nodes){         
               //this just gets the name
               if(result.body.data.orders.nodes[orderNode].displayFulfillmentStatus == "FULFILLED"){
-
-                alreadyFufilled += `${result.body.data.orders.nodes[orderNode].name}, `
-                resData["alreadyFufilled"].push(`${result.body.data.orders.nodes[orderNode].name}`)
+                resData.push({name:`${result.body.data.orders.nodes[orderNode].name}`,status:"closed"})
                 
               }else{
                 console.log("Fufilling "+result.body.data.orders.nodes[orderNode].name + "...")
@@ -83,49 +79,46 @@ router.put('/orderss', async (req,res) =>{
                   //----------------------------------------------Starting to mutate fufillment data
                   try{
                     const mutResult =await client.client2.query({
-                    data:{
-                      "query": 
-                        `mutation fulfillmentCreateV2($fulfillment: FulfillmentV2Input!) {
-                          fulfillmentCreateV2(fulfillment: $fulfillment) {
-                            fulfillment {
-                              status
-                              displayStatus
-                              name
-                              order {
+                      data:{
+                        "query": 
+                          `mutation fulfillmentCreateV2($fulfillment: FulfillmentV2Input!) {
+                            fulfillmentCreateV2(fulfillment: $fulfillment) {
+                              fulfillment {
+                                status
+                                displayStatus
                                 name
+                                order {
+                                  name
+                                }
+                              }
+                              userErrors {
+                                field
+                                message
                               }
                             }
-                            userErrors {
-                              field
-                              message
+                          }`,
+                        "variables":{
+                          "fulfillment": {
+                            "lineItemsByFulfillmentOrder": [
+                              {
+                                "fulfillmentOrderId": `${fulfillmentOrderId}`
+                              }
+                            ],
+                            "notifyCustomer": true,
+                            "trackingInfo": {
+                              "company": `${shippingCompany}`,
+                              "number": `${trackingNumber}`
                             }
-                          }
-                        }`,
-                      "variables":{
-                        "fulfillment": {
-                          "lineItemsByFulfillmentOrder": [
-                            {
-                              "fulfillmentOrderId": `${fulfillmentOrderId}`
-                            }
-                          ],
-                          "notifyCustomer": true,
-                          "trackingInfo": {
-                            "company": `${shippingCompany}`,
-                            "number": `${trackingNumber}`
-                          }
-                        }            
+                          }            
+                        },
                       },
-                    },
-                  })
+                    })
 
-                  if(mutResult.body.data.fulfillmentCreateV2.fulfillment == "null"){
-                    console.log(mutResult.body.data.fulfillmentCreateV2.userErrors);
-                  }else{
-                    console.log(mutResult.body.data.fulfillmentCreateV2.fulfillment)
-                    
-                  }
-
-
+                    if(mutResult.body.data.fulfillmentCreateV2.fulfillment == "null"){
+                      console.log(mutResult.body.data.fulfillmentCreateV2.userErrors);
+                    }else{
+                      resData.push({name:`${mutResult.body.data.fulfillmentCreateV2.fulfillment.order.name}`,status:`${mutResult.body.data.fulfillmentCreateV2.fulfillment.displayStatus}`})                    
+                    }
                   } //---------------------------------------------Error catching on mutation
                   catch(error){
                     console.log(error.stack);
@@ -168,16 +161,12 @@ router.put('/orderss', async (req,res) =>{
 
 
 
-      // the entire for loop ends here and we can start to send results already.
-      console.log("Orders " +alreadyFufilled+ "were already fufilled")
-      console.log(resData);
-      console.log("Orders "+failedOrders + "could not be queried");
-      console.log("done")
-
+    // the entire for loop ends here and we can start to send results already.
+    obj = JSON.stringify(resData);
     //-----------------------------------------------json result if everything goes well
     res.status(200).json({
         status:"success",
-        
+        orders:resData 
     });
     }
 
