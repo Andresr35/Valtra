@@ -164,6 +164,7 @@ router.put('/orderss', async (req,res) =>{
     // the entire for loop ends here and we can start to send results already.
     obj = JSON.stringify(resData);
     //-----------------------------------------------json result if everything goes well
+    console.log("done");
     res.status(200).json({
         status:"success",
         orders:resData 

@@ -7,6 +7,7 @@ import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
 import { ProductsContextProvider } from './context/ProductsContext';
 import OrderPage from './routes/OrderPage';
 import { OrdersContextProvider } from './context/OrdersContext';
+import FulfillingOrders from './routes/FulfillingOrders';
 
 const App = ()=> {
     return(
@@ -19,6 +20,7 @@ const App = ()=> {
                             <Route exact path ="/products/:id/update" element = {<UpdateProducts/>}/>
                             <Route exact path ="/products/:id" element = {<ProductDetails/>}/>
                             <Route path='/orders' element={<OrderPage/>} />
+                            <Route path = '/fulfill' element={<FulfillingOrders/>}/>
                         </Routes>
                 
                     </Router>

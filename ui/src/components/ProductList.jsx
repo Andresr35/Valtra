@@ -26,7 +26,7 @@ const ProductList = (props) => {
 // Event handler for delete products on tablee
     const handleDelete= async(id)=>{
         try{
-            const response=await ProductFinder.delete(`/${id}`);
+            await ProductFinder.delete(`/${id}`);
             setProducts(products.filter(product=>{
                 return product.id !== id;
             }))

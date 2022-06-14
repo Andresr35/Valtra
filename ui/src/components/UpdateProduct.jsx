@@ -1,14 +1,14 @@
 import React from 'react'
-import { useContext } from 'react';
+//import { useContext } from 'react';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
-import { ProductsContext } from '../context/ProductsContext';
+//import { ProductsContext } from '../context/ProductsContext';
 import { useEffect } from 'react';
 import ProductFinder from '../api/ProductFinder';
 
 const UpdateProduct = (props) => {
     let navigate = useNavigate();
-   const {products} = useContext(ProductsContext)
+   //const {products} = useContext(ProductsContext)
    const {id} = useParams();
    const[ids,setID] = useState("");
    const[description,setDescription] = useState("");
@@ -26,7 +26,7 @@ const UpdateProduct = (props) => {
     
     const handleSubmit= async(e) =>{
         e.preventDefault();
-        const UpdateProduct = await ProductFinder.put(`/${id}`,{
+        await ProductFinder.put(`/${id}`,{
             ids,description
         });
         navigate("/");
@@ -34,7 +34,7 @@ const UpdateProduct = (props) => {
 
   return (
     <div> 
-        <h1></h1>
+        
       <form action="">
           {/* This is the form part for changing the id */}
           <div className="form-group">
