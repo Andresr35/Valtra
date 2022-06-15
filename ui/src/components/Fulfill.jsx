@@ -1,10 +1,11 @@
 import React,{useState} from 'react'
 import OrderFinder from '../api/OrderFinder';
+import {CSVLink} from "react-csv";
 
-const Fulfill = () => {
+const Fulfill = (props) => {
 
     const [file,setFile] = useState();
-    const [array,setArray] = useState([]);
+    const [data,setData] = useState([]);
     const fileReader = new FileReader();
 
     const handleOnChange = (e) =>{
@@ -14,6 +15,7 @@ const Fulfill = () => {
     //just the setup of the array
     const csvFileToArray = string =>{
         const csvHeader = string.slice(0,string.indexOf("\n")).split(",");
+        csvHeader.push("Status")
         const csvRows = string.slice(string.indexOf("\n")+1).split("\n");
         const array = csvRows.map(i =>{
             const values = i.split(",");
@@ -28,10 +30,13 @@ const Fulfill = () => {
             array.splice(obj,1);
             }
         }
-        setArray(array)
+        setData(array)
         sendData(array);
-    };
-    
+    };      
+
+
+
+
     //what happens when they press the button
     const handleOnSubmit =async(e) =>{
         e.preventDefault();
@@ -39,13 +44,14 @@ const Fulfill = () => {
           fileReader.onload = function (event) {
             const text = event.target.result;
             csvFileToArray(text);
+
           };
         fileReader.readAsText(file); 
         }
     };
     
-    const headerKeys = Object.keys(Object.assign({}, ...array));
-    
+    const headerKeys = Object.keys(Object.assign({}, ...data));
+
     //this runs when the button is pressed.
     const sendData = (array) =>{
         try {
@@ -59,46 +65,72 @@ const Fulfill = () => {
             OrderFinder.put("/orderss",{
                 sent:"success",
                 data:array        
-            }).then(response => {console.log(response.data);updateStatus(response.data,array)})
+            }).then((response) => {updateStatus(response.data,array)})
+            .catch(err => console.log(err))
         }catch(err){
           console.log(err);
         }
     }
-    const updateStatus = (response,test) => {
+    const updateStatus = (response,prevArray) => {
         
-        for(const obj in test){
+        for(const obj in prevArray){
             for(const order in response.orders){
-                if(test[obj].Name === response.orders[order].name.replace("#", "")){
-                    test[obj].status = response.orders[order].status;
+                if(prevArray[obj].Name === response.orders[order].name.replace("#", "")){
+                    prevArray[obj].Status = response.orders[order].Status;
                     break;
                 }
             }
         }
-        setArray(test)
-        console.log(test)
-        console.log("ran")
-        //add a key and value to the array
+        const newArray = [...prevArray];
+        setData(newArray);
     }
-     
+   
+    const headers = [
+        {label: "Name", key:"Name"},
+        {label: "Status", key:"Status"},
+        {label: "Tracking", key:"Tracking"}
+    ];
 
+    const csvReport = {
+        filename: 'report.csv',
+        headers:headers,
+        data:data
+    };
   return (
-    <div>
-        <form>
-            <input type={"file"} id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
-            <button onClick={(e) => {handleOnSubmit(e)}}>IMPORT CSV</button>
-        </form>
-    {/* this is the table for the csv values */}
+    <div>   
+        <div>
+            <h1 style={{textAlign: 'center'}}>Import CSV to Fulfill Orders</h1>
+        </div>
+        <div className='container'>
+            <div className="row">
+                <form>
+                    <div className="col col-lg-2">
+                        <input type={"file"}  className="form-control" id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
+                    </div>
+                    <div className="col">
+                        <button type='button' id="inputGroupFileAddon04" className='btn btn-outline-secondary' onClick={(e) => {handleOnSubmit(e)}}>Import CSV</button>
+                    </div>
+                </form>
+                
+            </div>
+            <div className="row">
+                <div className="col">
+                <CSVLink className='btn btn-primary' {...csvReport} >Export</CSVLink>
+                </div>
+            </div>
+            
+        </div>
         <table className="table table-hover table-bordered ">
             <thead className='table-dark'>
                 <tr>
                     {headerKeys.map((key,index) => (
                     <th key={index} scope = "col">{key}</th>
                     ))}
-                    <th key="status" scope="col">Status</th>
+                    {/* <th key="status" scope="col">Status</th> */}
                 </tr>
             </thead>
             <tbody>
-                {array.map((item,index) => (
+                {data.map((item,index) => (
                     <tr key={index}>
                         {Object.values(item) && Object.values(item).map((val,index) => (
                             <td key={index}>{val}</td>
@@ -109,7 +141,7 @@ const Fulfill = () => {
             </tbody>
         </table>
     </div>
-  )
+  );
 }
 
 export default Fulfill

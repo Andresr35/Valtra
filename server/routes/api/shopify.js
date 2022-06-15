@@ -64,13 +64,13 @@ router.put('/orderss', async (req,res) =>{
 
         // ----------------------------------------------------checking to see if the order name could be queried
         if(!result.body.data.orders.nodes.length){
-          resData.push({name:`${req.body.data[orderObject].Name}`,status:"failed"})
+          resData.push({name:`${req.body.data[orderObject].Name}`,Status:"FAILED"})
         }else{
           //----------------------------------------------getting the fufillment order id
           for(const orderNode in result.body.data.orders.nodes){         
               //this just gets the name
               if(result.body.data.orders.nodes[orderNode].displayFulfillmentStatus == "FULFILLED"){
-                resData.push({name:`${result.body.data.orders.nodes[orderNode].name}`,status:"closed"})
+                resData.push({name:`${result.body.data.orders.nodes[orderNode].name}`,Status:"CLOSED"})
                 
               }else{
                 console.log("Fufilling "+result.body.data.orders.nodes[orderNode].name + "...")
@@ -117,7 +117,7 @@ router.put('/orderss', async (req,res) =>{
                     if(mutResult.body.data.fulfillmentCreateV2.fulfillment == "null"){
                       console.log(mutResult.body.data.fulfillmentCreateV2.userErrors);
                     }else{
-                      resData.push({name:`${mutResult.body.data.fulfillmentCreateV2.fulfillment.order.name}`,status:`${mutResult.body.data.fulfillmentCreateV2.fulfillment.displayStatus}`})                    
+                      resData.push({name:`${mutResult.body.data.fulfillmentCreateV2.fulfillment.order.name}`,Status:`${mutResult.body.data.fulfillmentCreateV2.fulfillment.displayStatus}`})                    
                     }
                   } //---------------------------------------------Error catching on mutation
                   catch(error){
