@@ -1,8 +1,8 @@
 import React,{useState} from 'react'
 import OrderFinder from '../api/OrderFinder';
 import {CSVLink} from "react-csv";
-
 const Fulfill = (props) => {
+
 
     const [file,setFile] = useState();
     const [data,setData] = useState([]);
@@ -96,6 +96,9 @@ const Fulfill = (props) => {
         headers:headers,
         data:data
     };
+
+
+
   return (
     <div>   
         <div>
@@ -108,7 +111,7 @@ const Fulfill = (props) => {
                         <input type={"file"}  className="form-control" id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
                     </div>
                     <div className="col">
-                        <button type='button' id="inputGroupFileAddon04" className='btn btn-outline-secondary' onClick={(e) => {handleOnSubmit(e)}}>Import CSV</button>
+                        <button type='button'  className='btn btn-outline-secondary' onClick={(e) => {handleOnSubmit(e);}}>Import CSV</button>
                     </div>
                 </form>
                 
@@ -120,6 +123,7 @@ const Fulfill = (props) => {
             </div>
             
         </div>
+
         <table className="table table-hover table-bordered ">
             <thead className='table-dark'>
                 <tr>

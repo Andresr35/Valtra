@@ -6,43 +6,52 @@ router.use(express.json());
 
 
 // GET ALL ORDERS
-router.get('/orders', (req,res) =>{
-    console.log("got data from shopify");
-    client.client.get({path :'/orders'})
+router.get('/orders', (req, res) => {
+  console.log("got data from shopify");
+  client.client.get({ path: '/orders' })
     .then((result) => {
-        res.status(200).json({
-            status: 200,
-            result: result.body.orders
-        })
-    }).catch((error) =>{res.json({
+      res.status(200).json({
+        status: 200,
+        result: result.body.orders
+      })
+    }).catch((error) => {
+      res.json({
         status: error.response,
-        })
-      });  
-})
+      })
+    });
+});
 
+router.get('/checkout/:token', async (req, res, next) => {
+  try {
+    const result = await client.client.get({ path: `/checkouts/${req.params.token}` });
+    console.log(result.body);
+  } catch (err) {
+    return next(err);
+  }
+});
 
 //SAME THING AS LAST BUT WITH GRAPHQL
-router.put('/orderss', async (req,res) =>{
+router.put('/orderss', async (req, res) => {
   // console.log(req.body.data[0].Name);
   // console.log(req.body.data[0].Tracking);
   //start getting data and fulfilment numbers
-   try{
+  try {
     //------------------------------------------these will be the variables that change depending on what order we're on
     console.log("Running....");
-    if(!req.body.data){
+    if (!req.body.data) {
       console.log("No JSON received")
       res.status(404).json({
-        status:"null",
-        message:"no JSON recieved"
+        status: "null",
+        message: "no JSON recieved"
       })
     }
-    else{
-      var obj=`[]`;
+    else {
+      var obj = `[]`;
       const resData = JSON.parse(obj);
-      for(const orderObject in req.body.data){
+      for (const orderObject in req.body.data) {
         const name = req.body.data[orderObject].Name,
-        shippingCompany = "fedex",
-        trackingNumber = req.body.data[orderObject].Tracking;
+          shippingCompany = "fedex",
+          trackingNumber = req.body.data[orderObject].Tracking;
         var fulfillmentOrderId = "";
         const result = await client.client2.query({
           data:
@@ -63,25 +72,25 @@ router.put('/orderss', async (req,res) =>{
         });
 
         // ----------------------------------------------------checking to see if the order name could be queried
-        if(!result.body.data.orders.nodes.length){
-          resData.push({name:`${req.body.data[orderObject].Name}`,Status:"FAILED"})
-        }else{
+        if (!result.body.data.orders.nodes.length) {
+          resData.push({ name: `${req.body.data[orderObject].Name}`, Status: "FAILED" })
+        } else {
           //----------------------------------------------getting the fufillment order id
-          for(const orderNode in result.body.data.orders.nodes){         
-              //this just gets the name
-              if(result.body.data.orders.nodes[orderNode].displayFulfillmentStatus == "FULFILLED"){
-                resData.push({name:`${result.body.data.orders.nodes[orderNode].name}`,Status:"CLOSED"})
-                
-              }else{
-                console.log("Fufilling "+result.body.data.orders.nodes[orderNode].name + "...")
-                for(const node in result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes){
-                  fulfillmentOrderId = result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes[node].id
-                  //----------------------------------------------Starting to mutate fufillment data
-                  try{
-                    const mutResult =await client.client2.query({
-                      data:{
-                        "query": 
-                          `mutation fulfillmentCreateV2($fulfillment: FulfillmentV2Input!) {
+          for (const orderNode in result.body.data.orders.nodes) {
+            //this just gets the name
+            if (result.body.data.orders.nodes[orderNode].displayFulfillmentStatus == "FULFILLED") {
+              resData.push({ name: `${result.body.data.orders.nodes[orderNode].name}`, Status: "CLOSED" })
+
+            } else {
+              console.log("Fufilling " + result.body.data.orders.nodes[orderNode].name + "...")
+              for (const node in result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes) {
+                fulfillmentOrderId = result.body.data.orders.nodes[orderNode].fulfillmentOrders.nodes[node].id
+                //----------------------------------------------Starting to mutate fufillment data
+                try {
+                  const mutResult = await client.client2.query({
+                    data: {
+                      "query":
+                        `mutation fulfillmentCreateV2($fulfillment: FulfillmentV2Input!) {
                             fulfillmentCreateV2(fulfillment: $fulfillment) {
                               fulfillment {
                                 status
@@ -97,36 +106,36 @@ router.put('/orderss', async (req,res) =>{
                               }
                             }
                           }`,
-                        "variables":{
-                          "fulfillment": {
-                            "lineItemsByFulfillmentOrder": [
-                              {
-                                "fulfillmentOrderId": `${fulfillmentOrderId}`
-                              }
-                            ],
-                            "notifyCustomer": true,
-                            "trackingInfo": {
-                              "company": `${shippingCompany}`,
-                              "number": `${trackingNumber}`
+                      "variables": {
+                        "fulfillment": {
+                          "lineItemsByFulfillmentOrder": [
+                            {
+                              "fulfillmentOrderId": `${fulfillmentOrderId}`
                             }
-                          }            
-                        },
+                          ],
+                          "notifyCustomer": true,
+                          "trackingInfo": {
+                            "company": `${shippingCompany}`,
+                            "number": `${trackingNumber}`
+                          }
+                        }
                       },
-                    })
+                    },
+                  })
 
-                    if(mutResult.body.data.fulfillmentCreateV2.fulfillment == "null"){
-                      console.log(mutResult.body.data.fulfillmentCreateV2.userErrors);
-                    }else{
-                      resData.push({name:`${mutResult.body.data.fulfillmentCreateV2.fulfillment.order.name}`,Status:`${mutResult.body.data.fulfillmentCreateV2.fulfillment.displayStatus}`})                    
-                    }
-                  } //---------------------------------------------Error catching on mutation
-                  catch(error){
-                    console.log(error.stack);
+                  if (mutResult.body.data.fulfillmentCreateV2.fulfillment == "null") {
+                    console.log(mutResult.body.data.fulfillmentCreateV2.userErrors);
+                  } else {
+                    resData.push({ name: `${mutResult.body.data.fulfillmentCreateV2.fulfillment.order.name}`, Status: `${mutResult.body.data.fulfillmentCreateV2.fulfillment.displayStatus}` })
                   }
+                } //---------------------------------------------Error catching on mutation
+                catch (error) {
+                  console.log(error.stack);
                 }
-
               }
-           };
+
+            }
+          };
         }
       }
 
@@ -161,40 +170,39 @@ router.put('/orderss', async (req,res) =>{
 
 
 
-    // the entire for loop ends here and we can start to send results already.
-    obj = JSON.stringify(resData);
-    //-----------------------------------------------json result if everything goes well
-    console.log("done");
-    res.status(200).json({
-        status:"success",
-        orders:resData 
-    });
+      // the entire for loop ends here and we can start to send results already.
+      obj = JSON.stringify(resData);
+      //-----------------------------------------------json result if everything goes well
+      console.log("done");
+      res.status(200).json({
+        status: "success",
+        orders: resData
+      });
     }
 
     //--------------------------------------------------last catch error
-  }catch(err){
-      console.log("error at query")
-      console.log(err.stack);
-      res.status(404).json("something broke");
-    }
-      
+  } catch (err) {
+    console.log("error at query")
+    console.log(err.stack);
+    res.status(404).json("something broke");
+  }
+
 });
 
-
-
 // GET ONE ORDER
-router.get('/orders/:id', (req,res) =>{
-    client.get({path :`/orders/${req.params.id}`})
+router.get('/orders/:id', (req, res) => {
+  client.get({ path: `/orders/${req.params.id}` })
     .then((result) => {
-        res.json({
-            status:"good job",
-            result: result.body.order
-        })
+      res.json({
+        status: "good job",
+        result: result.body.order
+      })
     })
-    .catch((error) =>{res.json({
+    .catch((error) => {
+      res.json({
         status: error.response,
-        })
-    });  
-})
+      })
+    });
+});
 
 module.exports = router;
