@@ -1,9 +1,13 @@
 import React,{useState} from 'react'
 import OrderFinder from '../api/OrderFinder';
 import {CSVLink} from "react-csv";
-const Fulfill = (props) => {
+import Alert from 'react-bootstrap/Alert'
 
-
+const Fulfill = () => {
+    
+    const [running,setRunning] = useState(false);
+    const [done,setDone] = useState(false);
+    const [alert,setAlert] = useState(false);
     const [file,setFile] = useState();
     const [data,setData] = useState([]);
     const fileReader = new FileReader();
@@ -62,13 +66,15 @@ const Fulfill = (props) => {
             var value  = (array[obj])["Tracking"].replace(/(\r\n|\n|\r)/gm, "");
             (array[obj])["Tracking"] = value;
           }
+          setRunning(true);
             OrderFinder.put("/orderss",{
                 sent:"success",
                 data:array        
-            }).then((response) => {updateStatus(response.data,array)})
+            }).then((response) => {updateStatus(response.data,array);setDone(true)})
             .catch(err => console.log(err))
         }catch(err){
           console.log(err);
+          setAlert(true);
         }
     }
     const updateStatus = (response,prevArray) => {
@@ -98,7 +104,6 @@ const Fulfill = (props) => {
     };
 
 
-
   return (
     <div>   
         <div>
@@ -107,13 +112,14 @@ const Fulfill = (props) => {
         <div className='container'>
             <div className="row">
                 <form>
-                    <div className="col col-lg-2">
+                    <div className="col">
                         <input type={"file"}  className="form-control" id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
                     </div>
-                    <div className="col">
-                        <button type='button'  className='btn btn-outline-secondary' onClick={(e) => {handleOnSubmit(e);}}>Import CSV</button>
-                    </div>
+
                 </form>
+                <div className="col">
+                        <button type='button'  className='btn btn-outline-secondary' onClick={(e) => {handleOnSubmit(e)}}>Import CSV</button>
+                    </div>
                 
             </div>
             <div className="row">
@@ -123,7 +129,33 @@ const Fulfill = (props) => {
             </div>
             
         </div>
-
+        {/* This is where the alert is for whether a csv is done or not */}
+        
+      <Alert show = {running} variant="success" onClose={() => setRunning(false)} dismissible>
+        Fufilling Orders...
+        {/* <div className="d-flex justify-content-end">
+          <Button onClick={() => setRunning(false)} variant="outline-success">
+            Close me y'all!
+          </Button>
+        </div> */}
+      </Alert>
+      <Alert show = {done} variant="primary" onClose={() => setDone(false)} dismissible>
+        Finished!
+        {/* <div className="d-flex justify-content-end">
+          <Button onClick={() => setRunning(false)} variant="outline-success">
+            Close me y'all!
+          </Button>
+        </div> */}
+      </Alert>
+      <Alert show = {alert} variant="primary" onClose={() => setAlert(false)} dismissible>
+        Try again, timed out...
+        {/* <div className="d-flex justify-content-end">
+          <Button onClick={() => setRunning(false)} variant="outline-success">
+            Close me y'all!
+          </Button>
+        </div> */}
+      </Alert>
+    
         <table className="table table-hover table-bordered ">
             <thead className='table-dark'>
                 <tr>
