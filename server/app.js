@@ -17,7 +17,7 @@ require('dotenv').config()
 // console.log(client.get({path:'orders',
 // },).then(res => console.log(res.body)))
 
-
+"use strict";
 
 //setting up the server and views
 app.set("port", process.env.PORT || 3000);
