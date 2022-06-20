@@ -22,7 +22,7 @@ const UpdateProduct = (props) => {
         }catch(err){}
     };
     fetchData(); 
-    },[]);
+    },[id]);
     
     const handleSubmit= async(e) =>{
         e.preventDefault();

@@ -20,7 +20,7 @@ const ProductList = (props) => {
              }catch(err){}
         };
         fetchData(); 
-    },[]);
+    },[setProducts]);
 
 
 // Event handler for delete products on tablee

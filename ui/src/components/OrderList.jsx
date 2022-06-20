@@ -1,8 +1,8 @@
 import React, { useContext,useEffect}  from 'react'
 import OrderFinder from '../api/OrderFinder';
-import PDFFinder from '../api/PDFFinder';
+//import PDFFinder from '../api/PDFFinder';
 import { OrdersContext } from '../context/OrdersContext'
-import { writeFile } from 'fs';
+//import { writeFile } from 'fs';
 
 const OrderList = (props) => {
     const {orders,setOrders} = useContext(OrdersContext);
@@ -13,49 +13,50 @@ const OrderList = (props) => {
             try{
                 const response = await OrderFinder.get("/orders");
                 setOrders(response.data.result);
+
              }catch(err){console.log("didnt work")}
         };
         fetchData(); 
-    },[]);
+    },[setOrders]);
 
     //send request to server to give pdf???
     const handlePDF=async()=>{
-        try{
-            const response =await PDFFinder.post('/orders',{
-                data:{
-                    author: "Gary Lee",
-                    Company: {
-                      Name: "Company Name 1",
-                    },
-                    Items: [
-                      {
-                        ItemId: 1,
-                        Description: "Sample Description 1",
-                        Quantity: 2,
-                        UnitPrice: 100
-                      },
-                      {
-                        ItemId: 2,
-                        Description: "Sample Description 2",
-                        Quantity: 4,
-                        UnitPrice: 150
-                      },
+        // try{
+        //     const response =await PDFFinder.post('/orders',{
+        //         data:{
+        //             author: "Gary Lee",
+        //             Company: {
+        //               Name: "Company Name 1",
+        //             },
+        //             Items: [
+        //               {
+        //                 ItemId: 1,
+        //                 Description: "Sample Description 1",
+        //                 Quantity: 2,
+        //                 UnitPrice: 100
+        //               },
+        //               {
+        //                 ItemId: 2,
+        //                 Description: "Sample Description 2",
+        //                 Quantity: 4,
+        //                 UnitPrice: 150
+        //               },
 
-                    ],
-                    OrderDetails: {
-                      Number: "12424sda",
-                      Date: "12/06/2021",
-                      Tax: 345.23,
-                     Shipping: 820,
-                      Other: 0
-                    }
-                },
-                responseType: 'stream',
-            });
-            const pdfContents = response.data;
-            await writeFile('file.pdf',pdfContents);
+        //             ],
+        //             OrderDetails: {
+        //               Number: "12424sda",
+        //               Date: "12/06/2021",
+        //               Tax: 345.23,
+        //              Shipping: 820,
+        //               Other: 0
+        //             }
+        //         },
+        //         responseType: 'stream',
+        //     });
+        //     //const pdfContents = response.data;
+        //     // await writeFile('file.pdf',pdfContents);
 
-        }catch(err){console.log(err)}
+        // }catch(err){console.log(err)}
     }
 
   return (
