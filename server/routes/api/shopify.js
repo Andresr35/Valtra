@@ -191,7 +191,7 @@ router.put('/orderss', async (req, res) => {
 
 // GET ONE ORDER
 router.get('/orders/:id', (req, res) => {
-  client.get({ path: `/orders/${req.params.id}` })
+  client.client.get({ path: `/orders/${req.params.id}` })
     .then((result) => {
       res.json({
         status: "good job",
