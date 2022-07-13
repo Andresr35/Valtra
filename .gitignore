@@ -12,10 +12,7 @@
 /build  
 
 #backend 
-/server 
-
-#env 
-/server/.env
+server 
 
 # misc
 .DS_Store
