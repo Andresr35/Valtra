@@ -23,17 +23,21 @@ router.get("/",function(req,res){
 //GET ALL      just grabbing all data in table
 router.get('/products', function (req, res)  {
         db.query('SELECT * FROM products',(err, result) => {
-          if (err) {
-            return next(err)
-          }
+          if (err) { 
+            console.log(err); 
+            //return next(err)
+          } 
+          else {
           console.log("got data from db");
           res.status(200).json({
             status:"success",
             results: result.rows.length,
             data:{
               products: result.rows,
-            } 
-          })
+            }  
+          
+          }) 
+        }
         })   
 })
 
