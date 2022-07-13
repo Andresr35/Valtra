@@ -12,7 +12,8 @@
 /build  
 
 #backend 
-server 
+server  
+/server
 
 # misc
 .DS_Store
@@ -29,4 +30,6 @@ ui/node_modules
 server/node_modules
 server/dist
 private.key
-pdfservices-api-credentials.json
+pdfservices-api-credentials.json 
+
+
