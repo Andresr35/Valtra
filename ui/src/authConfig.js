@@ -1,14 +1,16 @@
-//change const var local to cahnge from localhost deployment and the azure site deployment
-let url = ""; 
-const local = false; 
+import {isLocal } from './components/Version'; 
+//change const var local to chage from localhost deployment and the azure site deployment
+let url = "";  
+//Web urls associated
 const webUrl = "https://valtra-automation.azurewebsites.net"; 
 const localUrl = "http://localhost:3005"; 
-
-if (local === false) { 
+//Algorithm that changes the urls 
+console.log(isLocal); 
+if (isLocal === false) { 
   url = webUrl; 
 } else { 
   url = localUrl;
-}
+} 
 export const msalConfig = {
   auth: {
     clientId: "b3efa5e9-61b3-43ea-84f7-dfc321dcae68", //b3efa5e9-61b3-43ea-84f7-dfc321dcae68, e012f4dd-5515-4772-a765-f6a382b2f97f

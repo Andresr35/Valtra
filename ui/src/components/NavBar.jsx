@@ -9,21 +9,25 @@ import { useIsAuthenticated } from "@azure/msal-react";
 //components
 import { SignInButton } from "../components/SignInButton";
 import { SignOutButton } from "../components/SignOutButton"; 
+import { Version } from "./Version"; 
 
 const NavBar = () => { 
     const isAuthenticated = useIsAuthenticated();
-  return ( 
-    <Navbar bg="dark" variant="dark">
-    <Container>
-        <Navbar.Brand href="/">ValtraAuto DEV</Navbar.Brand>
-            <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/orders">Orders</Nav.Link>
-            <Nav.Link href="/fulfill">Fulfill Orders</Nav.Link>
-        </Nav> 
-        {isAuthenticated ? <SignOutButton /> : <SignInButton />}
-    </Container>
-</Navbar>
+  return (  
+    <div>
+        <Navbar bg="dark" variant="dark">
+            <Container>
+                <Navbar.Brand href="/">ValtraAuto DEV</Navbar.Brand>
+                    <Nav className="me-auto">
+                    <Nav.Link href="/">Home</Nav.Link>
+                    <Nav.Link href="/orders">Orders</Nav.Link>
+                    <Nav.Link href="/fulfill">Fulfill Orders</Nav.Link>
+                </Nav> 
+                {isAuthenticated ? <SignOutButton /> : <SignInButton />} 
+            </Container> 
+        </Navbar> 
+        <p style={{marginLeft: '.7rem'}}><Version/></p> 
+    </div>
   )
 }
 /*
