@@ -28,7 +28,9 @@ const SignInPage = (props) => {
 
                 <div className='App'>
                     <header className="App-header">
-                        <img src={logo} className="App-logo" alt="logo" width={450} height={450} /> 
+                        <img src={logo} className="App-logo" alt="logo" width={450} height={450} />  
+                        <p>Please Sign in</p> 
+                        <p></p>
                         <Version/>
                     </header>
                 </div> 

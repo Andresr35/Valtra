@@ -13,7 +13,7 @@ if (isLocal === false) {
 } 
 export const msalConfig = {
   auth: {
-    clientId: "b3efa5e9-61b3-43ea-84f7-dfc321dcae68", //b3efa5e9-61b3-43ea-84f7-dfc321dcae68, e012f4dd-5515-4772-a765-f6a382b2f97f
+    clientId: "b3efa5e9-61b3-43ea-84f7-dfc321dcae68", 
     authority: "https://login.microsoftonline.com/stronghandtools.com/", // This is a URL (e.g. https://login.microsoftonline.com/{your tenant ID})
     redirectUri: url 
   },

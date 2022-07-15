@@ -12,8 +12,8 @@
 /build  
 
 #backend 
-server  
-/server
+#server  
+#/server
 
 # misc
 .DS_Store

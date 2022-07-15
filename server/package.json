@@ -1,0 +1,33 @@
+{
+  "name": "nodejsapp",
+  "version": "0.0.1",
+  "description": "testing a node.js app to show off capability to communicate with postgres and shopifyl",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "author": "Andres",
+  "license": "MIT",
+  "dependencies": {
+    "@adobe/pdfservices-node-sdk": "^2.2.2",
+    "@shopify/shopify-api": "^3.1.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "graphql": "^16.5.0",
+    "morgan": "^1.10.0",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "pg": "^8.7.3"
+  },
+  "keywords": []
+}
