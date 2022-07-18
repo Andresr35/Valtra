@@ -19,6 +19,8 @@ const NavBar = () => {
     let name = accounts[0] && accounts[0].name;  
     if (name === 'Andres Ruiz') { 
         name = 'Bozo'; 
+    } else if (name === 'Angel Arellano') { 
+        name = 'Please wait: Downloading Free Ram ...'
     }
   return (  
     <div>

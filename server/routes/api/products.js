@@ -84,7 +84,7 @@ router.post('/products', function (req, res)  {
 
 //PUT   
 router.put('/products/:id',function(req,res){
-  db.query('UPDATE products SET description = $2 WHERE id = $1 returning*' ,[req.params.id,req.body.description],(err,result) =>{
+  db.query(`UPDATE products SET id = $2, description = '${req.body.description}' WHERE id = $1 returning*` ,[req.params.id, req.body.ids,],(err,result) =>{
     if (err){
       console.log(err.stack);
     }else{
