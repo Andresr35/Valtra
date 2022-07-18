@@ -1,6 +1,7 @@
 import axios from "axios"; 
 
-import { isLocal } from "../components/Version"; 
+//import { isLocal } from "../components/Version"; 
+let isLocal = true;  
 let PDFurl = "";  
 //Web urls associated
 const webPDFUrl = "https://valtra-automation.azurewebsites.net/api/pdf"; 
