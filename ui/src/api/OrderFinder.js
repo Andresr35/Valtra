@@ -1,6 +1,7 @@
 import axios from "axios"; 
 
-import { isLocal } from "../components/Version"; 
+//import { isLocal } from "../components/Version"; 
+let isLocal = true;   
 let Burl = "";  
 //Web urls associated
 const webBUrl = "https://valtra-automation.azurewebsites.net/api/shopify"; 
