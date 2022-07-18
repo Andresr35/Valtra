@@ -5,7 +5,6 @@ let url = "";
 const webUrl = "https://valtra-automation.azurewebsites.net"; 
 const localUrl = "http://localhost:3005"; 
 //Algorithm that changes the urls 
-console.log(isLocal); 
 if (isLocal === false) { 
   url = webUrl; 
 } else { 

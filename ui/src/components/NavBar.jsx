@@ -10,9 +10,16 @@ import { useIsAuthenticated } from "@azure/msal-react";
 import { SignInButton } from "../components/SignInButton";
 import { SignOutButton } from "../components/SignOutButton"; 
 import { Version } from "./Version"; 
+import { useMsal } from "@azure/msal-react";  
+
 
 const NavBar = () => { 
-    const isAuthenticated = useIsAuthenticated();
+    const isAuthenticated = useIsAuthenticated(); 
+    const { accounts } = useMsal(); 
+    let name = accounts[0] && accounts[0].name;  
+    if (name === 'Andres Ruiz') { 
+        name = 'Bozo'; 
+    }
   return (  
     <div>
         <Navbar bg="dark" variant="dark">
@@ -25,7 +32,8 @@ const NavBar = () => {
                 </Nav> 
                 {isAuthenticated ? <SignOutButton /> : <SignInButton />} 
             </Container> 
-        </Navbar> 
+        </Navbar>  
+        <p className="card-title" style={{marginLeft: '.7rem'}}>Welcome {name}</p> 
         <p style={{marginLeft: '.7rem'}}><Version/></p> 
     </div>
   )
