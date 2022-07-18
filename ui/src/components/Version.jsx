@@ -15,7 +15,7 @@ export const Version = () => {
     );
 }  
 //true for local host testing and false for azure deploy 
-export const isLocal = true;
+export const isLocal = false;
 
 //changes automatically to port 
 const port = process.env.PORT || 3005; 
