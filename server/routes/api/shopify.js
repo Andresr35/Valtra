@@ -4,7 +4,6 @@ const morgan = require('morgan');
 const client = require('../../utils/shopify');
 router.use(express.json());
 
-
 // GET ALL ORDERS
 router.get('/orders', (req, res) => {
   console.log("got data from shopify");
