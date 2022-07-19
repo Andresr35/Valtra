@@ -7,15 +7,15 @@ Change certain settings on this page
 import React from 'react'
 export const Version = () => { 
     //change when version '=' to for change
-    const version = '1.0.7';
+    const version = '1.0.9';
     return ( 
-        <div> 
+        <> 
            version {version}
-        </div>
+        </>
     );
 }  
 //true for local host testing and false for azure deploy 
-export const isLocal = true;
+export const isLocal = false;
 
 //changes automatically to port 
 const port = process.env.PORT || 3005; 
