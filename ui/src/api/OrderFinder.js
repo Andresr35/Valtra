@@ -1,18 +1,17 @@
 import axios from "axios"; 
 
-//import { isLocal } from "../components/Version"; 
-let isLocal = true;   
-let Burl = "";  
+import { isLocal } from "../components/Version";    
+let Shopurl = "";  
 //Web urls associated
-const webBUrl = "https://valtra-automation.azurewebsites.net/api/shopify"; 
+const webBUrl = "https://backend-valtra-automation.azurewebsites.net/api/shopify"; 
 const localBUrl = "http://localhost:3006/api/shopify"; 
 //Algorithm that changes the urls 
 if (isLocal === false) { 
-  Burl = webBUrl; 
+  Shopurl = webBUrl; 
 } else { 
-  Burl = localBUrl;
+  Shopurl = localBUrl;
 }
 
 export default axios.create({
-    baseURL:Burl
+    baseURL:Shopurl
 });
