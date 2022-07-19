@@ -23,17 +23,21 @@ router.get("/",function(req,res){
 //GET ALL      just grabbing all data in table
 router.get('/products', function (req, res)  {
         db.query('SELECT * FROM products',(err, result) => {
-          if (err) {
-            return next(err)
-          }
+          if (err) { 
+            console.log(err); 
+            //return next(err)
+          } 
+          else {
           console.log("got data from db");
           res.status(200).json({
             status:"success",
             results: result.rows.length,
             data:{
               products: result.rows,
-            } 
-          })
+            }  
+          
+          }) 
+        }
         })   
 })
 
@@ -80,7 +84,7 @@ router.post('/products', function (req, res)  {
 
 //PUT   
 router.put('/products/:id',function(req,res){
-  db.query('UPDATE products SET description = $2 WHERE id = $1 returning*' ,[req.params.id,req.body.description],(err,result) =>{
+  db.query(`UPDATE products SET id = $2, description = '${req.body.description}' WHERE id = $1 returning*` ,[req.params.id, req.body.ids,],(err,result) =>{
     if (err){
       console.log(err.stack);
     }else{
