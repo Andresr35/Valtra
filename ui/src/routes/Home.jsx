@@ -5,8 +5,9 @@ import Header from '../components/Header'
 import NavBar from '../components/NavBar'
 import ProductList from '../components/ProductList'
 
-const Home = () => {
-  return (
+const Home = () => { 
+ console.log(process.env)
+  return ( 
     <div>
       <NavBar/> 
       <Container>
