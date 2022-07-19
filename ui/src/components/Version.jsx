@@ -7,7 +7,7 @@ Change certain settings on this page
 import React from 'react'
 export const Version = () => { 
     //change when version '=' to for change
-    const version = '1.0.6';
+    const version = '1.0.7';
     return ( 
         <div> 
            version {version}
