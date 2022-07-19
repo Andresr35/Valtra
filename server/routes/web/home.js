@@ -2,7 +2,7 @@ var express = require("express");
 var passport = require("passport");
 const db = require("../../db");
 
-var router = express.Router();
+var router = express.Router(); 
 
 router.get("/",function(req,res){
     console.log("hello I am on the start page ");

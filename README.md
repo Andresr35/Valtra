@@ -19,5 +19,8 @@ Front end for app
         can change database
     discovered deployeing manually from vs code is better than github(ignore aborts for now)  
 
-# 
+# 7/19/2022 
+    commit 1.0.10 
+    server is hooked up onto ui with sql database and api's 
+    
 

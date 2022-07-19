@@ -7,11 +7,11 @@ Change certain settings on this page
 import React from 'react'
 export const Version = () => { 
     //change when version '=' to for change
-    const version = '1.0.5';
+    const version = '1.0.11';
     return ( 
-        <div> 
+        <> 
            version {version}
-        </div>
+        </>
     );
 }  
 //true for local host testing and false for azure deploy 
