@@ -22,17 +22,17 @@ const NavBar = () => {
         name = 'Please wait: Downloading Free Ram ...'
     } 
     //Changes NAvBar brand to VatraAuto Dev or ValtraAuto
-    let Dev = ""; 
+    let DevTitle = ""; 
     if (isproduction === true) { 
-        Dev = ""; 
+        DevTitle = "Valtra-Automation"; 
     } else { 
-        Dev = " DEV"; 
+        DevTitle = "ValtraAuto DEV"; 
     }
   return (  
     <div>
         <Navbar bg="dark" variant="dark">
             <Container>
-                <Navbar.Brand href="/">ValtraAuto{DEV}</Navbar.Brand>
+                <Navbar.Brand href="/">{DevTitle}</Navbar.Brand>
                     <Nav className="me-auto">
                     <Nav.Link href="/">Home</Nav.Link>
                     <Nav.Link href="/orders">Orders</Nav.Link>
