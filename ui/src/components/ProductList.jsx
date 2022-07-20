@@ -37,7 +37,7 @@ const ProductList = (props) => {
 
 // Event handler for updating products on table
     const handleUpdate = (id) =>{
-        navigate(`/products/${id}/update`);
+        navigate(`/products/${id}/update`);  
     }
 
 
