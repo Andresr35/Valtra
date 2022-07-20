@@ -9,9 +9,8 @@ import { useIsAuthenticated } from "@azure/msal-react";
 //components
 import { SignInButton } from "../components/SignInButton";
 import { SignOutButton } from "../components/SignOutButton"; 
-import { Version } from "./Version"; 
+import { isproduction, Version } from "./Version"; 
 import { useMsal } from "@azure/msal-react";  
-
 
 const NavBar = () => { 
     const isAuthenticated = useIsAuthenticated(); 
@@ -21,12 +20,19 @@ const NavBar = () => {
         name = 'Bozo'; 
     } else if (name === 'Angel Arellano') { 
         name = 'Please wait: Downloading Free Ram ...'
+    } 
+    //Changes NAvBar brand to VatraAuto Dev or ValtraAuto
+    let Dev = ""; 
+    if (isproduction === true) { 
+        Dev = ""; 
+    } else { 
+        Dev = " DEV"; 
     }
   return (  
     <div>
         <Navbar bg="dark" variant="dark">
             <Container>
-                <Navbar.Brand href="/">ValtraAuto DEV</Navbar.Brand>
+                <Navbar.Brand href="/">ValtraAuto{DEV}</Navbar.Brand>
                     <Nav className="me-auto">
                     <Nav.Link href="/">Home</Nav.Link>
                     <Nav.Link href="/orders">Orders</Nav.Link>
