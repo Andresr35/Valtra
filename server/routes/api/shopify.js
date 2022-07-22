@@ -15,7 +15,7 @@ router.get('/orders', (req, res) => {
       })
     }).catch((error) => {
       res.json({
-        status: error.response,
+        status: error.stack, 
       })
     });
 });

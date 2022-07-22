@@ -7,7 +7,7 @@ Change certain settings on this page
 import React from 'react'
 export const Version = () => { 
     //change when version '=' to for change
-    const version = '1.0.12';
+    const version = '1.0.14';
     return ( 
         <> 
            version {version}
@@ -15,16 +15,8 @@ export const Version = () => {
     );
 }  
 //true for local host testing and false for azure deploy 
-export const isLocal = true;
+export const isLocal = false; 
 
-//changes automatically to port 
-const port = process.env.PORT || 3005; 
-let puerto = '';    
-if (isLocal === true) {  
-    puerto = 'http://localhost' + port; 
-} else { 
-    puerto = 'https://valtra-automation.azurewebsites.net'; 
-} 
+//turn true to signify operational and up to production 
 
-export const portFinder = puerto; 
-
+export const isproduction = true; 

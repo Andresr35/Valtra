@@ -110,18 +110,18 @@ const Fulfill = () => {
                 <div className="row">
                     <form>
                         <div className="col">
-                            <input type={"file"} className="form-control" id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
+                            <input style={{margin: '.7rem'}} type={"file"} className="form-control" id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
                         </div>
 
                     </form>
                     <div className="col">
-                        <button type='button' className='btn btn-outline-secondary' onClick={(e) => { handleOnSubmit(e) }}>Import CSV</button>
+                        <button style={{margin: '.7rem'}} type='button' className='btn btn-outline-secondary' onClick={(e) => { handleOnSubmit(e) }}>Import CSV</button>
                     </div>
 
                 </div>
                 <div className="row">
                     <div className="col">
-                        <CSVLink className='btn btn-primary' {...csvReport} >Export</CSVLink>
+                        <CSVLink style={{margin: '.7rem'}} className='btn btn-primary' {...csvReport} >Export</CSVLink>
                     </div>
                 </div>
 
