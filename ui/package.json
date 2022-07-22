@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@azure/msal-browser": "^2.27.0",
+    "@azure/msal-node": "^1.11.0",
+    "@azure/msal-react": "^1.4.3",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.0-beta1",
+    "file-system": "^2.2.2",
     "immer": "^9.0.6",
-    "nth-check": "^2.1.1",
     "react": "^18.1.0",
     "react-bootstrap": "^2.4.0",
     "react-csv": "^2.2.2",
@@ -19,7 +22,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3005 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

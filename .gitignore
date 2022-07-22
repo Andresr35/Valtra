@@ -6,10 +6,15 @@
 .pnp.js
 
 # testing
-/coverage
+/coverage 
+webconfig.txt
 
 # production
-/build
+/build  
+
+#backend 
+#server  
+#/server
 
 # misc
 .DS_Store
@@ -26,4 +31,6 @@ ui/node_modules
 server/node_modules
 server/dist
 private.key
-pdfservices-api-credentials.json
+pdfservices-api-credentials.json 
+
+

@@ -1,6 +1,19 @@
-import axios from "axios";
+import axios from "axios"; 
+import { isLocal } from "../components/Version";   
+let PDFurl = "";  
+//Web urls associated
+const webPDFUrl = "https://backend-valtra-automation.azurewebsites.net/api/pdf"; 
+const localPDFUrl = "http://localhost:3006/api/pdf"; 
+//Algorithm that changes the urls 
+if (isLocal === false) { 
+  PDFurl = webPDFUrl; 
+} else { 
+  PDFurl = localPDFUrl;
+}
 
 export default axios.create({
-    baseURL:"http://192.168.0.93:3001/api/pdf",
+
+    baseURL:PDFurl
+
 
 });

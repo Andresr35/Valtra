@@ -121,37 +121,32 @@ const Fulfill = () => {
                 accept={".csv"}
               />
             </div>
-          </form>
-          <div className="col">
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={(e) => {
-                handleOnSubmit(e);
-              }}
-            >
-              Import CSV
-            </button>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <CSVLink className="btn btn-primary" {...csvReport}>
-              Export
-            </CSVLink>
-          </div>
-        </div>
-      </div>
-      {/* This is where the alert is for whether a csv is done or not */}
+            <div className='container'>
+                <div className="row">
+                    <form>
+                        <div className="col">
+                            <input style={{margin: '.7rem'}} type={"file"} className="form-control" id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
+                        </div>
 
-      <Alert
-        show={running}
-        variant="success"
-        onClose={() => setRunning(false)}
-        dismissible
-      >
-        Fufilling Orders...
-        {/* <div className="d-flex justify-content-end">
+                    </form>
+                    <div className="col">
+                        <button style={{margin: '.7rem'}} type='button' className='btn btn-outline-secondary' onClick={(e) => { handleOnSubmit(e) }}>Import CSV</button>
+                    </div>
+
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <CSVLink style={{margin: '.7rem'}} className='btn btn-primary' {...csvReport} >Export</CSVLink>
+                    </div>
+                </div>
+
+            </div>
+            {/* This is where the alert is for whether a csv is done or not */}
+
+            <Alert show={running} variant="success" onClose={() => setRunning(false)} dismissible>
+                Fufilling Orders...
+                {/* <div className="d-flex justify-content-end">
+
           <Button onClick={() => setRunning(false)} variant="outline-success">
             Close me y'all!
           </Button>
