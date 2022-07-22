@@ -13,5 +13,7 @@ if (isLocal === false) {
 }
 
 export default axios.create({
+
     baseURL:Shopurl
+
 });

@@ -12,6 +12,7 @@ import { SignOutButton } from "../components/SignOutButton";
 import { isproduction, Version } from "./Version"; 
 import { useMsal } from "@azure/msal-react";  
 
+
 const NavBar = () => { 
     const isAuthenticated = useIsAuthenticated(); 
     const { accounts } = useMsal(); 
@@ -71,7 +72,4 @@ const NavBar = () => {
 </nav>
 </div>*/
 
-export default NavBar
-
-
-    
+export default NavBar;

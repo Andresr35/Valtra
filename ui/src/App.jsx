@@ -1,7 +1,7 @@
-import React from 'react'
-import Home from './routes/Home';
-import ProductDetails from './routes/ProductDetails';
-import UpdateProducts from './routes/UpdateProducts';
+import React from "react";
+import Home from "./routes/Home";
+import ProductDetails from "./routes/ProductDetails";
+import UpdateProducts from "./routes/UpdateProducts";
 
 import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
 import { ProductsContextProvider } from './context/ProductsContext';
@@ -52,3 +52,4 @@ const App = ()=> {
     
 }
 export default App  
+

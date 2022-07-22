@@ -1,11 +1,12 @@
+
 import React, {Fragment} from 'react'
 //import { useContext } from 'react';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom' 
 import Container from "react-bootstrap/Container"; 
 //import { ProductsContext } from '../context/ProductsContext';
-import { useEffect } from 'react';
-import ProductFinder from '../api/ProductFinder';
+import { useEffect } from "react";
+import ProductFinder from "../api/ProductFinder";
 
 const UpdateProduct = (props) => {
     let navigate = useNavigate();
@@ -22,16 +23,17 @@ const UpdateProduct = (props) => {
             setDescription(response.data.data.products.description); 
         }catch(err){}
     };
-    fetchData(); 
-    },[id]);
-    
-    const handleSubmit= async(e) =>{
-        e.preventDefault();
-        await ProductFinder.put(`/${id}`,{
-            ids,description
-        });
-        navigate("/");
-    }
+    fetchData();
+  }, [id]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await ProductFinder.put(`/${id}`, {
+      ids,
+      description,
+    });
+    navigate("/");
+  };
 
   return (
     <div>  
