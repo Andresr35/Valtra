@@ -25,8 +25,8 @@ app.set("views",path.join(__dirname,"views"));
 app.set("view engine", "ejs");
 
 app.use(cors({ 
-origin: ['https://valtra-automation.azurewebsites.net'], 
-methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+// origin: ['https://valtra-automation.azurewebsites.net'], 
+// methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
  }));    
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(cookieparser());

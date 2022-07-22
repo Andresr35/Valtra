@@ -10,6 +10,8 @@ if (isLocal === false) {
 } else { 
   url = localUrl;
 } 
+// TODO: make this a secret instead of an app enviroment type of thing... client id maybe
+
 export const msalConfig = {
   auth: {
     clientId: "b3efa5e9-61b3-43ea-84f7-dfc321dcae68", 

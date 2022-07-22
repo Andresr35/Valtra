@@ -37,7 +37,10 @@ const Fulfill = () => {
     sendData(array);
   };
 
-  //what happens when they press the button
+ /**
+  * function to do stuff when a csv gets imported...changes the text in the file input field
+  * @param {idk} e 
+  */
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     if (file) {
@@ -121,32 +124,37 @@ const Fulfill = () => {
                 accept={".csv"}
               />
             </div>
-            <div className='container'>
-                <div className="row">
-                    <form>
-                        <div className="col">
-                            <input style={{margin: '.7rem'}} type={"file"} className="form-control" id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
-                        </div>
+          </form>
+          <div className="col">
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={(e) => {
+                handleOnSubmit(e);
+              }}
+            >
+              Import CSV
+            </button>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <CSVLink className="btn btn-primary" {...csvReport}>
+              Export
+            </CSVLink>
+          </div>
+        </div>
+      </div>
+      {/* This is where the alert is for whether a csv is done or not */}
 
-                    </form>
-                    <div className="col">
-                        <button style={{margin: '.7rem'}} type='button' className='btn btn-outline-secondary' onClick={(e) => { handleOnSubmit(e) }}>Import CSV</button>
-                    </div>
-
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <CSVLink style={{margin: '.7rem'}} className='btn btn-primary' {...csvReport} >Export</CSVLink>
-                    </div>
-                </div>
-
-            </div>
-            {/* This is where the alert is for whether a csv is done or not */}
-
-            <Alert show={running} variant="success" onClose={() => setRunning(false)} dismissible>
-                Fufilling Orders...
-                {/* <div className="d-flex justify-content-end">
-
+      <Alert
+        show={running}
+        variant="success"
+        onClose={() => setRunning(false)}
+        dismissible
+      >
+        Fufilling Orders...
+        {/* <div className="d-flex justify-content-end">
           <Button onClick={() => setRunning(false)} variant="outline-success">
             Close me y'all!
           </Button>

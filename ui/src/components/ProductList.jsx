@@ -21,17 +21,6 @@ const ProductList = (props) => {
   }, [setProducts]);
 
 
-// GETs the data from backend and puts them in the products context
-    useEffect( () => {
-        const fetchData = async() => {
-            try{
-                const response = await ProductFinder.get("/");
-                setProducts(response.data.data.products);
-                console.log(response)
-             }catch(err){}
-        };
-        fetchData(); 
-    },[setProducts]);
 
 
 // Event handler for delete products on tablee
@@ -47,11 +36,6 @@ const ProductList = (props) => {
 
 
 // Event handler for updating products on table
-    const handleUpdate = (id) =>{
-        navigate(`/products/${id}/update`);  
-
-    }
-  };
 
   // Event handler for updating products on table
   const handleUpdate = (id) => {

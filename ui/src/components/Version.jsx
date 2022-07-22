@@ -4,19 +4,15 @@ Change certain settings on this page
 *set isLocal to true when testing on localhost, false when deploying on azure 
 *
 */
-import React from 'react'
-export const Version = () => { 
-    //change when version '=' to for change
-    const version = '1.0.14';
-    return ( 
-        <> 
-           version {version}
-        </>
-    );
-}  
-//true for local host testing and false for azure deploy 
-export const isLocal = false; 
+import React from "react";
+export const Version = () => {
+  //change when version '=' to for change
+  const version = "1.0.14";
+  return <>version {version}</>;
+};
+//true for local host testing and false for azure deploy
+export const isLocal = true;
 
-//turn true to signify operational and up to production 
+//turn true to signify operational and up to production
 
-export const isproduction = true; 
+export const isproduction = false;
