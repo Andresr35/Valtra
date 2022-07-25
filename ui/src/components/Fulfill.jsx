@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import OrderFinder from "../api/OrderFinder";
+import ShopifyRequest from "../api/ShopifyRequest";
 import { CSVLink } from "react-csv";
 import Alert from "react-bootstrap/Alert";
 
@@ -37,10 +37,10 @@ const Fulfill = () => {
     sendData(array);
   };
 
- /**
-  * function to do stuff when a csv gets imported...changes the text in the file input field
-  * @param {idk} e 
-  */
+  /**
+   * function to do stuff when a csv gets imported...changes the text in the file input field
+   * @param {String} e
+   */
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     if (file) {
@@ -65,7 +65,7 @@ const Fulfill = () => {
         array[obj]["Tracking"] = value;
       }
       setRunning(true);
-      OrderFinder.put("/orderss", {
+      ShopifyRequest.put("/fulfill", {
         sent: "success",
         data: array,
       })

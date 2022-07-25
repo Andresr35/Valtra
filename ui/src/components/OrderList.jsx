@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import OrderFinder from "../api/OrderFinder";
+import ShopifyRequest from "../api/ShopifyRequest";
 //import PDFFinder from '../api/PDFFinder';
 import { OrdersContext } from "../context/OrdersContext";
 //import { writeFile } from 'fs';
@@ -11,7 +11,7 @@ const OrderList = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await OrderFinder.get("/orders");
+        const response = await ShopifyRequest.get("/orders");
         setOrders(response.data.result);
       } catch (err) {
         console.log("didnt work");
