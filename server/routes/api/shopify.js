@@ -29,8 +29,13 @@ router.get('/checkout/:token', async (req, res, next) => {
   }
 });
 
-//SAME THING AS LAST BUT WITH GRAPHQL
-router.put('/orderss', async (req, res) => {
+/**
+ * gets the fulfillments from orders and fufills tehm
+ *
+ * @param   {route}  /fulfill  /api/shopify/fulfill
+ *
+ */
+router.put('/fulfill', async (req, res) => {
   // console.log(req.body.data[0].Name);
   // console.log(req.body.data[0].Tracking);
   //start getting data and fulfilment numbers
