@@ -278,6 +278,29 @@ router.get("/products", async (req, res) => {
   } catch (error) {
     res.json(error.stack);
   }
+}); 
+
+router.get('/products/:id', async(req, res) => { 
+  try {
+    const results = await client.client2.query({ 
+    	data: `{
+        product(id: "gid://shopify/Product/${req.params.id}") {
+          title
+          description
+          onlineStoreUrl 
+          featuredImage 
+          variants(first: 10){
+            id 
+            image 
+            
+          }
+      }
+    }`, 
+  }); 
+  res.json(results); 
+  } catch (error) {
+    res.json(error.stack);
+  } 
 });
 
 module.exports = router;
