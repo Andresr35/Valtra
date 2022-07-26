@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ShopifyRequest from "../api/ShopifyRequest";
 import { CSVLink } from "react-csv";
 import Alert from "react-bootstrap/Alert";
+import Container from "react-bootstrap/esm/Container";
 
 const Fulfill = () => {
   const [running, setRunning] = useState(false);
@@ -123,8 +124,9 @@ const Fulfill = () => {
                 onChange={handleOnChange}
                 accept={".csv"}
               />
-            </div>
-          </form>
+            </div> 
+          </form> 
+          <Container>
           <div className="col">
             <button
               type="button"
@@ -135,15 +137,18 @@ const Fulfill = () => {
             >
               Import CSV
             </button>
-          </div>
+          </div> 
+          </Container>
         </div>
-        <div className="row">
+        <div className="row"> 
+        <Container>
           <div className="col">
             <CSVLink className="btn btn-primary" {...csvReport}>
               Export
-            </CSVLink>
-          </div>
-        </div>
+            </CSVLink> 
+          </div> 
+          </Container>
+        </div> 
       </div>
       {/* This is where the alert is for whether a csv is done or not */}
 
