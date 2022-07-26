@@ -1,9 +1,9 @@
 import React from 'react'
 import Container from 'react-bootstrap/esm/Container'
-import AddProduct from '../components/AddProduct'
+import AddProduct from '../components/DBAddProduct'
 import Header from '../components/Header'
 import NavBar from '../components/NavBar'
-import ProductList from '../components/ProductList'
+import ProductList from '../components/DBProducts'
 
 const Home = () => { 
   return ( 

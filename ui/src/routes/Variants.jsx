@@ -1,13 +1,12 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import ShopifyVariants from '../components/ShopifyVariants'
 import NavBar from '../components/NavBar'
 
 const Variants = () => {
-    const{id} =useParams();
-
   return (
     <div>
       <NavBar/>
+      <ShopifyVariants/>
     </div>
   )
 }

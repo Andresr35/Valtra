@@ -8,6 +8,7 @@ import { ProductsContextProvider } from "./context/ProductsContext";
 import OrderPage from "./routes/OrderPage";
 import { OrdersContextProvider } from "./context/OrdersContext";
 import FulfillingOrders from "./routes/FulfillingOrders";
+import { VariantsContextProvider } from "./context/VariantsContext";
 
 //authentication
 import {
@@ -20,36 +21,42 @@ import SignInPage from "./routes/SignInPage";
 import ShopifyProducts from "./routes/ShopifyProducts";
 import Variants from "./routes/Variants";
 
+
 //version num
 const App = () => {
   return (
     <React.StrictMode>
       <AuthenticatedTemplate>
+      <VariantsContextProvider>
         <ProductsContextProvider>
           <OrdersContextProvider>
-            <Router>
-              <Routes>
-                <Route exact path="/" element={<Home />} />
-                <Route
-                  exact
-                  path="/products/:id/update"
-                  element={<UpdateProducts />}
-                />
-                <Route
-                  exact
-                  path="/products/:id"
-                  element={<ProductDetails />}
-                />
-                <Route path="/orders" element={<OrderPage />} />
-                <Route path="/fulfill" element={<FulfillingOrders />} />
-                <Route path='/products' element={<ShopifyProducts/>}/>
-                <Route path="/product/gid://shopify/Product/:id" element={<Variants/>}/>
-              </Routes>
-            </Router>
+              <Router>
+                <Routes>
+                  <Route exact path="/" element={<Home />} />
+                  <Route
+                    exact
+                    path="/products/:id/update"
+                    element={<UpdateProducts />}
+                  />
+                  <Route
+                    exact
+                    path="/products/:id"
+                    element={<ProductDetails />}
+                  />
+                  <Route path="/orders" element={<OrderPage />} />
+                  <Route path="/fulfill" element={<FulfillingOrders />} />
+
+                  <Route path="/products" element={<ShopifyProducts />} />
+                  <Route
+                    path="/product/gid://shopify/Product/:id"
+                    element={<Variants />}
+                  />
+                </Routes>
+              </Router>
           </OrdersContextProvider>
         </ProductsContextProvider>
+        </VariantsContextProvider>
       </AuthenticatedTemplate>
-
       <UnauthenticatedTemplate>
         <Router>
           <Routes>
