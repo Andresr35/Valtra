@@ -1,6 +1,5 @@
 import React from "react";
 import { useEffect } from "react";
-import { useState } from "react";
 import ShopifyRequest from "../api/ShopifyRequest";
 import Container from "react-bootstrap/esm/Container";
 import Table from "react-bootstrap/Table";

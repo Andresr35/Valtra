@@ -4,6 +4,11 @@ import ProductFinder from "../api/ProductFinder";
 import { ProductsContext } from "../context/ProductsContext";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Lists all the products from the localhost database... this is a test 
+ * for the later actual products on the database. This will get replaced by the 
+ * shopify products page right now
+ */
 const ProductList = (props) => {
   const { products, setProducts } = useContext(ProductsContext);
   let navigate = useNavigate();
