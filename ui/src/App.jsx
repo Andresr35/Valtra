@@ -8,6 +8,7 @@ import { ProductsContextProvider } from "./context/ProductsContext";
 import OrderPage from "./routes/OrderPage";
 import { OrdersContextProvider } from "./context/OrdersContext";
 import FulfillingOrders from "./routes/FulfillingOrders";
+import { VariantsContextProvider } from "./context/VariantsContext";
 
 //authentication
 import {
@@ -24,11 +25,13 @@ import Downloads from "./routes/Downloads";
 import Documentation from "./routes/Documentation";
 import DocumentationRestricted from "./routes/DocumentationRestricted";
 
+
 //version num
 const App = () => {
   return (
     <React.StrictMode>
       <AuthenticatedTemplate>
+      <VariantsContextProvider>
         <ProductsContextProvider>
           <OrdersContextProvider>
             <Router>
@@ -50,12 +53,13 @@ const App = () => {
                 <Route path="/downloads" element={<Downloads/>} />
                 <Route path="/documentation" element={<Documentation/>} />
                 <Route path="/product/gid://shopify/Product/:id" element={<Variants/>}/>
-              </Routes>
-            </Router>
+                </Routes>
+              </Router>
+
           </OrdersContextProvider>
         </ProductsContextProvider>
+        </VariantsContextProvider>
       </AuthenticatedTemplate>
-
       <UnauthenticatedTemplate>
         <Router>
           <Routes>
