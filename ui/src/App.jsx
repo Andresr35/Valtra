@@ -22,7 +22,8 @@ import Variants from "./routes/Variants";
 import SignOutPage from "./routes/SignOut"; 
 import Downloads from "./routes/Downloads";
 import Documentation from "./routes/Documentation";
-import DocumentationRestricted from "./routes/DocumentationRestricted";
+import DocumentationRestricted from "./routes/DocumentationRestricted"; 
+import Updates from "./routes/Updates" 
 
 //version num
 const App = () => {
@@ -49,7 +50,8 @@ const App = () => {
                 <Route path='/products' element={<ShopifyProducts/>}/> 
                 <Route path="/downloads" element={<Downloads/>} />
                 <Route path="/documentation" element={<Documentation/>} />
-                <Route path="/product/gid://shopify/Product/:id" element={<Variants/>}/>
+                <Route path="/product/gid://shopify/Product/:id" element={<Variants/>}/> 
+                <Route path="/updates" element={<Updates/>}/>
               </Routes>
             </Router>
           </OrdersContextProvider>
@@ -67,7 +69,8 @@ const App = () => {
             <Route path="/fulfill" element={<SignOutPage />} />  
             <Route path = "/SignedOut" element = {<SignOutPage/>}/> 
             <Route path="/downloads" element={<SignOutPage/>} />
-            <Route path="/documentation" element={<DocumentationRestricted/>} />
+            <Route path="/documentation" element={<DocumentationRestricted/>} /> 
+            <Route path="/updates" element={<SignOutPage/>}/>
           </Routes>
         </Router>
       </UnauthenticatedTemplate>

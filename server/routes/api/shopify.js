@@ -292,7 +292,7 @@ router.get('/products/:id', async(req, res) => {
           variants(first: 10){
             id 
             image 
-            
+
           }
       }
     }`, 
@@ -301,6 +301,74 @@ router.get('/products/:id', async(req, res) => {
   } catch (error) {
     res.json(error.stack);
   } 
-});
+}); 
+//TODO create image updater using shofify api 
+router.post('/products/:id', async(req, res)=>{ 
+  try {
+    const result = await client.client2.query({ 
+      data: {
+        query: `mutation productImageUpdate($image: ImageInput!, $productId: ID!) {
+          productImageUpdate(image: $image, productId: $productId) {
+            image { 
+              id 
+              url
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }`, 
+        variables: {
+          image: {
+            altText: 'image',
+            id: 'gid://shopify/ProductImage/6901870067849',
+            src: `${req.body.url}`
+          },
+          productId: `gid://shopify/Product/${req.params.id}`
+        }
+      } 
+    });
+    res.json(result);
+  } catch (error) { 
+    console.log(req)
+    res.json(error.stack)  
+  } 
+}); 
+
+// // const mutResult = await client.client2.query({
+//   data: {
+//     query: `mutation fulfillmentCreateV2($fulfillment: FulfillmentV2Input!) {
+//           fulfillmentCreateV2(fulfillment: $fulfillment) {
+//             fulfillment {
+//               status
+//               displayStatus
+//               name
+//               order {
+//                 name
+//               }
+//             }
+//             userErrors {
+//               field
+//               message
+//             }
+//           }
+//         }`,
+// //     variables: {
+// //       fulfillment: {
+// //         lineItemsByFulfillmentOrder: [
+// //           {
+// //             fulfillmentOrderId: `${fulfillmentOrderId}`,
+// //           },
+// //         ],
+// //         notifyCustomer: true,
+// //         trackingInfo: {
+// //           company: `${shippingCompany}`,
+// //           number: `${trackingNumber}`,
+// //         },
+// //       },
+// //     },
+// //   },
+// // });
 
 module.exports = router;
