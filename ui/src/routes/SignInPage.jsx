@@ -10,7 +10,8 @@ import Navbar from "react-bootstrap/Navbar";
 //components
 import { SignInButton } from '../components/SignInButton';
 import { SignOutButton } from '../components/SignOutButton'; 
-import { Version } from '../components/Version'; 
+import { Version } from "../components/structure/Version";
+
 //Azure auth
 import { useIsAuthenticated } from "@azure/msal-react";
 

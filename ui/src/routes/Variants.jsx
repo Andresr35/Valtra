@@ -1,6 +1,6 @@
 import React from 'react'
 import ShopifyVariants from '../components/ShopifyVariants'
-import NavBar from '../components/NavBar'
+import NavBar from '../components/structure/NavBar'
 
 /**
  * Edit products 

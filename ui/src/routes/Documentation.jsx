@@ -1,13 +1,13 @@
 import React from 'react'
 import Container from 'react-bootstrap/esm/Container'
-import NavBar from '../components/NavBar'
+import NavBar from '../components/structure/NavBar'
 
 const Documentation = () => { 
   return ( 
     <div>
       <NavBar/> 
       <Container>
-        <a> Welcome to Documentation</a> 
+        <p> Welcome to Documentation</p> 
       </Container>
     </div>
   )

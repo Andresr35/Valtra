@@ -1,6 +1,6 @@
 import React from 'react'
 import Fulfill from '../components/Fulfill'
-import NavBar from '../components/NavBar' 
+import NavBar from '../components/structure/NavBar'
 import Container from 'react-bootstrap/esm/Container'
 
 const FulfillingOrders = () => {

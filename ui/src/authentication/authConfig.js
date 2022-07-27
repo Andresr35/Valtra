@@ -1,4 +1,4 @@
-import {isLocal } from '../components/Version'; 
+import {isLocal } from '../components/structure/Version'; 
 //change const var local to chage from localhost deployment and the azure site deployment
 let url = "";  
 //Web urls associated

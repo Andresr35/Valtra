@@ -1,5 +1,5 @@
 import React from 'react'
-import NavBar from '../components/NavBar'
+import NavBar from '../components/structure/NavBar'
 import OrderList from '../components/ShopifyOrders' 
 import Container from 'react-bootstrap/esm/Container'
 

@@ -1,6 +1,6 @@
 import axios from "axios"; 
 
-import { isLocal } from "../components/Version";   
+import { isLocal } from "../components/structure/Version";   
 let Purl = "";  
 //Web urls associated
 const webPUrl = "https://backend-valtra-automation.azurewebsites.net/api/products"; 

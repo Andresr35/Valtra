@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { isLocal } from "../components/Version";
+import { isLocal } from "../components/structure/Version";
 let Shopurl = "";
 //Web urls associated
 const webBUrl =

@@ -7,8 +7,8 @@ import Nav from "react-bootstrap/Nav";
 //Azure Auth 
 import { useIsAuthenticated } from "@azure/msal-react";
 //components
-import { SignInButton } from "../components/SignInButton";
-import { SignOutButton } from "../components/SignOutButton"; 
+import { SignInButton } from "../SignInButton";
+import { SignOutButton } from "../SignOutButton"; 
 import { isproduction, Version } from "./Version"; 
 import { useMsal } from "@azure/msal-react";  
 
