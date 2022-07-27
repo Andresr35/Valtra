@@ -1,8 +1,8 @@
 //React
 import React from 'react';  
 //Other Files
-import '../App.css';   
-import logo from '../logo.svg' 
+import '../assets/css/App.css';   
+import logo from '../assets/images/logo.svg' 
 import '../App.jsx';  
 //Bootstrap   
 import Navbar from "react-bootstrap/Navbar";  

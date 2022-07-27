@@ -3,11 +3,11 @@ import React from 'react';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
  
-import './index.css';
-import reportWebVitals from './reportWebVitals'; 
+import './assets/css/index.css';
+import reportWebVitals from './authentication/reportWebVitals'; 
 import { PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
-import { msalConfig } from "./authConfig";  
+import { msalConfig } from "./authentication/authConfig";  
 import { createRoot } from 'react-dom/client';
 
 const msalInstance = new PublicClientApplication(msalConfig); 

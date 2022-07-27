@@ -1,6 +1,5 @@
 import React from "react";
 import Home from "./routes/Home";
-import ProductDetails from "./routes/ProductDetails";
 import UpdateProducts from "./routes/UpdateProducts";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -42,11 +41,6 @@ const App = () => {
                   path="/products/:id/update"
                   element={<UpdateProducts />}
                 />
-                <Route
-                  exact
-                  path="/products/:id"
-                  element={<ProductDetails />}
-                />
                 <Route path="/orders" element={<OrderPage />} />
                 <Route path="/fulfill" element={<FulfillingOrders />} />
                 <Route path='/products' element={<ShopifyProducts/>}/> 
@@ -65,7 +59,7 @@ const App = () => {
           <Routes>
             <Route exact path="/" element={<SignInPage />} />
             <Route exact path="/products/:id/update" element={<SignOutPage/>} />
-            <Route exact path="//products/:id" element={<SignOutPage/>} />
+            <Route exact path="/products/:id" element={<SignOutPage/>} />
             <Route path="/orders" element={<SignOutPage />} /> 
             <Route path="/products" element={<SignOutPage />} />
             <Route path="/fulfill" element={<SignOutPage />} />  

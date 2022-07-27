@@ -8,7 +8,7 @@ import NavBar from '../components/NavBar'
  */
 const Variants = () => {
   return (
-    <div>
+    <div className="main">
       <NavBar/>
       <ShopifyVariants/>
     </div>

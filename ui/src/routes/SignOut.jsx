@@ -2,9 +2,9 @@
 import React from 'react';   
 import { useNavigate } from "react-router-dom"  
 //Other Files
-import '../App.css';   
-import logo from '../logo.svg'  
-import valtra_logo from '../valtra_logo.svg'
+import '../assets/css/App.css';   
+// import logo from '../assets/images/logo.svg'  
+import valtra_logo from '../assets/images/valtra_logo.svg'
 import '../App.jsx';  
 //Bootstrap   
 import Navbar from "react-bootstrap/Navbar";  
@@ -12,7 +12,7 @@ import Navbar from "react-bootstrap/Navbar";
 //components; 
 import { Version } from '../components/Version'; 
 //Azure auth
-import { useIsAuthenticated } from "@azure/msal-react"; 
+// import { useIsAuthenticated } from "@azure/msal-react"; 
 
 const SignOutPage = (props) => {   
     let navigate = useNavigate();  
@@ -35,7 +35,7 @@ const SignOutPage = (props) => {
                         <p>You are signed Out</p> 
                         <p>Please go back to Sign in page to gain access</p> 
                         <p></p>  
-                        <a><button style={{background:'#0693E3'}} className = 'px-4' onClick={() => redirect()}>Go to Login page</button> 
+                        <a href='/#'><button style={{background:'#0693E3'}} className = 'px-4' onClick={() => redirect()}>Go to Login page</button> 
                         <button className = 'px-4' onClick={() => redirectUn()}>Proceed to Unresticted pages</button></a>
                         <Version/>
                     </header>

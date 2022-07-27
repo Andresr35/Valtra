@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+.main{
+  background-color: rgb(240, 240, 240);
+}
+.box{
+  background-color: white;
+}

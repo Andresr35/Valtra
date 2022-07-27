@@ -2,6 +2,8 @@ var express = require("express");
 var router = express.Router();
 const morgan = require("morgan");
 const client = require("../../utils/shopify");
+const {parse, stringify, toJSON, fromJSON} = require('flatted');
+
 router.use(express.json());
 
 /**
@@ -288,15 +290,25 @@ router.get('/products/:id', async(req, res) => {
           title
           description
           onlineStoreUrl 
-          featuredImage 
-          variants(first: 10){
+          featuredImage{
             id 
-            image 
+            url
+          }
+          variants(first: 10){
+            nodes{
+              id
+              image {
+                id
+                url
+              }
+            }
+
             
           }
       }
     }`, 
   }); 
+
   res.json(results); 
   } catch (error) {
     res.json(error.stack);
