@@ -8,6 +8,7 @@ import { ProductsContextProvider } from "./context/ProductsContext";
 import OrderPage from "./routes/OrderPage";
 import { OrdersContextProvider } from "./context/OrdersContext";
 import FulfillingOrders from "./routes/FulfillingOrders";
+import { VariantsContextProvider } from "./context/VariantsContext";
 
 //authentication
 import {
@@ -22,14 +23,15 @@ import Variants from "./routes/Variants";
 import SignOutPage from "./routes/SignOut"; 
 import Downloads from "./routes/Downloads";
 import Documentation from "./routes/Documentation";
-import DocumentationRestricted from "./routes/DocumentationRestricted"; 
-import Updates from "./routes/Updates" 
+import DocumentationRestricted from "./routes/DocumentationRestricted";
+
 
 //version num
 const App = () => {
   return (
     <React.StrictMode>
       <AuthenticatedTemplate>
+      <VariantsContextProvider>
         <ProductsContextProvider>
           <OrdersContextProvider>
             <Router>
@@ -50,14 +52,14 @@ const App = () => {
                 <Route path='/products' element={<ShopifyProducts/>}/> 
                 <Route path="/downloads" element={<Downloads/>} />
                 <Route path="/documentation" element={<Documentation/>} />
-                <Route path="/product/gid://shopify/Product/:id" element={<Variants/>}/> 
-                <Route path="/updates" element={<Updates/>}/>
-              </Routes>
-            </Router>
+                <Route path="/product/gid://shopify/Product/:id" element={<Variants/>}/>
+                </Routes>
+              </Router>
+
           </OrdersContextProvider>
         </ProductsContextProvider>
+        </VariantsContextProvider>
       </AuthenticatedTemplate>
-
       <UnauthenticatedTemplate>
         <Router>
           <Routes>
@@ -69,8 +71,7 @@ const App = () => {
             <Route path="/fulfill" element={<SignOutPage />} />  
             <Route path = "/SignedOut" element = {<SignOutPage/>}/> 
             <Route path="/downloads" element={<SignOutPage/>} />
-            <Route path="/documentation" element={<DocumentationRestricted/>} /> 
-            <Route path="/updates" element={<SignOutPage/>}/>
+            <Route path="/documentation" element={<DocumentationRestricted/>} />
           </Routes>
         </Router>
       </UnauthenticatedTemplate>

@@ -1,27 +1,31 @@
 import React from "react";
 import { useEffect } from "react";
-import { useState } from "react";
 import ShopifyRequest from "../api/ShopifyRequest";
 import Container from "react-bootstrap/esm/Container";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { VariantsContext } from "../context/VariantsContext";
+
 const Products = (props) => {
+
   let navigate = useNavigate();
-  const [products, setProduct] = useState([]);
+  const {variants, setVariants} = useContext(VariantsContext);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await ShopifyRequest.get("/products");
         console.log({ first: response.data.body });
         console.log({ products: response.data.body.data.products.nodes });
-        setProduct(response.data.body.data.products.nodes);
+        setVariants(response.data.body.data.products.nodes);
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
-  }, [setProduct]);
+  }, [setVariants]);
   const handleVariants = (id) => {
     navigate(`/product/${id}`);
   };
@@ -38,7 +42,7 @@ const Products = (props) => {
             </tr>
           </thead>
           <tbody>
-            {products.map((product, index) => (
+            {variants.map((product, index) => (
               <tr key={index}>
                 <td>
                   <img
@@ -51,7 +55,7 @@ const Products = (props) => {
                 <td>
                   <Button
                     variant="outline-secondary"
-                    onClick={() =>handleVariants(product.id)}
+                    onClick={() => handleVariants(product.id)}
                   >
                     More info
                   </Button>
