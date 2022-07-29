@@ -8,7 +8,7 @@ import React from "react";
 export const Version = () => {
   //change when version '=' to for change
   const version = "1.0.14";
-  return <>version {version}</>;
+  return <>Version {version}</>;
 };
 //true for local host testing and false for azure deploy
 export const isLocal = true;

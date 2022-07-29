@@ -5,6 +5,9 @@ import { useParams } from "react-router-dom";
 import ShopifyRequest from "../api/ShopifyRequest";
 import Container from "react-bootstrap/esm/Container";
 import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
 
 /**
  * This page shows one product from shopify and should be able to edit at least the featured
@@ -13,8 +16,14 @@ import Table from "react-bootstrap/Table";
  */
 const ShopifyVariants = () => {
   // const{variants,setVariants} = useContext(VariantsContext);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [imageHover, setImageHover] = useState(false);
+  const [url, setUrl] = useState("");
   const [product, setProduct] = useState({});
   const { id } = useParams();
+
   useEffect(() => {
     try {
       const fetchData = async (id) => {
@@ -26,8 +35,23 @@ const ShopifyVariants = () => {
       console.log(err);
     }
   }, [setProduct, id]);
-  console.log(product);
+  // console.log(product);
 
+  /**
+   *
+   * @param {dict} e this is an event handler for finding the url the user puts for a new image
+   */
+  const handleOnChange = (e) => setUrl(e.target.value);
+
+  //TODO: change this router
+
+  /**
+   * this adds an image to a product. This uses the modal code found below.
+   */
+  const addImage = async () => {
+    const response = await ShopifyRequest.put(`/image/put`, { url });
+    console.log(response);
+  };
   //TODO:  Get a page up for the featured image and the variants image....
   // how should the fornt end look like??? Try to copy as much from shopify's setup
   return (
@@ -41,15 +65,16 @@ const ShopifyVariants = () => {
             </p>
           </div>
         </div>
-        <div className="box">
+        <div className="box" id="featured">
           <h3 style={{ textAlign: "center" }}>Featured Image</h3>
           <img
             className="image"
+            style={{ width: "initial", height: "initial" }}
             src={product.featuredImage ? product.featuredImage.url : ""}
             alt="no work"
           />
         </div>
-        <div className="box">
+        <div className="box" id="media">
           <div>
             <h3 style={{ textAlign: "center" }}>Media</h3>
           </div>
@@ -64,6 +89,47 @@ const ShopifyVariants = () => {
                   />
                 </span>
               ))}
+            <span>
+              <button
+                className="image"
+                onClick={() => {
+                  handleShow();
+                }}
+              >
+                Add Image
+              </button>
+              <div>
+                <Modal show={show} onHide={() => handleClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Add Image</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Form>
+                      <Form.Group
+                        className="mb-3"
+                        controlId="exampleForm.ControlTextarea1"
+                      >
+                        <Form.Label>Enter Image URL</Form.Label>
+                        <Form.Control
+                          type="text"
+                          onChange={() => handleOnChange}
+                          as="textarea"
+                          rows={1}
+                        />
+                      </Form.Group>
+                    </Form>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={() => handleClose}>
+                      Close
+                    </Button>
+                    <Button variant="primary" onClick={() => addImage}>
+                      Add
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </div>
+            </span>
           </div>
         </div>
         <div className="box" id="options">
@@ -91,6 +157,7 @@ const ShopifyVariants = () => {
                 <th scope="col">Variant</th>
                 <th scope="col">Price</th>
                 <th scope="col">SKU</th>
+                <th scope="col">Save Edits</th>
               </tr>
             </thead>
             <tbody>
@@ -99,15 +166,29 @@ const ShopifyVariants = () => {
                   // TODO: make this look nicer
                   <tr key={index}>
                     <td>
-                      <img
-                        className="thumbnail image"
-                        src={variant.image && variant.image.url}
-                        alt="Add one?"
-                      />
+                      <div className="container">
+                        <button
+                          style={{ all: "unset", cursor: "pointer" }}
+                          onMouseEnter={() => setImageHover(true)}
+                          onMouseLeave={() => setImageHover(false)}
+                        >
+                          <img
+                            className="thumbnail image"
+                            src={variant.image && variant.image.url}
+                            alt="Add one?"
+                          />
+                          <div className="overlay">
+                          {imageHover && <p className="text">Change Image</p>}
+                          </div>
+                        </button>
+                      </div>
                     </td>
                     <td>{variant.title}</td>
                     <td>${variant.price}</td>
                     <td>{variant.sku}</td>
+                    <td>
+                      <Button>Save</Button>
+                    </td>
                   </tr>
                 ))}
             </tbody>
