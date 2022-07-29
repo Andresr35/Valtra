@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { VariantsContext } from "../context/VariantsContext";
 
-const Products = (props) => {
+const ShopProducts = (props) => {
 
   let navigate = useNavigate();
   const {variants, setVariants} = useContext(VariantsContext);
@@ -69,4 +69,4 @@ const Products = (props) => {
   );
 };
 
-export default Products;
+export default ShopProducts;

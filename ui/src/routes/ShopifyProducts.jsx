@@ -1,6 +1,6 @@
 import React from 'react'
-import NavBar from '../components/structure/NavBar'
-import Products from "../components/Products"
+import NavBar from '../components/structure/NavBar';
+import ShopProducts  from "../components/ShopProducts"
 // import { VariantsContextProvider } from '../context/VariantsContext'
 
 const ShopifyProducts = () => {
@@ -8,7 +8,7 @@ const ShopifyProducts = () => {
     <div>
 
       <NavBar/>
-      <Products/>
+      <ShopProducts/>
 
     </div>
   )

@@ -38,8 +38,44 @@
 }
 
 .main{
-  background-color: rgb(240, 240, 240);
+  background-color:#f6f6f7;
 }
 .box{
-  background-color: white;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  margin: 20px;
+  border: 1px solid rgb(185, 185, 185) ;
+  border-radius: 7px;
+  padding: 15px;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.box#options{
+  padding: 0px;
+}
+.image{
+  border: 1px solid rgb(185, 185, 185);
+  padding-top: 15px;
+  padding-bottom: 15px;
+  
+  border-radius: 10px;
+  margin: 6px;
+}
+.option{
+  /* box-sizing: border-box; */
+  margin: 5px;
+  background-color: rgb(216, 216, 216);
+  border-radius: 10px;
+  padding: 5px;
+  width: 70%;
+}
+.options{
+  border-top:1px solid grey;
+  /* border-bottom:1px solid grey; */
+  padding: 10px;
+}
+.thumbnail{
+  width: 80px;
+  height:80px;
 }

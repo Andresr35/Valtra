@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const morgan = require("morgan");
 const client = require("../../utils/shopify");
-const {parse, stringify, toJSON, fromJSON} = require('flatted');
+const { parse, stringify, toJSON, fromJSON } = require("flatted");
 
 router.use(express.json());
 
@@ -280,39 +280,58 @@ router.get("/products", async (req, res) => {
   } catch (error) {
     res.json(error.stack);
   }
-}); 
+});
 
-router.get('/products/:id', async(req, res) => { 
+/**
+ * gets the id and sends images for the variants as well as a little bit of the variants' info
+ *
+ * @param   {route}  /products/:id  [/products/:id description]
+ */
+router.get("/products/:id", async (req, res) => {
   try {
-    const results = await client.client2.query({ 
-    	data: `{
+    const results = await client.client2.query({
+      data: `{
         product(id: "gid://shopify/Product/${req.params.id}") {
           title
           description
-          onlineStoreUrl 
           featuredImage{
-            id 
             url
           }
           variants(first: 10){
-            nodes{
-              id
+            nodes {
+              price
+              sku
+              title
+              selectedOptions{
+                name
+                value
+              }
               image {
-                id
                 url
               }
             }
-
-            
           }
-      }
-    }`, 
-  }); 
+          options(first:10){
+            name
+            values
+          }
+          media(first:10){
+            nodes{
+              preview{
+                image{
+                  url
+                }
+              }
+            }
+          }
+        }
+    }`,
+    });
 
-  res.json(results); 
+    res.json(results);
   } catch (error) {
     res.json(error.stack);
-  } 
+  }
 });
 
 module.exports = router;
