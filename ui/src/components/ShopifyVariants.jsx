@@ -9,18 +9,22 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 
+
 /**
  * This page shows one product from shopify and should be able to edit at least the featured
- * image and the variants image at fisrt TODO:
+ * image and the variants image at fisrt TODO: also i need to make a way of knowing which image is being changed with states..like make
+ * a new object for them or keep the product state
  *
  */
 const ShopifyVariants = () => {
-  // const{variants,setVariants} = useContext(VariantsContext);
+
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [imageHover, setImageHover] = useState(false);
   const [url, setUrl] = useState("");
+  const [image, setImage] = useState([]);
   const [product, setProduct] = useState({});
   const { id } = useParams();
 
@@ -37,21 +41,31 @@ const ShopifyVariants = () => {
   }, [setProduct, id]);
   // console.log(product);
 
-  /**
-   *
-   * @param {dict} e this is an event handler for finding the url the user puts for a new image
-   */
   const handleOnChange = (e) => setUrl(e.target.value);
-
-  //TODO: change this router
-
-  /**
-   * this adds an image to a product. This uses the modal code found below.
-   */
-  const addImage = async () => {
-    const response = await ShopifyRequest.put(`/image/put`, { url });
-    console.log(response);
+  const handleImageChange = (e) => {
+    e.preventDefault()
+    // console.log(e.target.files[0])
+    setImage(e.target.files[0]);
   };
+
+  const sendImage = async (e) => {
+    try {
+      e.preventDefault()
+      const imageData = new FormData();
+      imageData.append("image", image);
+      const response = await ShopifyRequest.put(
+        `/productVariant`,
+        imageData,
+        {headers:{
+          'Content-Type': `multipart/form-data`
+        }}    );
+      console.log(response);
+    } catch (error) {
+      console.log(error)
+    }
+
+  };
+
   //TODO:  Get a page up for the featured image and the variants image....
   // how should the fornt end look like??? Try to copy as much from shopify's setup
   return (
@@ -99,7 +113,7 @@ const ShopifyVariants = () => {
                 Add Image
               </button>
               <div>
-                <Modal show={show} onHide={() => handleClose}>
+                <Modal show={show} onHide={() => handleClose()}>
                   <Modal.Header closeButton>
                     <Modal.Title>Add Image</Modal.Title>
                   </Modal.Header>
@@ -112,7 +126,7 @@ const ShopifyVariants = () => {
                         <Form.Label>Enter Image URL</Form.Label>
                         <Form.Control
                           type="text"
-                          onChange={() => handleOnChange}
+                          onChange={() => handleOnChange()}
                           as="textarea"
                           rows={1}
                         />
@@ -120,12 +134,10 @@ const ShopifyVariants = () => {
                     </Form>
                   </Modal.Body>
                   <Modal.Footer>
-                    <Button variant="secondary" onClick={() => handleClose}>
+                    <Button variant="secondary" onClick={() => handleClose()}>
                       Close
                     </Button>
-                    <Button variant="primary" onClick={() => addImage}>
-                      Add
-                    </Button>
+                    <Button variant="primary">Add</Button>
                   </Modal.Footer>
                 </Modal>
               </div>
@@ -172,13 +184,21 @@ const ShopifyVariants = () => {
                           onMouseEnter={() => setImageHover(true)}
                           onMouseLeave={() => setImageHover(false)}
                         >
+                          <form action="/upload" encType="multipart/form-data">
+                          <input  
+                            name="image"
+                            type="file"
+                            style={{ all: "unset", cursor: "pointer" }}
+                            onChange={(e) => handleImageChange(e)}
+                          ></input>
+                            </form>
                           <img
                             className="thumbnail image"
                             src={variant.image && variant.image.url}
                             alt="Add one?"
                           />
                           <div className="overlay">
-                          {imageHover && <p className="text">Change Image</p>}
+                            {imageHover && <p className="text">Change Image</p>}
                           </div>
                         </button>
                       </div>
@@ -187,7 +207,7 @@ const ShopifyVariants = () => {
                     <td>${variant.price}</td>
                     <td>{variant.sku}</td>
                     <td>
-                      <Button>Save</Button>
+                      <Button onClick={(e) => sendImage(e)}>Save</Button>
                     </td>
                   </tr>
                 ))}

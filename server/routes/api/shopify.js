@@ -3,7 +3,23 @@ var router = express.Router();
 const morgan = require("morgan");
 const client = require("../../utils/shopify");
 const { parse, stringify, toJSON, fromJSON } = require("flatted");
+const multer = require("multer");
+const path = require("path");
+const db = require("../../db");
 
+
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./images");
+  },
+  filename: (req, file, cb) => {
+    // console.log(file)
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage: storage });
 router.use(express.json());
 
 /**
@@ -334,4 +350,29 @@ router.get("/products/:id", async (req, res) => {
   }
 });
 
+router.put("/productVariant", upload.single("image"), async (req, res) => {
+  const { filename, mimetype, size } = req.file;
+  const filepath = req.file.path;
+  console.log(req.file);
+
+  res.status(200);
+  // try {
+  //   const results = db.query(
+  //     `UPDATE products SET featuredImage = '${req.file.data}' WHERE id = 1 returning*`,
+  //     (err, result) => {
+  //       console.log("got data from db");
+  //       console.log(result);
+  //       res.status(200).json({
+  //         status: "success",
+  //         data: {
+  //           products: result,
+  //         },
+  //       });
+  //     }
+  //   );
+  //   console.log(results);
+  // } catch (err) {
+  //   console.log(err);
+  // }
+});
 module.exports = router;
