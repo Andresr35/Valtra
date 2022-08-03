@@ -6,7 +6,9 @@ const { parse, stringify, toJSON, fromJSON } = require("flatted");
 const multer = require("multer");
 const path = require("path");
 const db = require("../../db");
-
+const azure = require('../../utils')
+var MulterAzureStorage = require('multer-azure-storage');
+require("dotenv").config();
 
 
 
@@ -19,7 +21,21 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
-const upload = multer({ storage: storage });
+
+var getFileName = function(file) {
+  return file.originalname;
+  // or return file.name;
+}
+
+const upload = multer({ storage: new MulterAzureStorage({
+  //TODO: add this connection string to env variables
+  azureStorageConnectionString:process.env.AZURE_STORAGE_CONNECTION_STRING,
+  containerName:'fireball-images',
+  containerSecurity:'blob',
+  fileName:getFileName
+})
+ });
+
 router.use(express.json());
 
 /**
@@ -353,9 +369,10 @@ router.get("/products/:id", async (req, res) => {
 router.put("/productVariant", upload.single("image"), async (req, res) => {
   const { filename, mimetype, size } = req.file;
   const filepath = req.file.path;
-  console.log(req.file);
-
+  console.log(req.file.url);
   res.status(200);
+
+  
   // try {
   //   const results = db.query(
   //     `UPDATE products SET featuredImage = '${req.file.data}' WHERE id = 1 returning*`,

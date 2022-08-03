@@ -2,14 +2,15 @@ const { BlobServiceClient } = require("@azure/storage-blob");
 const { v1: uuidv1 } = require("uuid");
 require("dotenv").config();
 
-async function main() {
-  console.log("Azure Blob storage v12 - JavaScript quickstart sample");
-
+/**
+ *  grabs the client for the image container
+ *
+ * @return  {ContainerClient}  the client for images
+ */
+function getContainer() {
   // Quick start code goes here
   const AZURE_STORAGE_CONNECTION_STRING =
     process.env.AZURE_STORAGE_CONNECTION_STRING;
-
-
 
   if (!AZURE_STORAGE_CONNECTION_STRING) {
     throw Error("Azure Storage Connection string not found");
@@ -21,22 +22,35 @@ async function main() {
   );
 
   //   // Create a unique name for the container
-  const containerName = "fireball-images" ;
-
-  //   console.log("\nCreating container...");
-  //   console.log("\t", containerName);
+  const containerName = "fireball-images";
 
   // Get a reference to a container
   const containerClient = blobServiceClient.getContainerClient(containerName);
-  // Create the container
-  //   const createContainerResponse = await containerClient.create();
-  //   console.log(
-  //     "Container was created successfully. requestId: ",
-  //     createContainerResponse.requestId
-  //   );
+  return containerClient;
+}
+
+async function main() {
+  // Quick start code goes here
+  const AZURE_STORAGE_CONNECTION_STRING =
+    process.env.AZURE_STORAGE_CONNECTION_STRING;
+
+  if (!AZURE_STORAGE_CONNECTION_STRING) {
+    throw Error("Azure Storage Connection string not found");
+  }
+
+  // Create the BlobServiceClient object which will be used to create a container client
+  const blobServiceClient = BlobServiceClient.fromConnectionString(
+    AZURE_STORAGE_CONNECTION_STRING
+  );
+
+  //   // Create a unique name for the container
+  const containerName = "fireball-images";
+
+  // Get a reference to a container
+  const containerClient = blobServiceClient.getContainerClient(containerName);
 
   // Create a unique name for the blob
-  const blobName = "quickstart" + uuidv1() + ".txt";
+  const blobName = "quickstart.txt";
 
   // Get a block blob client
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
@@ -45,15 +59,20 @@ async function main() {
 
   // Upload data to the blob
   const data = "Hello, World!";
-  const uploadBlobResponse = await blockBlobClient.upload(data, data.length);
-  console.log(
-    "Blob was uploaded successfully. requestId: ",
-    uploadBlobResponse.requestId
-  );
+    const uploadBlobResponse = await blockBlobClient.upload(data, data.length);
 
   // Get blob content from position 0 to the end
   // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
   // In browsers, get downloaded data by accessing downloadBlockBlobResponse.blobBody
+
+  console.log("\nListing blobs...");
+
+  // List the blob(s) in the container.
+  for await (const blob of containerClient.listBlobsFlat()) {
+    console.log("\t", blob.name);
+    console.log(blob.properties);
+  }
+
   const downloadBlockBlobResponse = await blockBlobClient.download(0);
   console.log("\nDownloaded blob content...");
   console.log(
@@ -72,6 +91,16 @@ async function main() {
   }
 }
 
-main()
-  .then(() => console.log("Done"))
-  .catch((ex) => console.log(ex.message));
+
+
+// main()
+//   .then(() => console.log("Done"))
+//   .catch((ex) => console.log(ex.message));
+
+module.exports = { getContainer,
+ uploadBlobResponse:async(data,length,container) => {
+  const blockBlobClient = container.getBlockBlobClient("ok");
+  const response = await blockBlobClient.upload(data, length)
+  console.log(response)
+ }
+};

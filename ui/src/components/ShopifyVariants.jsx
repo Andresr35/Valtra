@@ -23,7 +23,7 @@ const ShopifyVariants = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [imageHover, setImageHover] = useState(false);
-  const [url, setUrl] = useState("");
+  const [ setUrl] = useState("");
   const [image, setImage] = useState([]);
   const [product, setProduct] = useState({});
   const { id } = useParams();
