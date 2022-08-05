@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from 'react-bootstrap/esm/Container'
-import NavBar from '../components/NavBar' 
-import {Version} from '../components/Version'
+import NavBar from '../components/structure/NavBar' 
+import {Version} from '../components/structure/Version'
 
 const Updates = () => { 
   return ( 
