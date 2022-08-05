@@ -40,7 +40,8 @@ const NavBar = () => {
                     <Nav.Link href="/fulfill">Fulfill Orders</Nav.Link>
                     <Nav.Link href="/products">Shopify Products </Nav.Link> 
                     <Nav.Link href="/downloads">Downloads</Nav.Link>
-                    <Nav.Link href="/documentation">Documentation</Nav.Link>
+                    <Nav.Link href="/documentation">Documentation</Nav.Link> 
+                    <Nav.Link href="/updates">Updates</Nav.Link>
                 </Nav> 
                 {isAuthenticated ? <SignOutButton /> : <SignInButton />} 
             </Container> 

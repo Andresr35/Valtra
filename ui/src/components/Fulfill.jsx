@@ -127,25 +127,23 @@ const Fulfill = () => {
             </div> 
           </form> 
           <Container>
-          <div className="col">
+          <div className="col"> 
+          <center>
             <button
-              type="button"
+              type="button" 
+              style = {{marginLeft: '.5rem', marginRight: '.7rem', marginTop: '.5rem'}}
               className="btn btn-outline-secondary"
               onClick={(e) => {
                 handleOnSubmit(e);
               }}
             >
               Import CSV
-            </button>
-          </div> 
-          </Container>
-        </div>
-        <div className="row"> 
-        <Container>
-          <div className="col">
-            <CSVLink className="btn btn-primary" {...csvReport}>
+            </button >
+            <CSVLink className="btn btn-primary" {...csvReport} 
+             style = {{marginLeft: '.7rem', marginRight: '.5rem', marginTop: '.5rem'}}>
               Export
-            </CSVLink> 
+            </CSVLink>  
+            </center>
           </div> 
           </Container>
         </div> 

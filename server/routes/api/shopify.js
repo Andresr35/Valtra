@@ -364,8 +364,42 @@ router.get("/products/:id", async (req, res) => {
     res.json(results);
   } catch (error) {
     res.json(error.stack);
-  }
-});
+  } 
+}); 
+//TODO create image updater using shofify api 
+router.post('/products/:id', async(req, res)=>{ 
+  try {
+    const result = await client.client2.query({ 
+      data: {
+        query: `mutation productImageUpdate($image: ImageInput!, $productId: ID!) {
+          productImageUpdate(image: $image, productId: $productId) {
+            image { 
+              id 
+              url
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }`, 
+        variables: { 
+          "productId": `gid://shopify/Product/${req.params.id}`,
+          "image": {
+            "id": 'gid://shopify/ProductImage/6901870067849',
+            "src": `${req.body.url}`
+          },
+        }
+      } 
+    });
+    res.json(result);
+  } catch (error) { 
+    console.log(req)
+    res.json(error.stack)  
+  } 
+}); 
+
+// // const mutResult = await client.client2.query({
 
 router.put("/productVariant", upload.single("image"), async (req, res) => {
   if(req.file){
