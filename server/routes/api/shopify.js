@@ -8,6 +8,7 @@ const path = require("path");
 const db = require("../../db");
 const azure = require('../../utils')
 var MulterAzureStorage = require('multer-azure-storage');
+const e = require("connect-flash");
 require("dotenv").config();
 
 
@@ -367,11 +368,17 @@ router.get("/products/:id", async (req, res) => {
 });
 
 router.put("/productVariant", upload.single("image"), async (req, res) => {
+  if(req.file){
   const { filename, mimetype, size } = req.file;
   const filepath = req.file.path;
   console.log(req.file.url);
-  res.status(200);
-
+  res.status(200).json({
+    status:"success"
+  });
+}else{
+  console.log("no file")
+  
+}
   
   // try {
   //   const results = db.query(
