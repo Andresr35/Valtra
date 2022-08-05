@@ -319,13 +319,12 @@ router.post('/products/:id', async(req, res)=>{
             }
           }
         }`, 
-        variables: {
-          image: {
-            altText: 'image',
-            id: 'gid://shopify/ProductImage/6901870067849',
-            src: `${req.body.url}`
+        variables: { 
+          "productId": `gid://shopify/Product/${req.params.id}`,
+          "image": {
+            "id": 'gid://shopify/ProductImage/6901870067849',
+            "src": `${req.body.url}`
           },
-          productId: `gid://shopify/Product/${req.params.id}`
         }
       } 
     });

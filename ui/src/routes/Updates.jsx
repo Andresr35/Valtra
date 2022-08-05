@@ -10,9 +10,10 @@ const Updates = () => {
       <Container>
         <p>Updates 1.0.0 - 1.0.14 development phases with 1.0.14 being the first functional version</p> 
         <p>First official update: TBD</p> 
-        <p>Current: <Version/></p> 
+        <p>Current: <Version/></p>  
       </Container>
-    </div>
+    </div> 
+    
   )
 }
 
