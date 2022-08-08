@@ -9,7 +9,6 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 
-
 /**
  * This page shows one product from shopify and should be able to edit at least the featured
  * image and the variants image at fisrt TODO: also i need to make a way of knowing which image is being changed with states..like make
@@ -17,13 +16,11 @@ import Form from "react-bootstrap/Form";
  *
  */
 const ShopifyVariants = () => {
-
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [imageHover, setImageHover] = useState(false);
-  const [ setUrl] = useState("");
+  const [setUrl] = useState("");
   const [image, setImage] = useState([]);
   const [product, setProduct] = useState({});
   const { id } = useParams();
@@ -43,27 +40,25 @@ const ShopifyVariants = () => {
 
   const handleOnChange = (e) => setUrl(e.target.value);
   const handleImageChange = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     // console.log(e.target.files[0])
     setImage(e.target.files[0]);
   };
 
   const sendImage = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
       const imageData = new FormData();
       imageData.append("image", image);
-      const response = await ShopifyRequest.put(
-        `/productVariant`,
-        imageData,
-        {headers:{
-          'Content-Type': `multipart/form-data`
-        }}    );
+      const response = await ShopifyRequest.put(`/productVariant`, imageData, {
+        headers: {
+          "Content-Type": `multipart/form-data`,
+        },
+      });
       console.log(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
   };
 
   //TODO:  Get a page up for the featured image and the variants image....
@@ -185,13 +180,13 @@ const ShopifyVariants = () => {
                           onMouseLeave={() => setImageHover(false)}
                         >
                           <form action="/upload" encType="multipart/form-data">
-                          <input  
-                            name="image"
-                            type="file"
-                            style={{ all: "unset", cursor: "pointer" }}
-                            onChange={(e) => handleImageChange(e)}
-                          ></input>
-                            </form>
+                            <input
+                              name="image"
+                              type="file"
+                              style={{ all: "unset", cursor: "pointer" }}
+                              onChange={(e) => handleImageChange(e)}
+                            ></input>
+                          </form>
                           <img
                             className="thumbnail image"
                             src={variant.image && variant.image.url}
