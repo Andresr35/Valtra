@@ -397,7 +397,11 @@ router.post('/products/:id', async(req, res)=>{
     console.log(req)
     res.json(error.stack)  
   } 
-}); 
+});  
+
+router.put("/productTitle", async(req, res) => { 
+  console.log(req.body)
+})
 
 // // const mutResult = await client.client2.query({
 
