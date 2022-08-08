@@ -19,10 +19,10 @@ const NavBar = () => {
     let name = accounts[0] && accounts[0].name;  
     if (name === 'Andres Ruiz') { 
         name = 'Bozo'; 
-    } else if (name === 'Angel Arellano') { 
+    } else if (name === 'Angel Arellano' || name === 'Ramon Martinez') { 
         name = 'Please wait: Downloading Free Ram ...'
     } 
-    //Changes NAvBar brand to VatraAuto Dev or ValtraAuto
+    //Changes NavBar brand to VatraAuto Dev or ValtraAuto
     let DevTitle = ""; 
     if (isproduction === true) { 
         DevTitle = "Valtra-Automation"; 

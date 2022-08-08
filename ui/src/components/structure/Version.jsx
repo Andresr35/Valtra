@@ -14,5 +14,4 @@ export const Version = () => {
 export const isLocal = true;
 
 //turn true to signify operational and up to production
-
 export const isproduction = false;

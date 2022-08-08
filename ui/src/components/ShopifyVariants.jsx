@@ -1,13 +1,14 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import ShopifyRequest from "../api/ShopifyRequest";
 import Container from "react-bootstrap/esm/Container";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
+import Form from "react-bootstrap/Form"; 
+import "../assets/css/Image.css"
 
 /**
  * This page shows one product from shopify and should be able to edit at least the featured
@@ -23,7 +24,10 @@ const ShopifyVariants = () => {
   const [setUrl] = useState("");
   const [image, setImage] = useState([]);
   const [product, setProduct] = useState({});
-  const { id } = useParams();
+  const { id } = useParams(); 
+  const [title, setTitle] = useState("");  
+  const [price, setPrice] = useState(""); 
+  const [sku, setSku] = useState("");  
 
   useEffect(() => {
     try {
@@ -59,6 +63,71 @@ const ShopifyVariants = () => {
     } catch (error) {
       console.log(error);
     }
+
+  }; 
+
+  const handleTitleChange = (e) => {  
+    try { 
+      setTitle(e.target.value)   
+    } catch (error) {
+      console.log(error)
+    }
+  }; 
+
+  const sendTitle = async(e) => { 
+    try {
+      const response = await ShopifyRequest.put( 
+        '/productTitle',  
+        {status: 'success', data: title} 
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  }; 
+  
+  const handlePriceChange = (e) => {  
+    try { 
+      setPrice(e.target.value)   
+    } catch (error) {
+      console.log(error)
+    }
+  } 
+
+  const sendPrice = async(e) => { 
+    try {
+      const response = await ShopifyRequest.put( 
+        '/productPrice',  
+        {status: 'success', data: price} 
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  };  
+  
+  const handleSkuChange = (e) => {  
+    try { 
+      setSku(e.target.value)   
+    } catch (error) {
+      console.log(error)
+    }
+  } 
+
+  const sendSku = async(e) => { 
+    try {
+      const response = await ShopifyRequest.put( 
+        '/productSku',  
+        {status: 'success', data: sku} 
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  };  
+  
+  const send = (e) => { 
+    sendTitle(e); 
+    sendImage(e); 
+    sendPrice(e); 
+    sendSku(e);
   };
 
   //TODO:  Get a page up for the featured image and the variants image....
@@ -177,32 +246,50 @@ const ShopifyVariants = () => {
                         <button
                           style={{ all: "unset", cursor: "pointer" }}
                           onMouseEnter={() => setImageHover(true)}
-                          onMouseLeave={() => setImageHover(false)}
-                        >
-                          <form action="/upload" encType="multipart/form-data">
-                            <input
-                              name="image"
-                              type="file"
-                              style={{ all: "unset", cursor: "pointer" }}
-                              onChange={(e) => handleImageChange(e)}
-                            ></input>
-                          </form>
-                          <img
-                            className="thumbnail image"
-                            src={variant.image && variant.image.url}
-                            alt="Add one?"
-                          />
-                          <div className="overlay">
-                            {imageHover && <p className="text">Change Image</p>}
+                          onMouseLeave={() => setImageHover(false)}>
+                          <div className="brightness"> 
+                            <div class="image-upload">
+                              <label for="file-input"> 
+                                <form action="/upload" encType="multipart/form-data"> 
+                                  <input id="file-input" type="file" 
+                                  name="image" 
+                                  style={{ all: "unset", cursor: "pointer" }}
+                                  onChange={(e) => handleImageChange(e)}/>
+                                </form>
+                                <img 
+                                  className= "thumbnail image"
+                                  src={variant.image && variant.image.url}
+                                  alt="Add one?" />
+                              </label>
+                            </div> 
                           </div>
                         </button>
                       </div>
                     </td>
-                    <td>{variant.title}</td>
-                    <td>${variant.price}</td>
-                    <td>{variant.sku}</td>
                     <td>
-                      <Button onClick={(e) => sendImage(e)}>Save</Button>
+                      <input 
+                        type="text" size="14" defaultValue={variant.title} 
+                        style={{ marginRight: '.1rem', }} 
+                        onChange = {(e) => handleTitleChange(e)} >
+                      </input> 
+                    </td> 
+
+                    <td>
+                      <input 
+                        type="text" size="6" defaultValue={'$' + variant.price} 
+                        style={{ marginLeft: '.1rem', }} 
+                        onChange = {(e) => handlePriceChange(e)} >
+                      </input>
+                    </td>
+                    <td> 
+                      <input
+                        type="text" size="1" defaultValue={variant.sku} 
+                        style={{ marginLeft: '.1rem', }} 
+                        onChange = {(e) => handleSkuChange(e)}>
+                      </input>
+                    </td>
+                    <td>
+                      <Button onClick= {(e) => send(e)}>Save</Button>
                     </td>
                   </tr>
                 ))}
