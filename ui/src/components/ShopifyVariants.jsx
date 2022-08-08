@@ -248,8 +248,8 @@ const ShopifyVariants = () => {
                           onMouseEnter={() => setImageHover(true)}
                           onMouseLeave={() => setImageHover(false)}>
                           <div className="brightness"> 
-                            <div class="image-upload">
-                              <label for="file-input"> 
+                            <div className="image-upload">
+                              <label htmlFor="file-input"> 
                                 <form action="/upload" encType="multipart/form-data"> 
                                   <input id="file-input" type="file" 
                                   name="image" 
