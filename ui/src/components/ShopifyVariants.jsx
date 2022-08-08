@@ -20,20 +20,25 @@ const ShopifyVariants = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleTitleChange = (e) => setTitle(e.target.value);  
+  const handlePriceChange = (e, iden) => setPrice([e.target.value, iden]);  
+  const handleSkuChange = (e, iden) => setSku([e.target.value, iden]); 
+
+
   const [imageHover, setImageHover] = useState(false);
   const [setUrl] = useState("");
   const [image, setImage] = useState([]);
   const [product, setProduct] = useState({});
   const { id } = useParams(); 
   const [title, setTitle] = useState("");  
-  const [price, setPrice] = useState(""); 
-  const [sku, setSku] = useState("");  
+  const [price, setPrice] = useState([]); 
+  const [sku, setSku] = useState([]);  
 
   useEffect(() => {
     try {
       const fetchData = async (id) => {
         var response = await ShopifyRequest.get(`/products/${id}`);
-        setProduct(response.data.body.data.product);
+        setProduct(response.data.body.data.product); 
       };
       fetchData(id);
     } catch (err) {
@@ -44,7 +49,7 @@ const ShopifyVariants = () => {
 
   const handleOnChange = (e) => setUrl(e.target.value);
   const handleImageChange = (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
     // console.log(e.target.files[0])
     setImage(e.target.files[0]);
   };
@@ -63,15 +68,6 @@ const ShopifyVariants = () => {
     } catch (error) {
       console.log(error);
     }
-
-  }; 
-
-  const handleTitleChange = (e) => {  
-    try { 
-      setTitle(e.target.value)   
-    } catch (error) {
-      console.log(error)
-    }
   }; 
 
   const sendTitle = async(e) => { 
@@ -83,39 +79,29 @@ const ShopifyVariants = () => {
     } catch (error) {
       console.log(error)
     }
-  }; 
+  };  
   
-  const handlePriceChange = (e) => {  
-    try { 
-      setPrice(e.target.value)   
-    } catch (error) {
-      console.log(error)
-    }
-  } 
+  function noDolllarSign(string) { 
+    let rstring = string.replace("$", ""); 
+    return rstring;
+  }
 
   const sendPrice = async(e) => { 
-    try {
+    try {  
+      price[0] = noDolllarSign(price[0]); 
       const response = await ShopifyRequest.put( 
-        '/productPrice',  
+        '/productUpdatePrice',  
         {status: 'success', data: price} 
       )
     } catch (error) {
       console.log(error)
     }
-  };  
-  
-  const handleSkuChange = (e) => {  
-    try { 
-      setSku(e.target.value)   
-    } catch (error) {
-      console.log(error)
-    }
-  } 
+  };    
 
   const sendSku = async(e) => { 
-    try {
+    try { 
       const response = await ShopifyRequest.put( 
-        '/productSku',  
+        '/productUpdateSku', 
         {status: 'success', data: sku} 
       )
     } catch (error) {
@@ -124,8 +110,8 @@ const ShopifyVariants = () => {
   };  
   
   const send = (e) => { 
-    sendTitle(e); 
-    sendImage(e); 
+    //sendTitle(e); 
+   //sendImage(e); 
     sendPrice(e); 
     sendSku(e);
   };
@@ -239,7 +225,7 @@ const ShopifyVariants = () => {
             <tbody>
               {product.variants &&
                 product.variants.nodes.map((variant, index) => (
-                  // TODO: make this look nicer
+                  // TODO: make this look nicer 
                   <tr key={index}>
                     <td>
                       <div className="container">
@@ -278,14 +264,14 @@ const ShopifyVariants = () => {
                       <input 
                         type="text" size="6" defaultValue={'$' + variant.price} 
                         style={{ marginLeft: '.1rem', }} 
-                        onChange = {(e) => handlePriceChange(e)} >
+                        onChange = {(e) => handlePriceChange(e, variant.id)}>
                       </input>
                     </td>
                     <td> 
                       <input
                         type="text" size="1" defaultValue={variant.sku} 
                         style={{ marginLeft: '.1rem', }} 
-                        onChange = {(e) => handleSkuChange(e)}>
+                        onChange = {(e) => handleSkuChange(e, variant.id)}>
                       </input>
                     </td>
                     <td>
