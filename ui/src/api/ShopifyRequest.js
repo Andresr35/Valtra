@@ -1,7 +1,7 @@
 import axios from "axios";
 import { isLocal } from "../components/structure/Version";
-import { useMsal } from "@azure/msal-react";
-const graph = require('../authentication/graph');
+// import { useMsal } from "@azure/msal-react";
+// const graph = require('../authentication/graph');
 // const { accounts } = useMsal(); 
 // let name = accounts[0] && accounts[0].name; 
 
