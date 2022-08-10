@@ -75,6 +75,7 @@ app.use("/images", express.static(__dirname + "public/images"));
 app.use("/js", express.static(__dirname + "public/js"));
 
 //view files
+app.all('*', passport.authenticate('oauth-bearer', {session: false}));
 app.use("/", require("./routes/web"));
 app.use("/api", require("./routes/api"));
 
@@ -85,86 +86,21 @@ app.listen(app.get("port"), function () {
 //-------------------------------------------------this is testing authenticationss
 
 
-app.get('/hello',
-    passport.authenticate('oauth-bearer', {session: false}),
-    (req, res) => {
-        console.log('Validated claims: ', req.authInfo);
-        console.log(req.headers)
-        // Service relies on the name claim.  
-        res.status(200).json({
-            'name': req.authInfo['name'],
-            'issued-by': req.authInfo['iss'],
-            'issued-for': req.authInfo['aud'],
-            'scope': req.authInfo['scp']
-        });
-    }
-);
+// app.get('/hello',
+//     passport.authenticate('oauth-bearer', {session: false}),
+//     (req, res) => {
+//         console.log('Validated claims: ', req.authInfo);
+//         console.log(req.headers)
+//         // Service relies on the name claim.  
+//         res.status(200).json({
+//             'name': req.authInfo['name'],
+//             'issued-by': req.authInfo['iss'],
+//             'issued-for': req.authInfo['aud'],
+//             'scope': req.authInfo['scp']
+//         });
+//     }
+// );
 
-/**
- * just makes a token depending on user id
- *
- * @param   {route}  /auth/login  [/auth/login description]
- *
- * @return  {[token]}               api token
- */
-app.get("/auth/login", (req, res) => {
-  let jwtSecretKey = process.env.JWT_SECRET_KEY;
-  let data = { userId: 12 };
-  const token = jwt.sign(data, jwtSecretKey, { expiresIn: "2h" });
-  res.send(token);
-});
-
-app.get("/protected", ensureToken, (req, res) => {
-  jwt.verify(req.token, process.env.JWT_SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      res.json({ text: "this is protexted", data: data });
-    }
-  });
-});
-
-app.get("/test", (req, res) => {
-  console.log(req);
-});
-
-/**
- * makes sure that you have a token attatched
- *
- *
- * @return  {token?}        [return description]
- */
-function ensureToken(req, res, next) {
-  const bearerHeader = req.headers["authorization"];
-  if (typeof bearerHeader !== "undefined") {
-    const bearer = bearerHeader.split(" ");
-    const bearerToken = bearer[1];
-    req.token = bearerToken;
-    next();
-  } else {
-    res.sendStatus(403);
-  }
-}
-
-// app.get("/user/validateToken", (req, res) => {
-//   // Tokens are generally passed in the header of the request
-//   // Due to security reasons.
-//   let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
-//   let jwtSecretKey = process.env.JWT_SECRET_KEY;
-//   try {
-//       const token = req.header(tokenHeaderKey);
-//       const verified = jwt.verify(token, jwtSecretKey);
-//       if(verified){
-//           return res.send("Successfully Verified");
-//       }else{
-//           // Access Denied
-//           return res.status(401).send(error);
-//       }
-//   } catch (error) {
-//       // Access Denied
-//       return res.status(401).send(error);
-//   }
-// });
 
 //
 // task.job.start()

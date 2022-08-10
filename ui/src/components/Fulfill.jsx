@@ -3,6 +3,10 @@ import ShopifyRequest from "../api/ShopifyRequest";
 import { CSVLink } from "react-csv";
 import Alert from "react-bootstrap/Alert";
 import Container from "react-bootstrap/esm/Container";
+import { useMsal, useAccount } from "@azure/msal-react";
+import { protectedResources } from "../authentication/authConfig";
+import { callApiWithToken } from "../fetch";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
 const Fulfill = () => {
   const [running, setRunning] = useState(false);
@@ -11,6 +15,8 @@ const Fulfill = () => {
   const [file, setFile] = useState();
   const [data, setData] = useState([]);
   const fileReader = new FileReader();
+  const { instance, accounts, inProgress } = useMsal();
+  const account = useAccount(accounts[0] || {});
 
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
@@ -66,15 +72,50 @@ const Fulfill = () => {
         array[obj]["Tracking"] = value;
       }
       setRunning(true);
-      ShopifyRequest.put("/fulfill", {
-        sent: "success",
-        data: array,
-      })
-        .then((response) => {
-          updateStatus(response.data, array);
-          setDone(true);
-        })
-        .catch((err) => console.log(err));
+
+      if (account && inProgress === "none") {
+        instance
+          .acquireTokenSilent({
+            scopes: protectedResources.apiHello.scopes,
+            account: account,
+          })
+          .then((response) => {
+            callApiWithToken(
+              response.accessToken,
+              ShopifyRequest.getUri() + "/fulfill",
+              "PUT",
+              {
+                sent: "success",
+                data: array,
+              }
+            ).then((response) => {
+              console.log(response)
+              updateStatus(response.data, array);
+              setDone(true);
+            }).catch(err=>console.log(err));
+          })
+          .catch((error) => {
+            if (error instanceof InteractionRequiredAuthError) {
+              if (account && inProgress === "none") {
+                instance
+                  .acquireTokenPopup({
+                    scopes: protectedResources.apiHello.scopes,
+                  })
+                  .then((response) => {
+                    callApiWithToken(
+                      response.accessToken,
+                      ShopifyRequest.getUri() + "/orders",
+                      "PUT"
+                    ).then((response) => {
+                      updateStatus(response.data, array);
+                      setDone(true);
+                    });
+                  })
+                  .catch((error) => console.log(error));
+              }
+            }
+          });
+      }
     } catch (err) {
       console.log(err);
       setAlert(true);
@@ -111,43 +152,54 @@ const Fulfill = () => {
   return (
     <div>
       <div>
-        <h1 style={{ textAlign: "center"}}>Import CSV to Fulfill Orders</h1>
+        <h1 style={{ textAlign: "center" }}>Import CSV to Fulfill Orders</h1>
       </div>
       <div className="container">
         <div className="row">
           <form>
-            <div className="col"> 
-            <p></p>
-              <input 
+            <div className="col">
+              <p></p>
+              <input
                 type={"file"}
                 className="form-control"
                 id={"csvFileInput"}
                 onChange={handleOnChange}
                 accept={".csv"}
               />
-            </div> 
-          </form> 
-          <Container> 
-          <div className="col"> 
-          <center>
-            <button
-              type="button" 
-              style = {{marginLeft: '.5rem', marginRight: '.7rem', marginTop: '.5rem'}}
-              className="btn btn-outline-secondary"
-              onClick={(e) => {
-                handleOnSubmit(e);
-              }}
-            >
-              Import CSV
-            </button >
-            <CSVLink className="btn btn-primary" {...csvReport} 
-             style = {{marginLeft: '.7rem', marginRight: '.5rem', marginTop: '.5rem'}}>
-              Export
-            </CSVLink>  
-            </center>
-          </div> 
+            </div>
+          </form>
+          <Container>
+            <div className="col">
+              <center>
+                <button
+                  type="button"
+                  style={{
+                    marginLeft: ".5rem",
+                    marginRight: ".7rem",
+                    marginTop: ".5rem",
+                  }}
+                  className="btn btn-outline-secondary"
+                  onClick={(e) => {
+                    handleOnSubmit(e);
+                  }}
+                >
+                  Import CSV
+                </button>
+                <CSVLink
+                  className="btn btn-primary"
+                  {...csvReport}
+                  style={{
+                    marginLeft: ".7rem",
+                    marginRight: ".5rem",
+                    marginTop: ".5rem",
+                  }}
+                >
+                  Export
+                </CSVLink>
+              </center>
+            </div>
           </Container>
-        </div> 
+        </div>
       </div>
       {/* This is where the alert is for whether a csv is done or not */}
 

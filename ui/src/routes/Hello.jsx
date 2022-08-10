@@ -59,7 +59,7 @@ const HelloContent = () => {
           }
         });
     }
-  }, [account, inProgress, instance]);
+  }, [account, inProgress, instance,helloData]);
 
   return <>{helloData ? <HelloData helloData={helloData} /> : null}</>;
 };

@@ -2,10 +2,10 @@ import React, { useContext, useEffect } from "react";
 import ShopifyRequest from "../api/ShopifyRequest";
 //import PDFFinder from '../api/PDFFinder';
 import { OrdersContext } from "../context/OrdersContext";
-import { useMsal, useMsalAuthentication, useAccount } from "@azure/msal-react";
+import { useMsal, useAccount } from "@azure/msal-react";
 //import { writeFile } from 'fs';
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
-import { loginRequest, protectedResources } from "../authentication/authConfig";
+import { protectedResources } from "../authentication/authConfig";
 import { callApiWithToken } from "../fetch";
 
 const OrderList = (props) => {
@@ -19,10 +19,6 @@ const OrderList = (props) => {
   useEffect(() => {
     // console.log(accounts)
     const fetchData = () => {
-      const tokenRequest = {
-        account: accounts[0], // This is an example - Select account based on your app's requirements
-        scopes: ["User.Read"],
-      };
       if (account && inProgress === "none") {
         instance
           .acquireTokenSilent({
@@ -30,12 +26,12 @@ const OrderList = (props) => {
             account: account,
           })
           .then((response) => {
+            console.log(response)
             callApiWithToken(
               response.accessToken,
               ShopifyRequest.getUri() + "/orders",
               "GET"
             ).then((response) => {
-              console.log(response)
                setOrders(response.result);
             });
           })
@@ -57,8 +53,8 @@ const OrderList = (props) => {
               }
             }
           });
-
-        // Call your API with the access token and return the data you need to save in state
+      }
+              // Call your API with the access token and return the data you need to save in state
         // ShopifyRequest.get(
         //   "/orders"
         //   // data:,
@@ -66,7 +62,6 @@ const OrderList = (props) => {
         //   setOrders(response.data.result);
         // });
         // })
-      }
     };
     fetchData();
   }, [setOrders, accounts, instance,inProgress,account]);
