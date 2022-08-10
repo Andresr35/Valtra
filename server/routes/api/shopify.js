@@ -44,7 +44,7 @@ router.use(express.json());
  * @param   {path}  /orders  /api/shopify/orders
  */
 router.get("/orders", (req, res) => {
-  console.log(req.authInfo)
+  console.log(req.body)
   console.log("got data from shopify");
 
   client.client

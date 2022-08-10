@@ -2,16 +2,23 @@ import React, { useContext, useEffect } from "react";
 import ShopifyRequest from "../api/ShopifyRequest";
 //import PDFFinder from '../api/PDFFinder';
 import { OrdersContext } from "../context/OrdersContext";
+import { useMsal } from "@azure/msal-react";  
 //import { writeFile } from 'fs';
 
 const OrderList = (props) => {
   const { orders, setOrders } = useContext(OrdersContext);
+  const { accounts } = useMsal();
+
+  let name = accounts[0] && accounts[0].name;  
   //get data from backed
 
   useEffect(() => {
+    console.log(accounts)
     const fetchData = async () => {
       try {
-        const response = await ShopifyRequest.get("/orders");
+        const response = await ShopifyRequest.get("/orders",{
+          data:name,
+        });
         setOrders(response.data.result);
       } catch (err) {
         console.log("didnt work");
