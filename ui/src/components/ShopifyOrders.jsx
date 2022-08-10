@@ -27,7 +27,7 @@ const OrderList = (props) => {
         ShopifyRequest.get("/orders",{
           // data:,
           headers:{
-            "data":response.accessToken
+            "authorization":response.accessToken
           }
         }).then((response)=>{
           setOrders(response.data.result);
