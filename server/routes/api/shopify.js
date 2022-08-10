@@ -335,7 +335,8 @@ router.get("/products/:id", async (req, res) => {
             nodes {
               price
               sku
-              title
+              title 
+              id
               selectedOptions{
                 name
                 value
@@ -394,15 +395,89 @@ router.post("/products/:id", async (req, res) => {
       },
     });
     res.json(result);
-  } catch (error) {
-    console.log(req);
-    res.json(error.stack);
-  }
+  } catch (error) { 
+    console.log(req)
+    res.json(error.stack)  
+  } 
+});  
+router.put('/productUpdatePrice', async(req, res) => {   
+  const data = await client.client2.query({
+    data: {
+      query: `mutation updateProductVariantMetafields($input: ProductVariantInput!) {
+        productVariantUpdate(input: $input) {
+          productVariant {
+            id
+     	      price
+          }
+          userErrors {
+            message
+            field
+          }
+        }
+      }`,
+      variables: {
+        input: { 
+          "id": `${req.body.data[1]}`, 
+          "price": `${req.body.data[0]}`, 
+        }
+      },
+    },
+  });  
+}); 
+
+router.put('/productUpdateSku', async(req, res) => {  
+  console.log(req.body);  
+  const data = await client.client2.query({
+    data: {
+      query: `mutation updateProductVariantMetafields($input: ProductVariantInput!) {
+        productVariantUpdate(input: $input) {
+          productVariant {
+            id
+     	      sku
+          }
+          userErrors {
+            message
+            field
+          }
+        }
+      }`,
+      variables: {
+        input: { 
+          "id": `${req.body.data[1]}`, 
+          "sku": `${req.body.data[0]}`, 
+        }
+      },
+    },
+  });  
 });
 
-router.put("/productTitle", async (req, res) => {
-  console.log(req.body);
+router.put('/productUpdatePicture', async(req, res) => {  
+  console.log(req.body);  
+  const data = await client.client2.query({
+    data: {
+      query: `mutation updateProductVariantMetafields($input: ProductVariantInput!) {
+        productVariantUpdate(input: $input) {
+          productVariant {
+            id
+     	      sku
+          }
+          userErrors {
+            message
+            field
+          }
+        }
+      }`,
+      variables: {
+        input: { 
+          "id": `${req.body.data[1]}`, 
+          "sku": `${req.body.data[0]}`, 
+        }
+      },
+    },
+  });  
 });
+
+
 
 // // const mutResult = await client.client2.query({
 
