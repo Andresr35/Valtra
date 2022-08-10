@@ -8,8 +8,7 @@ import inforInvoicesZip from '../dowloadableFiles/Testzip.zip'//'../dowloadableF
 //TODO actaully app conent that can be downloaded 
 //Allows users to have a centalized place to 
 //downlaod content such as infor apps  
-import { useEffect } from 'react'
-import {useState} from 'react' 
+
 import { useNavigate } from "react-router-dom";
 
 //Downloads---------------------------------------- 

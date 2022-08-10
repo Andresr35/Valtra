@@ -34,3 +34,13 @@ export const graphConfig = {
     graphMeEndpoint: "https://graph.microsoft.com",
    
 };
+export const protectedResources = {
+  graphMe: {
+      endpoint: "https://graph.microsoft.com/v1.0/me",
+      scopes: ["User.Read"],
+  },
+  apiHello: {
+      endpoint: "http://localhost:5000/hello",
+      scopes: ["Enter_the_Web_Api_Scope_Here"], // e.g. api://xxxxxx/access_as_user
+  },
+}

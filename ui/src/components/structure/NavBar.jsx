@@ -11,11 +11,18 @@ import { SignInButton } from "../SignInButton";
 import { SignOutButton } from "../SignOutButton"; 
 import { isproduction, Version } from "./Version"; 
 import { useMsal } from "@azure/msal-react";  
+// import { loginRequest, protectedResources } from "../../authentication/authConfig";
 
 
 const NavBar = () => { 
     const isAuthenticated = useIsAuthenticated(); 
     const { accounts } = useMsal(); 
+    // const {instance} = useMsal();
+    // instance.acquireTokenSilent({
+    //     scopes: protectedResources.apiHello.scopes,
+    //     account: accounts[0]
+    // }).then((res)=>{console.log(res)}).catch((err)=>{console.log(err)})
+    // // console.log(instance)
     let name = accounts[0] && accounts[0].name;  
     if (name === 'Andres Ruiz') { 
         name = 'Bozo'; 

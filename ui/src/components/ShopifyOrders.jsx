@@ -4,28 +4,51 @@ import ShopifyRequest from "../api/ShopifyRequest";
 import { OrdersContext } from "../context/OrdersContext";
 import { useMsal } from "@azure/msal-react";  
 //import { writeFile } from 'fs';
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
 const OrderList = (props) => {
   const { orders, setOrders } = useContext(OrdersContext);
   const { accounts } = useMsal();
+  const { instance } = useMsal();
 
-  let name = accounts[0] && accounts[0].name;  
+
+  // let name = accounts[0] && accounts[0].name;  
   //get data from backed
 
   useEffect(() => {
-    console.log(accounts)
+    // console.log(accounts)
     const fetchData = async () => {
-      try {
-        const response = await ShopifyRequest.get("/orders",{
-          data:name,
-        });
-        setOrders(response.data.result);
-      } catch (err) {
-        console.log("didnt work");
-      }
+      const tokenRequest = {
+        account: accounts[0], // This is an example - Select account based on your app's requirements
+        scopes: ["User.Read"]
+    }
+      instance.acquireTokenSilent(tokenRequest).then((response) => {
+        // Call your API with the access token and return the data you need to save in state
+        ShopifyRequest.get("/orders",{
+          // data:,
+          headers:{
+            "data":response.accessToken
+          }
+        }).then((response)=>{
+          setOrders(response.data.result);
+        })
+
+        
+    }).catch(async (e) => {
+        console.log(e)
+        // Catch interaction_required errors and call interactive method to resolve
+        if (e instanceof InteractionRequiredAuthError) {
+            await instance.acquireTokenRedirect(tokenRequest);
+        }
+
+        throw e;
+    });
+
+
+
     };
     fetchData();
-  }, [setOrders]);
+  }, [setOrders,accounts,instance]);
 
   //send request to server to give pdf???
 
