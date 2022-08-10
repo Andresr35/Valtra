@@ -24,7 +24,7 @@ import Downloads from "./routes/Downloads";
 import Documentation from "./routes/Documentation";
 import DocumentationRestricted from "./routes/DocumentationRestricted"; 
 import Updates from"./routes/Updates";
-
+import { Hello } from "./routes/Hello";
 
 //version num
 const App = () => { 
