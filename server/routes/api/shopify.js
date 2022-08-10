@@ -6,8 +6,8 @@ const { parse, stringify, toJSON, fromJSON } = require("flatted");
 const multer = require("multer");
 const path = require("path");
 const db = require("../../db");
-const azure = require('../../utils')
-var MulterAzureStorage = require('multer-azure-storage');
+const azure = require("../../utils");
+var MulterAzureStorage = require("multer-azure-storage");
 const e = require("connect-flash");
 require("dotenv").config();
 
@@ -21,19 +21,20 @@ const storage = multer.diskStorage({
   },
 });
 
-var getFileName = function(file) {
+var getFileName = function (file) {
   return file.originalname;
   // or return file.name;
-}
+};
 
-const upload = multer({ storage: new MulterAzureStorage({
-  //TODO: add this connection string to env variables
-  azureStorageConnectionString:process.env.AZURE_STORAGE_CONNECTION_STRING,
-  containerName:'fireball-images',
-  containerSecurity:'blob',
-  fileName:getFileName
-})
- });
+const upload = multer({
+  storage: new MulterAzureStorage({
+    //TODO: add this connection string to env variables
+    azureStorageConnectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
+    containerName: "fireball-images",
+    containerSecurity: "blob",
+    fileName: getFileName,
+  }),
+});
 
 router.use(express.json());
 
@@ -44,12 +45,14 @@ router.use(express.json());
  */
 router.get("/orders", (req, res) => {
   console.log("got data from shopify");
+
   client.client
     .get({ path: "/orders" })
     .then((result) => {
       res.status(200).json({
         status: 200,
         result: result.body.orders,
+        
       });
     })
     .catch((error) => {
@@ -363,12 +366,12 @@ router.get("/products/:id", async (req, res) => {
     res.json(results);
   } catch (error) {
     res.json(error.stack);
-  } 
-}); 
-//TODO create image updater using shofify api 
-router.post('/products/:id', async(req, res)=>{ 
+  }
+});
+//TODO create image updater using shofify api
+router.post("/products/:id", async (req, res) => {
   try {
-    const result = await client.client2.query({ 
+    const result = await client.client2.query({
       data: {
         query: `mutation productImageUpdate($image: ImageInput!, $productId: ID!) {
           productImageUpdate(image: $image, productId: $productId) {
@@ -381,15 +384,15 @@ router.post('/products/:id', async(req, res)=>{
               message
             }
           }
-        }`, 
-        variables: { 
-          "productId": `gid://shopify/Product/${req.params.id}`,
-          "image": {
-            "id": 'gid://shopify/ProductImage/6901870067849',
-            "src": `${req.body.url}`
+        }`,
+        variables: {
+          productId: `gid://shopify/Product/${req.params.id}`,
+          image: {
+            id: "gid://shopify/ProductImage/6901870067849",
+            src: `${req.body.url}`,
           },
-        }
-      } 
+        },
+      },
     });
     res.json(result);
   } catch (error) { 
@@ -477,18 +480,17 @@ router.put('/productUpdatePicture', async(req, res) => {
 // // const mutResult = await client.client2.query({
 
 router.put("/productVariant", upload.single("image"), async (req, res) => {
-  if(req.file){
-  const { filename, mimetype, size } = req.file;
-  const filepath = req.file.path;
-  console.log(req.file.url);
-  res.status(200).json({
-    status:"success"
-  });
-}else{
-  console.log("no file")
-  
-}
-  
+  if (req.file) {
+    const { filename, mimetype, size } = req.file;
+    const filepath = req.file.path;
+    console.log(req.file.url);
+    res.status(200).json({
+      status: "success",
+    });
+  } else {
+    console.log("no file");
+  }
+
   // try {
   //   const results = db.query(
   //     `UPDATE products SET featuredImage = '${req.file.data}' WHERE id = 1 returning*`,
@@ -508,7 +510,5 @@ router.put("/productVariant", upload.single("image"), async (req, res) => {
   //   console.log(err);
   // }
 });
-
-
 
 module.exports = router;
