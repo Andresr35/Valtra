@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import ShopifyRequest from "../api/ShopifyRequest";
 import Container from "react-bootstrap/esm/Container";
 import Table from "react-bootstrap/Table";
@@ -23,17 +23,17 @@ const ShopifyVariants = () => {
   const handleTitleChange = (e) => setTitle(e.target.value);  
   const handlePriceChange = (e, iden) => setPrice([e.target.value, iden]);  
   const handleSkuChange = (e, iden) => setSku([e.target.value, iden]); 
-  const handlePicChange = (e, iden) => setSku([e.target.value, iden]);
+  // const handlePicChange = (e, iden) => setSku([e.target.value, iden]);
 
-  const [imageHover, setImageHover] = useState(false);
+  const [ setImageHover] = useState(false);
   const [setUrl] = useState("");
   const [image, setImage] = useState([]);
   const [product, setProduct] = useState({});
   const { id } = useParams(); 
-  const [title, setTitle] = useState("");  
+  const [ setTitle] = useState("");  
   const [price, setPrice] = useState([]); 
   const [sku, setSku] = useState([]);  
-  const [pic, setPic] = useState([]); 
+  const [pic] = useState([]); 
 
   useEffect(() => {
     try {
@@ -71,16 +71,16 @@ const ShopifyVariants = () => {
     }
   }; 
 
-  const sendTitle = async(e) => { 
-    try {
-      const response = await ShopifyRequest.put( 
-        '/productTitle',  
-        {status: 'success', data: title} 
-      )
-    } catch (error) {
-      console.log(error)
-    }
-  };  
+  // const sendTitle = async(e) => { 
+  //   try {
+  //     const response = await ShopifyRequest.put( 
+  //       '/productTitle',  
+  //       {status: 'success', data: title} 
+  //     )
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // };  
   
   function noDolllarSign(string) { 
     let rstring = string.replace("$", ""); 
@@ -94,6 +94,7 @@ const ShopifyVariants = () => {
         '/productUpdatePrice',  
         {status: 'success', data: price} 
       )
+      console.log(response)
     } catch (error) {
       console.log(error)
     }
@@ -105,6 +106,7 @@ const ShopifyVariants = () => {
         '/productUpdateSku', 
         {status: 'success', data: sku} 
       )
+      console.log(response)
     } catch (error) {
       console.log(error)
     }
@@ -116,6 +118,7 @@ const ShopifyVariants = () => {
         '/productUpdatePicture', 
         {status: 'success', data: pic} 
       )
+      console.log(response)
     } catch (error) {
       console.log(error)
     }

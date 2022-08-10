@@ -7,7 +7,7 @@ import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { VariantsContext } from "../context/VariantsContext"; 
-import { SignOutButton } from "./SignOutButton";
+// import { SignOutButton } from "./SignOutButton";
 
 const ShopProducts = (props) => {
 

@@ -24,7 +24,8 @@ import Downloads from "./routes/Downloads";
 import Documentation from "./routes/Documentation";
 import DocumentationRestricted from "./routes/DocumentationRestricted"; 
 import Updates from"./routes/Updates";
- 
+
+
 //version num
 const App = () => { 
 
@@ -49,6 +50,7 @@ const App = () => {
                 <Route path="/documentation" element={<Documentation/>} />
                 <Route path="/product/gid://shopify/Product/:id" element={<Variants/>}/> 
                 <Route path="/updates" element={<Updates/>} />
+                <Route path="/hello" element={<Hello/>}/>
                 </Routes>
               </Router>
 
