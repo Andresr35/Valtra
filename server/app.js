@@ -85,6 +85,10 @@ app.get("/protected",ensureToken,(req,res)=>{
 
 });
 
+app.get('/test',(req,res)=>{
+  console.log(req)
+})
+
 /**
  * makes sure that you have a token attatched
  *

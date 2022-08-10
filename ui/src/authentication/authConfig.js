@@ -29,7 +29,8 @@ export const loginRequest = {
  scopes: ["User.Read"]
 };
 
-// Add the endpoints here for Microsoft Graph API services you'd like to use.
+// Add the endpoints here for Microsoft Graph API services you'd like to use. can i add more endpints here?
 export const graphConfig = {
-    graphMeEndpoint: "https://graph.microsoft.com"
+    graphMeEndpoint: "https://graph.microsoft.com",
+   
 };
