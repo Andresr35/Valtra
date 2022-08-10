@@ -24,7 +24,7 @@ const HelloContent = () => {
                 scopes: protectedResources.apiHello.scopes,
                 account: account
             }).then((response) => {
-                callApiWithToken(response.accessToken, protectedResources.apiHello.endpoint)
+                callApiWithToken(response.accessToken, protectedResources.apiHello.endpoint,"GET",)
                     .then(response => setHelloData(response));
             }).catch((error) => {
                 // in case if silent token acquisition fails, fallback to an interactive method
