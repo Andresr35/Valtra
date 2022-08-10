@@ -19,4 +19,5 @@ if (isLocal === false) {
  */
 export default axios.create({
   baseURL: Shopurl,
+  headers:{'Authorization':"key"}
 });
