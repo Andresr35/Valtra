@@ -23,7 +23,7 @@ const ShopifyVariants = () => {
   const handleTitleChange = (e) => setTitle(e.target.value);  
   const handlePriceChange = (e, iden) => setPrice([e.target.value, iden]);  
   const handleSkuChange = (e, iden) => setSku([e.target.value, iden]); 
-
+  const handlePicChange = (e, iden) => setSku([e.target.value, iden]);
 
   const [imageHover, setImageHover] = useState(false);
   const [setUrl] = useState("");
@@ -33,6 +33,7 @@ const ShopifyVariants = () => {
   const [title, setTitle] = useState("");  
   const [price, setPrice] = useState([]); 
   const [sku, setSku] = useState([]);  
+  const [pic, setPic] = useState([]); 
 
   useEffect(() => {
     try {
@@ -109,9 +110,21 @@ const ShopifyVariants = () => {
     }
   };  
   
+  const sendPic = async(e) => { 
+    try { 
+      const response = await ShopifyRequest.put( 
+        '/productUpdatePicture', 
+        {status: 'success', data: pic} 
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  }; 
+  
   const send = (e) => { 
     //sendTitle(e); 
-   //sendImage(e); 
+    sendImage(e);  
+    sendPic(e);
     sendPrice(e); 
     sendSku(e);
   };

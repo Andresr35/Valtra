@@ -452,33 +452,6 @@ router.put('/productUpdateSku', async(req, res) => {
   });  
 });
 
-router.put('/productUpdatePicture', async(req, res) => {  
-  console.log(req.body);  
-  const data = await client.client2.query({
-    data: {
-      query: `mutation updateProductVariantMetafields($input: ProductVariantInput!) {
-        productVariantUpdate(input: $input) {
-          productVariant {
-            id
-     	      sku
-          }
-          userErrors {
-            message
-            field
-          }
-        }
-      }`,
-      variables: {
-        input: { 
-          "id": `${req.body.data[1]}`, 
-          "sku": `${req.body.data[0]}`, 
-        }
-      },
-    },
-  });  
-});
-
-
 
 // // const mutResult = await client.client2.query({
 
