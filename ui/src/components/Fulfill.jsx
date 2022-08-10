@@ -111,13 +111,14 @@ const Fulfill = () => {
   return (
     <div>
       <div>
-        <h1 style={{ textAlign: "center" }}>Import CSV to Fulfill Orders</h1>
+        <h1 style={{ textAlign: "center"}}>Import CSV to Fulfill Orders</h1>
       </div>
       <div className="container">
         <div className="row">
           <form>
-            <div className="col">
-              <input
+            <div className="col"> 
+            <p></p>
+              <input 
                 type={"file"}
                 className="form-control"
                 id={"csvFileInput"}
@@ -126,7 +127,7 @@ const Fulfill = () => {
               />
             </div> 
           </form> 
-          <Container>
+          <Container> 
           <div className="col"> 
           <center>
             <button

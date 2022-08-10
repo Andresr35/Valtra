@@ -12,7 +12,8 @@ const DocumentationRestricted = () => {
     <div>
       <NavBar/> 
       <Container>
-        <p> Welcome to Documentation with restricted acess</p> 
+      <h1 style={{textAlign: "center", fontSize: '40px'}}>Welcome to Documentation</h1> 
+      <p style={{ textAlign: "center" }}>Scroll to find your Application</p>
       </Container>
     </div>
   )

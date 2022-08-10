@@ -456,7 +456,7 @@ router.put('/productUpdatePicture', async(req, res) => {
         productVariantUpdate(input: $input) {
           productVariant {
             id
-     	      sku
+     	      img
           }
           userErrors {
             message
@@ -467,14 +467,12 @@ router.put('/productUpdatePicture', async(req, res) => {
       variables: {
         input: { 
           "id": `${req.body.data[1]}`, 
-          "sku": `${req.body.data[0]}`, 
+          "img": `${req.body.data[0]}`, 
         }
       },
     },
   });  
 });
-
-
 
 // // const mutResult = await client.client2.query({
 
