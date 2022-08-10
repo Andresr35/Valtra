@@ -1,13 +1,13 @@
 
-export const callApiWithToken = async(accessToken, apiEndpoint) => {
+export const callApiWithToken = async(accessToken, apiEndpoint,method,body) => {
     const headers = new Headers();
     const bearer = `Bearer ${accessToken}`;
 
     headers.append("Authorization", bearer);
-
     const options = {
-        method: "GET",
-        headers: headers
+        method: method,
+        headers: headers,
+        body:body
     };
 
     return fetch(apiEndpoint, options)

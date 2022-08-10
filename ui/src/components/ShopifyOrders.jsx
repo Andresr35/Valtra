@@ -2,60 +2,79 @@ import React, { useContext, useEffect } from "react";
 import ShopifyRequest from "../api/ShopifyRequest";
 //import PDFFinder from '../api/PDFFinder';
 import { OrdersContext } from "../context/OrdersContext";
-import { useMsal } from "@azure/msal-react";  
+import { useMsal, useMsalAuthentication, useAccount } from "@azure/msal-react";
 //import { writeFile } from 'fs';
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
+import { loginRequest, protectedResources } from "../authentication/authConfig";
+import { callApiWithToken } from "../fetch";
 
 const OrderList = (props) => {
   const { orders, setOrders } = useContext(OrdersContext);
-  const { accounts } = useMsal();
-  const { instance } = useMsal();
+  const { instance, accounts, inProgress } = useMsal();
+  const account = useAccount(accounts[0] || {});
 
-
-  // let name = accounts[0] && accounts[0].name;  
+  // let name = accounts[0] && accounts[0].name;
   //get data from backed
 
   useEffect(() => {
     // console.log(accounts)
-    const fetchData = async () => {
+    const fetchData = () => {
       const tokenRequest = {
         account: accounts[0], // This is an example - Select account based on your app's requirements
-        scopes: ["User.Read"]
-    }
-      instance.acquireTokenSilent(tokenRequest).then((response) => {
+        scopes: ["User.Read"],
+      };
+      if (account && inProgress === "none") {
+        instance
+          .acquireTokenSilent({
+            scopes: protectedResources.apiHello.scopes,
+            account: account,
+          })
+          .then((response) => {
+            callApiWithToken(
+              response.accessToken,
+              ShopifyRequest.getUri() + "/orders",
+              "GET"
+            ).then((response) => {
+              console.log(response)
+               setOrders(response.result);
+            });
+          })
+          .catch((error) => {
+            if (error instanceof InteractionRequiredAuthError) {
+              if (account && inProgress === "none") {
+                instance
+                  .acquireTokenPopup({
+                    scopes: protectedResources.apiHello.scopes,
+                  })
+                  .then((response) => {
+                    callApiWithToken(
+                      response.accessToken,
+                      ShopifyRequest.getUri() + "/orders",
+                      "GET"
+                    ).then((response) => setOrders(response.data.result));
+                  })
+                  .catch((error) => console.log(error));
+              }
+            }
+          });
+
         // Call your API with the access token and return the data you need to save in state
-        ShopifyRequest.get("/orders",{
-          // data:,
-          headers:{
-            "authorization":response.accessToken
-          }
-        }).then((response)=>{
-          setOrders(response.data.result);
-        })
-
-        
-    }).catch(async (e) => {
-        console.log(e)
-        // Catch interaction_required errors and call interactive method to resolve
-        if (e instanceof InteractionRequiredAuthError) {
-            await instance.acquireTokenRedirect(tokenRequest);
-        }
-
-        throw e;
-    });
-
-
-
+        // ShopifyRequest.get(
+        //   "/orders"
+        //   // data:,
+        // ).then((response) => {
+        //   setOrders(response.data.result);
+        // });
+        // })
+      }
     };
     fetchData();
-  }, [setOrders,accounts,instance]);
+  }, [setOrders, accounts, instance,inProgress,account]);
 
   //send request to server to give pdf???
 
   return (
     <div className="list-group">
-
-
       <table className="table table-hover table-bordered ">
         <thead className="table-dark">
           <tr>

@@ -9,6 +9,7 @@ const db = require("../../db");
 const azure = require("../../utils");
 var MulterAzureStorage = require("multer-azure-storage");
 const e = require("connect-flash");
+const passport = require("passport");
 require("dotenv").config();
 
 const storage = multer.diskStorage({
@@ -43,7 +44,7 @@ router.use(express.json());
  *
  * @param   {path}  /orders  /api/shopify/orders
  */
-router.get("/orders", (req, res) => {
+router.get("/orders",passport.authenticate('oauth-bearer',{session:false}), (req, res) => {
  console.log(req.headers.authorization)
   console.log("got data from shopify");
 
