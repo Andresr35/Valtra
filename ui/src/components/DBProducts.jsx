@@ -1,8 +1,11 @@
 import React, { useEffect, useContext } from "react";
-
 import ProductFinder from "../api/ProductFinder";
 import { ProductsContext } from "../context/ProductsContext";
 import { useNavigate } from "react-router-dom";
+import { useMsal, useAccount } from "@azure/msal-react";
+import { protectedResources } from "../authentication/authConfig";
+import { callApiWithToken } from "../fetch";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
 /**
  * Lists all the products from the localhost database... this is a test 
@@ -11,41 +14,113 @@ import { useNavigate } from "react-router-dom";
  */
 const ProductList = (props) => {
   const { products, setProducts } = useContext(ProductsContext);
+  const { instance, accounts, inProgress } = useMsal();
+  const account = useAccount(accounts[0] || {});
   let navigate = useNavigate();
+  
 
   // GETs the data from backend and puts them in the products context
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await ProductFinder.get("/");
-        setProducts(response.data.data.products);
-        console.log(response);
-      } catch (err) {}
+
+    const fetchData = () => {
+
+      if (account && inProgress === "none") {
+        instance
+          .acquireTokenSilent({
+            scopes: protectedResources.apiHello.scopes,
+            account: account,
+          })
+          .then((response) => {
+            callApiWithToken(
+              response.accessToken,
+              ProductFinder.getUri() + "/",
+              "GET"
+            ).then((response) => {
+              setProducts(response.data.products);
+            });
+          })
+          .catch((error) => {
+            if (error instanceof InteractionRequiredAuthError) {
+              if (account && inProgress === "none") {
+                instance
+                  .acquireTokenPopup({
+                    scopes: protectedResources.apiHello.scopes,
+                  })
+                  .then((response) => {
+                    callApiWithToken(
+                      response.accessToken,
+                      ProductFinder.getUri() + "/",
+                      "GET"
+                    ).then((response) => setProducts(response.data.products));
+                  })
+                  .catch((error) => console.log(error));
+              }
+            }
+          });
+      }
     };
+
     fetchData();
-  }, [setProducts]);
+  }, [setProducts,accounts, instance,inProgress,account]);
 
 
 
 
 // Event handler for delete products on tablee
-    const handleDelete= async(id)=>{
-        try{
-            await ProductFinder.delete(`/${id}`);
-            setProducts(products.filter(product=>{
+    const handleDelete= (id)=>{
+      
+      if (account && inProgress === "none") {
+        instance
+          .acquireTokenSilent({
+            scopes: protectedResources.apiHello.scopes,
+            account: account,
+          })
+          .then((response) => {
+            callApiWithToken(
+              response.accessToken,
+              ProductFinder.getUri() + `/${id}`,
+              "DELETE"
+            ).then(
+              setProducts(products.filter(product=>{
                 return product.id !== id;
-            }))
-        }catch(err){console.log(err);
-        }
+            }
+            ))
+            );
+          })
+          .catch((error) => {
+            if (error instanceof InteractionRequiredAuthError) {
+              if (account && inProgress === "none") {
+                instance
+                  .acquireTokenPopup({
+                    scopes: protectedResources.apiHello.scopes,
+                  })
+                  .then((response) => {
+                    callApiWithToken(
+                      response.accessToken,
+                      ProductFinder.getUri() + `/${id}`,
+                      "DELETE"
+                    ).then(
+                      setProducts(products.filter(product=>{
+                        return product.id !== id;
+                    }
+                    ))
+                    );
+                  })
+                  .catch((error) => console.log(error));
+              }
+            }
+          });
+      }
     }
 
 
-// Event handler for updating products on table
 
   // Event handler for updating products on table
   const handleUpdate = (id) => {
     navigate(`/products/${id}/update`);
   };
+
+
 
   //actual html of the product table
   return (

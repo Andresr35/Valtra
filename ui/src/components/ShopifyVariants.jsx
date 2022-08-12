@@ -1,14 +1,18 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ShopifyRequest from "../api/ShopifyRequest";
 import Container from "react-bootstrap/esm/Container";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form"; 
-import "../assets/css/Image.css"
+import Form from "react-bootstrap/Form";
+import "../assets/css/Image.css";
+import { useMsal, useAccount } from "@azure/msal-react";
+import { protectedResources } from "../authentication/authConfig";
+import { callApiWithToken } from "../fetch";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
 /**
  * This page shows one product from shopify and should be able to edit at least the featured
@@ -20,41 +24,74 @@ const ShopifyVariants = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const handleTitleChange = (e) => setTitle(e.target.value);  
-  const handlePriceChange = (e, iden) => setPrice([e.target.value, iden]);  
-  const handleSkuChange = (e, iden) => setSku([e.target.value, iden]); 
-  // const handlePicChange = (e, iden) => setSku([e.target.value, iden]);
-
-  const [ setImageHover] = useState(false);
+  const handleTitleChange = (e) => setTitle(e.target.value);
+  const handlePriceChange = (e, iden) => setPrice([e.target.value, iden]);
+  const handleSkuChange = (e, iden) => setSku([e.target.value, iden]);
+  const [setImageHover] = useState(false);
   const [setUrl] = useState("");
   const [image, setImage] = useState([]);
   const [product, setProduct] = useState({});
-  const { id } = useParams(); 
-  const [ setTitle] = useState("");  
-  const [price, setPrice] = useState([]); 
-  const [sku, setSku] = useState([]);  
-  const [pic] = useState([]); 
+  const { id } = useParams();
+  const [setTitle] = useState("");
+  const [price, setPrice] = useState([]);
+  const [sku, setSku] = useState([]);
+  const [pic] = useState([]);
+  const handleOnChange = (e) => setUrl(e.target.value);
+  const handleImageChange = (e) => setImage(e.target.files[0]);
+  const { instance, accounts, inProgress } = useMsal();
+  const account = useAccount(accounts[0] || {});
 
   useEffect(() => {
     try {
-      const fetchData = async (id) => {
-        var response = await ShopifyRequest.get(`/products/${id}`);
-        setProduct(response.data.body.data.product); 
+      const fetchData = (id) => {
+        if (account && inProgress === "none") {
+          instance
+            .acquireTokenSilent({
+              scopes: protectedResources.apiHello.scopes,
+              account: account,
+            })
+            .then((response) => {
+              callApiWithToken(
+                response.accessToken,
+                ShopifyRequest.getUri() + `/products/${id}`,
+                "GET"
+              ).then((response) => {
+                setProduct(response.body.data.product);
+              });
+            })
+            .catch((error) => {
+              if (error instanceof InteractionRequiredAuthError) {
+                if (account && inProgress === "none") {
+                  instance
+                    .acquireTokenPopup({
+                      scopes: protectedResources.apiHello.scopes,
+                    })
+                    .then((response) => {
+                      callApiWithToken(
+                        response.accessToken,
+                        ShopifyRequest.getUri() + `/products/${id}`,
+                        "GET"
+                      ).then((response) => {
+                        setProduct(response.body.data.product);
+                      });
+                    })
+                    .catch((error) => console.log(error));
+                }
+              }
+            });
+        }
       };
+
       fetchData(id);
     } catch (err) {
       console.log(err);
     }
-  }, [setProduct, id]);
+  }, [setProduct, id, accounts, instance, inProgress, account]);
   // console.log(product);
 
-  const handleOnChange = (e) => setUrl(e.target.value);
-  const handleImageChange = (e) => {
-    e.preventDefault(); 
-    // console.log(e.target.files[0])
-    setImage(e.target.files[0]);
-  };
 
+
+  //FIXME: All these functions need new routes
   const sendImage = async (e) => {
     try {
       e.preventDefault();
@@ -69,66 +106,66 @@ const ShopifyVariants = () => {
     } catch (error) {
       console.log(error);
     }
-  }; 
+  };
 
-  // const sendTitle = async(e) => { 
+  // const sendTitle = async(e) => {
   //   try {
-  //     const response = await ShopifyRequest.put( 
-  //       '/productTitle',  
-  //       {status: 'success', data: title} 
+  //     const response = await ShopifyRequest.put(
+  //       '/productTitle',
+  //       {status: 'success', data: title}
   //     )
   //   } catch (error) {
   //     console.log(error)
   //   }
-  // };  
-  
-  function noDolllarSign(string) { 
-    let rstring = string.replace("$", ""); 
+  // };
+
+  function noDolllarSign(string) {
+    let rstring = string.replace("$", "");
     return rstring;
   }
 
-  const sendPrice = async(e) => { 
-    try {  
-      price[0] = noDolllarSign(price[0]); 
-      const response = await ShopifyRequest.put( 
-        '/productUpdatePrice',  
-        {status: 'success', data: price} 
-      )
-      console.log(response)
+  const sendPrice = async (e) => {
+    try {
+      price[0] = noDolllarSign(price[0]);
+      const response = await ShopifyRequest.put("/productUpdatePrice", {
+        status: "success",
+        data: price,
+      });
+      console.log(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  };    
+  };
 
-  const sendSku = async(e) => { 
-    try { 
-      const response = await ShopifyRequest.put( 
-        '/productUpdateSku', 
-        {status: 'success', data: sku} 
-      )
-      console.log(response)
+  const sendSku = async (e) => {
+    try {
+      const response = await ShopifyRequest.put("/productUpdateSku", {
+        status: "success",
+        data: sku,
+      });
+      console.log(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  };  
-  
-  const sendPic = async(e) => { 
-    try { 
-      const response = await ShopifyRequest.put( 
-        '/productUpdatePicture', 
-        {status: 'success', data: pic} 
-      )
-      console.log(response)
+  };
+
+  const sendPic = async (e) => {
+    try {
+      const response = await ShopifyRequest.put("/productUpdatePicture", {
+        status: "success",
+        data: pic,
+      });
+      console.log(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }; 
-  
-  const send = (e) => { 
-    //sendTitle(e); 
-    sendImage(e);  
+  };
+
+  const send = (e) => {
+    //sendTitle(e);
+    sendImage(e);
     sendPic(e);
-    sendPrice(e); 
+    sendPrice(e);
     sendSku(e);
   };
 
@@ -241,57 +278,71 @@ const ShopifyVariants = () => {
             <tbody>
               {product.variants &&
                 product.variants.nodes.map((variant, index) => (
-                  // TODO: make this look nicer 
+                  // TODO: make this look nicer
                   <tr key={index}>
                     <td>
                       <div className="container">
                         <button
                           style={{ all: "unset", cursor: "pointer" }}
                           onMouseEnter={() => setImageHover(true)}
-                          onMouseLeave={() => setImageHover(false)}>
-                          <div className="brightness"> 
+                          onMouseLeave={() => setImageHover(false)}
+                        >
+                          <div className="brightness">
                             <div className="image-upload">
-                              <label htmlFor="file-input"> 
-                                <form action="/upload" encType="multipart/form-data"> 
-                                  <input id="file-input" type="file" 
-                                  name="image" 
-                                  style={{ all: "unset", cursor: "pointer" }}
-                                  onChange={(e) => handleImageChange(e)}/>
+                              <label htmlFor="file-input">
+                                <form
+                                  action="/upload"
+                                  encType="multipart/form-data"
+                                >
+                                  <input
+                                    id="file-input"
+                                    type="file"
+                                    name="image"
+                                    style={{ all: "unset", cursor: "pointer" }}
+                                    onChange={(e) => handleImageChange(e)}
+                                  />
                                 </form>
-                                <img 
-                                  className= "thumbnail image"
+                                <img
+                                  className="thumbnail image"
                                   src={variant.image && variant.image.url}
-                                  alt="Add one?" />
+                                  alt="Add one?"
+                                />
                               </label>
-                            </div> 
+                            </div>
                           </div>
                         </button>
                       </div>
                     </td>
                     <td>
-                      <input 
-                        type="text" size="14" defaultValue={variant.title} 
-                        style={{ marginRight: '.1rem', }} 
-                        onChange = {(e) => handleTitleChange(e)} >
-                      </input> 
-                    </td> 
+                      <input
+                        type="text"
+                        size="14"
+                        defaultValue={variant.title}
+                        style={{ marginRight: ".1rem" }}
+                        onChange={(e) => handleTitleChange(e)}
+                      ></input>
+                    </td>
 
                     <td>
-                      <input 
-                        type="text" size="6" defaultValue={'$' + variant.price} 
-                        style={{ marginLeft: '.1rem', }} 
-                        onChange = {(e) => handlePriceChange(e, variant.id)}>
-                      </input>
-                    </td>
-                    <td> 
                       <input
-                        type="text" size="1" defaultValue={variant.sku} 
-                        style={{ marginLeft: '.1rem', }} 
-                        onChange = {(e) => handleSkuChange(e, variant.id)}>
-                      </input>
+                        type="text"
+                        size="6"
+                        defaultValue={"$" + variant.price}
+                        style={{ marginLeft: ".1rem" }}
+                        onChange={(e) => handlePriceChange(e, variant.id)}
+                      ></input>
                     </td>
                     <td>
-                      <Button onClick= {(e) => send(e)}>Save</Button>
+                      <input
+                        type="text"
+                        size="1"
+                        defaultValue={variant.sku}
+                        style={{ marginLeft: ".1rem" }}
+                        onChange={(e) => handleSkuChange(e, variant.id)}
+                      ></input>
+                    </td>
+                    <td>
+                      <Button onClick={(e) => send(e)}>Save</Button>
                     </td>
                   </tr>
                 ))}

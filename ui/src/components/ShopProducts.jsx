@@ -7,29 +7,76 @@ import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { VariantsContext } from "../context/VariantsContext"; 
-// import { SignOutButton } from "./SignOutButton";
+import { useMsal, useAccount } from "@azure/msal-react";
+import { protectedResources } from "../authentication/authConfig";
+import { callApiWithToken } from "../fetch";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
+//TODO: Document this
 const ShopProducts = (props) => {
-
   let navigate = useNavigate();
   const {variants, setVariants} = useContext(VariantsContext);
+  const { instance, accounts, inProgress } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
+
 
   useEffect(() => {
-    const fetchData = async () => {
+
+    const fetchData = () => {
       try {
-        const response = await ShopifyRequest.get("/products");
-        console.log({ first: response.data.body });
-        console.log({ products: response.data.body.data.products.nodes });
-        setVariants(response.data.body.data.products.nodes);
+        if (account && inProgress === "none") {
+          instance
+            .acquireTokenSilent({
+              scopes: protectedResources.apiHello.scopes,
+              account: account,
+            })
+            .then((response) => {
+              callApiWithToken(
+                response.accessToken,
+                ShopifyRequest.getUri() + "/products",
+                "GET"
+              ).then((response) => {
+                setVariants(response.body.data.products.nodes);
+              });
+            })
+            .catch((error) => {
+              if (error instanceof InteractionRequiredAuthError) {
+                if (account && inProgress === "none") {
+                  instance
+                    .acquireTokenPopup({
+                      scopes: protectedResources.apiHello.scopes,
+                    })
+                    .then((response) => {
+                      callApiWithToken(
+                        response.accessToken,
+                        ShopifyRequest.getUri() + "/products",
+                        "GET"
+                      ).then((response) => {
+                        setVariants(response.body.data.products.nodes);
+                      })
+                    })
+                    .catch((error) => console.log(error));
+                }
+              }
+            });
+        }
       } catch (err) {
         console.log(err);
       }
+
     };
     fetchData();
-  }, [setVariants]);
+  }, [setVariants, accounts, instance,inProgress,account]);
+
+
+
   const handleVariants = (id) => {
     navigate(`/product/${id}`);
   };
+
+  
+
   return (
     <div>
       <Container>

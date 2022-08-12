@@ -13,9 +13,7 @@ const OrderList = (props) => {
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  // let name = accounts[0] && accounts[0].name;
-  //get data from backed
-
+  // TODO: document this codes
   useEffect(() => {
     // console.log(accounts)
     const fetchData = () => {
@@ -26,14 +24,13 @@ const OrderList = (props) => {
             account: account,
           })
           .then((response) => {
-            console.log(response)
             callApiWithToken(
               response.accessToken,
               ShopifyRequest.getUri() + "/orders",
               "GET"
             ).then((response) => {
                setOrders(response.result);
-            });
+            }).catch((err)=>console.log(err))
           })
           .catch((error) => {
             if (error instanceof InteractionRequiredAuthError) {
@@ -54,14 +51,7 @@ const OrderList = (props) => {
             }
           });
       }
-              // Call your API with the access token and return the data you need to save in state
-        // ShopifyRequest.get(
-        //   "/orders"
-        //   // data:,
-        // ).then((response) => {
-        //   setOrders(response.data.result);
-        // });
-        // })
+            
     };
     fetchData();
   }, [setOrders, accounts, instance,inProgress,account]);

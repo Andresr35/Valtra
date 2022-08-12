@@ -9,8 +9,6 @@ var flash = require("connect-flash");
 var bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
-const task = require("./db/update.js");
-const jwt = require("jsonwebtoken");
 
 const BearerStrategy = require('passport-azure-ad').BearerStrategy;
 app.use(express.json());
@@ -42,14 +40,6 @@ require("dotenv").config();
 app.set("port", process.env.PORT || 3000);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-//only allow https
-app.use(function (request, response, next) {
-  if (process.env.NODE_ENV != "development" && !request.secure) {
-    return response.redirect("https://" + request.headers.host + request.url);
-  }
-
-  next();
-});
 app.use(
   cors({
     //     origin: ['http://192.168.0.93:3005'],
