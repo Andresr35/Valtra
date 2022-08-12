@@ -86,21 +86,5 @@ app.listen(app.get("port"), function () {
 //-------------------------------------------------this is testing authenticationss
 
 
-// app.get('/hello',
-//     passport.authenticate('oauth-bearer', {session: false}),
-//     (req, res) => {
-//         console.log('Validated claims: ', req.authInfo);
-//         console.log(req.headers)
-//         // Service relies on the name claim.  
-//         res.status(200).json({
-//             'name': req.authInfo['name'],
-//             'issued-by': req.authInfo['iss'],
-//             'issued-for': req.authInfo['aud'],
-//             'scope': req.authInfo['scp']
-//         });
-//     }
-// );
-
-
 //
 // task.job.start()
