@@ -2,7 +2,7 @@ import {isLocal } from '../components/structure/Version';
 //change const var local to chage from localhost deployment and the azure site deployment
 let url = "";  
 //Web urls associated
-const webUrl = "https://valtra-automation.azurewebsites.net"; 
+const webUrl = "https://valtraautomation.azurewebsites.net"; //https://valtra-automation.azurewebsites.net/
 const localUrl = "http://localhost:3005"; 
 //Algorithm that changes the urls 
 if (isLocal === false) { 
@@ -14,7 +14,7 @@ if (isLocal === false) {
 
 export const msalConfig = {
   auth: {
-    clientId: "b3efa5e9-61b3-43ea-84f7-dfc321dcae68", 
+    clientId: "508865a0-9a82-487c-a2cb-314fb88ff3b1", 
     authority: "https://login.microsoftonline.com/0abd75ee-31bd-4491-8c4c-7a1ff64b4f0f", // This is a URL (e.g. https://login.microsoftonline.com/{your tenant ID})0abd75ee-31bd-4491-8c4c-7a1ff64b4f0f,,https://login.microsoftonline.com/stronghandtools.com/
     redirectUri: url 
   },
