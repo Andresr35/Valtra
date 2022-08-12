@@ -18,9 +18,13 @@ const Fulfill = () => {
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
 
+
+
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
   };
+
+
 
   //just the setup of the array
   const csvFileToArray = (string) => {
@@ -44,6 +48,8 @@ const Fulfill = () => {
     sendData(array);
   };
 
+
+
   /**
    * function to do stuff when a csv gets imported...changes the text in the file input field
    * @param {String} e
@@ -59,8 +65,12 @@ const Fulfill = () => {
     }
   };
 
+
+
   const headerKeys = Object.keys(Object.assign({}, ...data));
 
+
+  
   //this runs when the button is pressed.
   const sendData = (array) => {
     try {
@@ -104,8 +114,12 @@ const Fulfill = () => {
                   .then((response) => {
                     callApiWithToken(
                       response.accessToken,
-                      ShopifyRequest.getUri() + "/orders",
-                      "PUT"
+                      ShopifyRequest.getUri() + "/fulfill",
+                      "PUT",
+                      {
+                        sent: "success",
+                        data: array,
+                      }
                     ).then((response) => {
                       updateStatus(response.data, array);
                       setDone(true);
