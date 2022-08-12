@@ -44,8 +44,7 @@ router.use(express.json());
  *
  * @param   {path}  /orders  /api/shopify/orders
  */
-router.get("/orders",passport.authenticate('oauth-bearer',{session:false}), (req, res) => {
- console.log(req.headers.authorization)
+router.get("/orders", (req, res) => {
   console.log("got data from shopify");
 
   client.client
