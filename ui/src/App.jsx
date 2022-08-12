@@ -25,17 +25,17 @@ import Documentation from "./routes/Documentation";
 import DocumentationRestricted from "./routes/DocumentationRestricted"; 
 import Updates from"./routes/Updates";
 
-
 //version num
-const App = () => {
-  return (
+const App = () => { 
+
+  return ( 
     <React.StrictMode>
-      <AuthenticatedTemplate>
+      <AuthenticatedTemplate>  
       <VariantsContextProvider>
         <ProductsContextProvider>
           <OrdersContextProvider>
             <Router>
-              <Routes>
+              <Routes> 
                 <Route exact path="/" element={<Home />} />
                 <Route
                   exact
@@ -72,6 +72,7 @@ const App = () => {
         </Router>
       </UnauthenticatedTemplate>
     </React.StrictMode>
-  );
-};
+  ); 
+}; 
+
 export default App;

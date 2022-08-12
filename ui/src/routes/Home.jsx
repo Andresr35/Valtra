@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/esm/Container'
 import AddProduct from '../components/DBAddProduct'
 import Header from '../components/structure/Header'
 import NavBar from '../components/structure/NavBar'
-import ProductList from '../components/DBProducts'
+import ProductList from '../components/DBProducts'  
 
 const Home = () => { 
   return ( 
