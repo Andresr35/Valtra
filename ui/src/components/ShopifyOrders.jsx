@@ -30,7 +30,7 @@ const OrderList = (props) => {
               "GET"
             ).then((response) => {
                setOrders(response.result);
-            });
+            }).catch((err)=>console.log(err))
           })
           .catch((error) => {
             if (error instanceof InteractionRequiredAuthError) {

@@ -14,7 +14,7 @@ if (isLocal === false) {
 
 export const msalConfig = {
   auth: {
-    clientId: "b3efa5e9-61b3-43ea-84f7-dfc321dcae68", 
+    clientId: "b3efa5e9-61b3-43ea-84f7-dfc321dcae68", //TODO: idk you said to change this
     authority: "https://login.microsoftonline.com/0abd75ee-31bd-4491-8c4c-7a1ff64b4f0f", // This is a URL (e.g. https://login.microsoftonline.com/{your tenant ID})0abd75ee-31bd-4491-8c4c-7a1ff64b4f0f,,https://login.microsoftonline.com/stronghandtools.com/
     redirectUri: url 
   },
@@ -40,7 +40,7 @@ export const protectedResources = {
       scopes: ["User.Read"],
   },
   apiHello: {
-      endpoint: "http://localhost:3006/hello",
+      endpoint: "http://localhost:3006/hello",//not used
       scopes: ["api://f2be1c04-63b0-4f81-bc6d-3fe120ac6712/access_as_user"], // e.g. api://xxxxxx/access_as_user
   },
 }
