@@ -106,7 +106,6 @@ useEffect(()=>{
                 data:array,
               }
             ).then((response) => {
-              console.log(response)
               updateStatus(response, array);
               setDone(true);
             }).catch(err=>console.log(err));
