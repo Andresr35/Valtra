@@ -7,11 +7,11 @@ Change certain settings on this page
 import React from "react";
 export const Version = () => {
   //change when version '=' to for change
-  const version = "1.1.0";
+  const version = "1.1.1";
   return <>Version {version}</>;
 };
 //true for local host testing and false for azure deploy
-export const isLocal = false;
+export const isLocal = true;
 
 //turn true to signify operational and up to production
-export const isproduction = true;
+export const isproduction = false;
