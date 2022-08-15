@@ -10,7 +10,8 @@ import { VariantsContext } from "../context/VariantsContext";
 import { useMsal, useAccount } from "@azure/msal-react";
 import { protectedResources } from "../authentication/authConfig";
 import { callApiWithToken } from "../fetch";
-import { InteractionRequiredAuthError } from "@azure/msal-browser";
+import { InteractionRequiredAuthError } from "@azure/msal-browser"; 
+import '../assets/css/Image.css'
 
 //TODO: Document this
 const ShopProducts = (props) => {
@@ -93,7 +94,8 @@ const ShopProducts = (props) => {
             {variants.map((product, index) => (
               <tr key={index}>
                 <td>
-                  <img
+                  <img  
+                    className='ShopProductsTableImage'
                     src={product.featuredImage ? product.featuredImage.url : ""}
                     alt="NA"
                   />
