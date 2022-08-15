@@ -5,7 +5,11 @@
 }
 .brightness img:hover {
     opacity: .5;
-} 
+}  
+.ShopProductsTableImage{  
+    height: 10rem;
+    max-width: 100%;
+}
 
 /*.image-upload>input {
     display: none;
