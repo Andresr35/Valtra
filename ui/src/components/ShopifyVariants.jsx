@@ -186,7 +186,7 @@ const ShopifyVariants = () => {
           <h3 style={{ textAlign: "center" }}>Featured Image</h3>
           <img
             className="image"
-            style={{ width: "initial", height: "initial" }}
+            style={{ width: "100%", height: "initial" }}
             src={product.featuredImage ? product.featuredImage.url : ""}
             alt="no work"
           />
