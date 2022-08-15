@@ -11,7 +11,7 @@ export const Version = () => {
   return <>Version {version}</>;
 };
 //true for local host testing and false for azure deploy
-export const isLocal = false;
+export const isLocal = true;
 
 //turn true to signify operational and up to production
-export const isproduction = true;
+export const isproduction = false;
