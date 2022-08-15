@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ShopifyRequest from "../api/ShopifyRequest";
 import { CSVLink } from "react-csv";
 import Alert from "react-bootstrap/Alert";
@@ -8,6 +8,11 @@ import { protectedResources } from "../authentication/authConfig";
 import { callApiWithToken } from "../fetch";
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
+
+/**
+ * 
+ * @returns 
+ */
 const Fulfill = () => {
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState(false);
@@ -18,7 +23,9 @@ const Fulfill = () => {
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-
+useEffect(()=>{
+  console.log("status changed")
+},[data])
 
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
@@ -96,11 +103,10 @@ const Fulfill = () => {
               "PUT",
               {
                 sent: "success",
-                data: array,
+                data:array,
               }
             ).then((response) => {
-              console.log(response)
-              updateStatus(response.data, array);
+              updateStatus(response, array);
               setDone(true);
             }).catch(err=>console.log(err));
           })
@@ -121,7 +127,7 @@ const Fulfill = () => {
                         data: array,
                       }
                     ).then((response) => {
-                      updateStatus(response.data, array);
+                      updateStatus(response, array);
                       setDone(true);
                     });
                   })
@@ -137,6 +143,7 @@ const Fulfill = () => {
   };
 
   const updateStatus = (response, prevArray) => {
+    console.log("updatingg")
     for (const obj in prevArray) {
       for (const order in response.orders) {
         if (
