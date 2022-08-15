@@ -13,7 +13,8 @@ const OrderList = (props) => {
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  // TODO: document this codes
+  // TODO: document this codes 
+  //TODO: catch all errors
   useEffect(() => {
     // console.log(accounts)
     const fetchData = () => {

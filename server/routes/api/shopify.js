@@ -84,9 +84,11 @@ router.put("/fulfill", async (req, res) => {
   // console.log(req.body.data[0].Name);
   // console.log(req.body.data[0].Tracking);
   //start getting data and fulfilment numbers
+  console.log(req.body)
   try {
     //------------------------------------------these will be the variables that change depending on what order we're on
     console.log("Running....");
+
     if (!req.body.data) {
       console.log("No JSON received");
       res.status(404).json({
