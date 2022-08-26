@@ -61,7 +61,6 @@ async function main() {
 
 
 
-
   //------------------------------------------------------------- Get a block blob client and download
   const blockBlobClient = containerClient.getBlockBlobClient("test.png");
 
@@ -71,8 +70,7 @@ async function main() {
   const downloadStream = got.stream("https://cdn.shopify.com/s/files/1/0581/8459/7641/products/index.png?v=1658532454")
 
   const uploadBlobResponse = await blockBlobClient.uploadStream(downloadStream,undefined,undefined,{blobHTTPHeaders: { blobContentType: "image" } });
-
-
+    
 
 
 
