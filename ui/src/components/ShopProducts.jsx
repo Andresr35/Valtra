@@ -20,8 +20,6 @@ const ShopProducts = (props) => {
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-
-
   useEffect(() => {
 
     const fetchData = () => {
@@ -76,8 +74,6 @@ const ShopProducts = (props) => {
     navigate(`/product/${id}`);
   };
 
-  
-
   return (
     <div>
       <Container>
@@ -93,7 +89,7 @@ const ShopProducts = (props) => {
           <tbody>
             {variants.map((product, index) => (
               <tr key={index}>
-                <td>
+                <td className="imageTableWidth">
                   <img  
                     className='ShopProductsTableImage'
                     src={product.featuredImage ? product.featuredImage.url : ""}
