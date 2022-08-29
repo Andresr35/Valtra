@@ -1,13 +1,11 @@
 /**
- * GIves back modules for getting the Azure container...I use this for uploading images to azure. I dont think
+ * Gives back modules for getting the Azure container...I use this for uploading images to azure. I dont think
  * the backupshopify thing uses this...
  */
 
-
-
 const { BlobServiceClient } = require("@azure/storage-blob");
 const { v1: uuidv1 } = require("uuid");
-const got = require('got')
+const got = require("got");
 require("dotenv").config();
 
 /**
@@ -37,7 +35,7 @@ function getContainer() {
   return containerClient;
 }
 
-async function main() {
+async function test() {
   // Quick start code goes here
   const AZURE_STORAGE_CONNECTION_STRING =
     process.env.AZURE_STORAGE_CONNECTION_STRING;
@@ -59,26 +57,21 @@ async function main() {
 
   // Create a unique name for the blob
 
-
-
   //------------------------------------------------------------- Get a block blob client and download
   const blockBlobClient = containerClient.getBlockBlobClient("test.png");
 
   console.log("\nUploading to Azure storage as blob:\n\t", "test");
 
+  const downloadStream = got.stream(
+    "https://cdn.shopify.com/s/files/1/0581/8459/7641/products/index.png?v=1658532454"
+  );
 
-  const downloadStream = got.stream("https://cdn.shopify.com/s/files/1/0581/8459/7641/products/index.png?v=1658532454")
-
-  const uploadBlobResponse = await blockBlobClient.uploadStream(downloadStream,undefined,undefined,{blobHTTPHeaders: { blobContentType: "image" } });
-    
-
-
-
-
-
-
-
-
+  const uploadBlobResponse = await blockBlobClient.uploadStream(
+    downloadStream,
+    undefined,
+    undefined,
+    { blobHTTPHeaders: { blobContentType: "image" } }
+  );
 
   console.log(uploadBlobResponse);
   // Get blob content from position 0 to the end
@@ -112,12 +105,22 @@ async function main() {
   }
 }
 
-// main()
+// test()
 //   .then(() => console.log("Done"))
 //   .catch((ex) => console.log(ex.message));
 
 module.exports = {
   getContainer,
+
+  /**
+   * Uploads a blob to azure and then logs the response
+   *
+   * @param   {blob}  data       What is being uploaded
+   * @param   {float}  length     size of blob
+   * @param   {AzureContainer}  container  container that you want to upload blob to
+   *
+   * @return  {None}             none
+   */
   uploadBlobResponse: async (data, length, container) => {
     const blockBlobClient = container.getBlockBlobClient("ok");
     const response = await blockBlobClient.upload(data, length);

@@ -1,23 +1,31 @@
 var express = require("express");
 var router = express.Router();
-const morgan = require("morgan");
 const client = require("../../utils/shopify");
-const { parse, stringify, toJSON, fromJSON } = require("flatted");
 const multer = require("multer");
 const path = require("path");
 const db = require("../../db");
-const azure = require("../../utils");
 var MulterAzureStorage = require("multer-azure-storage");
-const e = require("connect-flash");
-const passport = require("passport");
 require("dotenv").config();
 
-
+/**
+ * Just returning a multer's files original name
+ *
+ * @param   {imageFile}  file  
+ *
+ * @return  {str}        original file name
+ */
 var getFileName = function (file) {
   return file.originalname;
-  // or return file.name;
 };
 
+/**
+ * Middleware for uploading imageForms to Azure from frontend.
+ * Requires AZURE_STORAGE_CONNECTION_STRING in env.
+ *
+ * Containes configuration for blob.
+ *
+ * @return  {None}  none
+ */
 const upload = multer({
   storage: new MulterAzureStorage({
     //TODO: add this connection string to env variables
@@ -28,73 +36,54 @@ const upload = multer({
   }),
 });
 
-router.use(express.json());
-
 /**
- * gets 50 orders from shopify
+ * Gets 50 orders from shopify
+ * Is used for "Orders" page.
  *
  * @param   {path}  /orders  /api/shopify/orders
  */
-router.get("/orders", (req, res) => {
-  console.log("got data from shopify");
-
-  client.client
-    .get({ path: "/orders" })
-    .then((result) => {
-      res.status(200).json({
-        status: 200,
-        result: result.body.orders,
-        
-      });
-    })
-    .catch((error) => {
-      res.json({
-        status: error.stack,
-      });
-    });
-});
-
-router.get("/checkout/:token", async (req, res, next) => {
+router.get("/orders", async (req, res) => {
   try {
-    const result = await client.client.get({
-      path: `/checkouts/${req.params.token}`,
+    const result = await client.restClient.get({ path: "/orders" });
+    res.status(200).json({
+      status: 200,
+      result: result.body.orders,
     });
-    console.log(result.body);
-  } catch (err) {
-    return next(err);
+  } catch (error) {
+    res.json({
+      status: error.stack,
+    });
   }
 });
 
 /**
- * gets the fulfillments from orders and fufills tehm
+ * Gets the fulfillments ID by order name,
+ * Loops through all orders and fulfills
+ * 
+ * Res sends back object with status of fulfillment orders
  *
  * @param   {route}  /fulfill  /api/shopify/fulfill
  *
  */
 router.put("/fulfill", async (req, res) => {
-  // console.log(req.body.data[0].Name);
-  // console.log(req.body.data[0].Tracking);
-  //start getting data and fulfilment numbers
-  console.log(req.body)
   try {
-    //------------------------------------------these will be the variables that change depending on what order we're on
-    console.log("Running....");
-
+    // Handler in case there is nothing in res.body.data
     if (!req.body.data) {
-      console.log("No JSON received");
       res.status(404).json({
-        status: "null",
-        message: "no JSON recieved",
+        status: "Null",
+        message: "No JSON recieved",
       });
     } else {
       var obj = `[]`;
       const resData = JSON.parse(obj);
+      // Looping through the orders to fulfill
       for (const orderObject in req.body.data) {
         const name = req.body.data[orderObject].Name,
           shippingCompany = "fedex",
           trackingNumber = req.body.data[orderObject].Tracking;
         var fulfillmentOrderId = "";
-        const result = await client.client2.query({
+        // Grabbing fulfillment ID's based on the Order Name
+        const result = await client.graphClient.query({
           data: `query getFulfillmentOrderbyName{
             orders(first:1,query:"name:${name}") {
               nodes {
@@ -102,25 +91,24 @@ router.put("/fulfill", async (req, res) => {
                 name
                 displayFulfillmentStatus
                 fulfillmentOrders(first:10,displayable:true){
-                    nodes{
-                      id
-                    }
+                  nodes{
+                    id
+                  }
                 }
               }
             }
           }`,
         });
-
-        // ----------------------------------------------------checking to see if the order name could be queried
+        // Checking to see if the order name could be queried
         if (!result.body.data.orders.nodes.length) {
           resData.push({
             name: `${req.body.data[orderObject].Name}`,
             Status: "FAILED",
           });
         } else {
-          //----------------------------------------------getting the fufillment order id
+          // Looping through orders given back
           for (const orderNode in result.body.data.orders.nodes) {
-            //this just gets the name
+            // Handling orders that have already been fulfilled
             if (
               result.body.data.orders.nodes[orderNode]
                 .displayFulfillmentStatus == "FULFILLED"
@@ -135,14 +123,15 @@ router.put("/fulfill", async (req, res) => {
                   result.body.data.orders.nodes[orderNode].name +
                   "..."
               );
+              // Looping through fulfillment ID's
               for (const node in result.body.data.orders.nodes[orderNode]
                 .fulfillmentOrders.nodes) {
                 fulfillmentOrderId =
                   result.body.data.orders.nodes[orderNode].fulfillmentOrders
                     .nodes[node].id;
-                //----------------------------------------------Starting to mutate fufillment data
                 try {
-                  const mutResult = await client.client2.query({
+                  // Starting to fulfill orders
+                  const mutResult = await client.graphClient.query({
                     data: {
                       query: `mutation fulfillmentCreateV2($fulfillment: FulfillmentV2Input!) {
                             fulfillmentCreateV2(fulfillment: $fulfillment) {
@@ -176,7 +165,7 @@ router.put("/fulfill", async (req, res) => {
                       },
                     },
                   });
-
+                  // Handling any mutation erros
                   if (
                     mutResult.body.data.fulfillmentCreateV2.fulfillment ==
                     "null"
@@ -185,13 +174,14 @@ router.put("/fulfill", async (req, res) => {
                       mutResult.body.data.fulfillmentCreateV2.userErrors
                     );
                   } else {
+                    // Saving the status of the fulfillment
                     resData.push({
                       name: `${mutResult.body.data.fulfillmentCreateV2.fulfillment.order.name}`,
                       Status: `${mutResult.body.data.fulfillmentCreateV2.fulfillment.displayStatus}`,
                     });
                   }
                 } catch (error) {
-                  //---------------------------------------------Error catching on mutation
+                  // Error handling on mutation
                   console.log(error.stack);
                 }
               }
@@ -200,43 +190,25 @@ router.put("/fulfill", async (req, res) => {
         }
       }
 
-      // the entire for loop ends here and we can start to send results already.
+      // Starting to send results back
       obj = JSON.stringify(resData);
-      //-----------------------------------------------json result if everything goes well
-      console.log("done");
+      // JSON result if everything goes well
+      console.log("Done");
       res.status(200).json({
         status: "success",
         orders: resData,
       });
     }
 
-    //--------------------------------------------------last catch error
+    // Final error handling for entire route
   } catch (err) {
-    console.log("error at query");
+    console.log(" Error at query for fulfillment ID");
     console.log(err.stack);
-    res.status(404).json("something broke");
-  }
-});
-
-/**
- * grabs one order using REST api
- *
- * @param   {route}  /orders/:id  api/shopify/orders/:id
- */
-router.get("/orders/:id", (req, res) => {
-  client.client
-    .get({ path: `/orders/${req.params.id}` })
-    .then((result) => {
-      res.json({
-        status: "good job",
-        result: result.body.order,
-      });
-    })
-    .catch((error) => {
-      res.json({
-        status: error.response,
-      });
+    res.status(404).json({
+      message:"Something broke on /fulfill route",
+      error: err.stack
     });
+  }
 });
 
 /**
@@ -248,7 +220,7 @@ router.get("/orders/:id", (req, res) => {
  */
 router.get("/products", async (req, res) => {
   try {
-    result = await client.client2.query({
+    result = await client.graphClient.query({
       data: `{
         products(first :20) {
           nodes {
@@ -317,7 +289,7 @@ router.get("/products", async (req, res) => {
  */
 router.get("/products/:id", async (req, res) => {
   try {
-    const results = await client.client2.query({
+    const results = await client.graphClient.query({
       data: `{
         product(id: "gid://shopify/Product/${req.params.id}") {
           title
@@ -354,7 +326,7 @@ router.get("/products/:id", async (req, res) => {
             }
           }
         }
-    }`,
+      }`,
     });
 
     res.json(results);
@@ -362,10 +334,15 @@ router.get("/products/:id", async (req, res) => {
     res.json(error.stack);
   }
 });
-//TODO create image updater using shofify api
+
+/**
+ * Mutating a product image with another current image hosted in shopify
+ *
+ * @param   {route}  /products/:id  [/products/:id description]
+ */
 router.post("/products/:id", async (req, res) => {
   try {
-    const result = await client.client2.query({
+    const result = await client.graphClient.query({
       data: {
         query: `mutation productImageUpdate($image: ImageInput!, $productId: ID!) {
           productImageUpdate(image: $image, productId: $productId) {
@@ -389,65 +366,109 @@ router.post("/products/:id", async (req, res) => {
       },
     });
     res.json(result);
-  } catch (error) { 
-    console.log(req)
-    res.json(error.stack)  
-  } 
-});  
-router.put('/productUpdatePrice', async(req, res) => {   
-  const data = await client.client2.query({
-    data: {
-      query: `mutation updateProductVariantMetafields($input: ProductVariantInput!) {
-        productVariantUpdate(input: $input) {
-          productVariant {
-            id
-     	      price
-          }
-          userErrors {
-            message
-            field
-          }
-        }
-      }`,
-      variables: {
-        input: { 
-          "id": `${req.body.data[1]}`, 
-          "price": `${req.body.data[0]}`, 
-        }
-      },
-    },
-  });  
-}); 
-
-router.put('/productUpdateSku', async(req, res) => {  
-  console.log(req.body);  
-  const data = await client.client2.query({
-    data: {
-      query: `mutation updateProductVariantMetafields($input: ProductVariantInput!) {
-        productVariantUpdate(input: $input) {
-          productVariant {
-            id
-     	      sku
-          }
-          userErrors {
-            message
-            field
-          }
-        }
-      }`,
-      variables: {
-        input: { 
-          "id": `${req.body.data[1]}`, 
-          "sku": `${req.body.data[0]}`, 
-        }
-      },
-    },
-  });  
+  } catch (error) {
+    console.log(req);
+    res.json(error.stack);
+  }
 });
 
+/**
+ * Updating the price of a shopify product. 
+ * 
+ * Requies a new price and ID in req.body
+ *
+ * @param   {rout}  /productUpdatePrice  [/productUpdatePrice description]
+ */
+router.put("/productUpdatePrice", async (req, res) => {
+  try {
+    const data = await client.graphClient.query({
+      data: {
+        query: `mutation updateProductVariantMetafields($input: ProductVariantInput!) {
+          productVariantUpdate(input: $input) {
+            productVariant {
+              id
+               price
+            }
+            userErrors {
+              message
+              field
+            }
+          }
+        }`,
+        variables: {
+          input: {
+            id: `${req.body.data[1]}`,
+            price: `${req.body.data[0]}`,
+          },
+        },
+      },
+    });
+    res.status(200).json({
+      message: "Sucess",
+      result:data
+    })
+  } catch (error) {
+    res.json(error.stack)
+  }
+});
 
-// // const mutResult = await client.client2.query({
+/**
+ * Update Product SKU
+ * 
+ * Requires ID and new SKU in req.body
+ *
+ * @param   {route}  /productUpdateSku  [/productUpdateSku description]
+ *
+ */
+router.put("/productUpdateSku", async (req, res) => {
+  try {
+    console.log(req.body);
+    const data = await client.graphClient.query({
+      data: {
+        query: `mutation updateProductVariantMetafields($input: ProductVariantInput!) {
+          productVariantUpdate(input: $input) {
+            productVariant {
+              id
+               sku
+            }
+            userErrors {
+              message
+              field
+            }
+          }
+        }`,
+        variables: {
+          input: {
+            id: `${req.body.data[1]}`,
+            sku: `${req.body.data[0]}`,
+          },
+        },
+      },
+    });
+    res.status(200).json({
+      message:"Sucess",
+      result:data
+    })
+  } catch (error) {
+    res.json(error.stack)
+  }
 
+});
+
+/**
+ * Updating the featured image of a shopify product.
+ * 
+ * requires imagefile in body
+ * 
+ * uploads to azure container.
+ * 
+ * NOTE: No longer in use
+ *
+ * @param   {[type]}  /productVariant  [/productVariant description]
+ * @param   {middleware}  upload           saves image to azure
+ * @param   {FormData}  image            formData of image
+ *
+ */
 router.put("/productVariant", upload.single("image"), async (req, res) => {
   if (req.file) {
     const { filename, mimetype, size } = req.file;
@@ -459,25 +480,6 @@ router.put("/productVariant", upload.single("image"), async (req, res) => {
   } else {
     console.log("no file");
   }
-
-  // try {
-  //   const results = db.query(
-  //     `UPDATE products SET featuredImage = '${req.file.data}' WHERE id = 1 returning*`,
-  //     (err, result) => {
-  //       console.log("got data from db");
-  //       console.log(result);
-  //       res.status(200).json({
-  //         status: "success",
-  //         data: {
-  //           products: result,
-  //         },
-  //       });
-  //     }
-  //   );
-  //   console.log(results);
-  // } catch (err) {
-  //   console.log(err);
-  // }
 });
 
 module.exports = router;
