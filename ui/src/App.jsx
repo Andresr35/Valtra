@@ -7,7 +7,8 @@ import { ProductsContextProvider } from "./context/ProductsContext";
 import OrderPage from "./routes/OrderPage";
 import { OrdersContextProvider } from "./context/OrdersContext";
 import FulfillingOrders from "./routes/FulfillingOrders";
-import { VariantsContextProvider } from "./context/VariantsContext";
+import { VariantsContextProvider } from "./context/VariantsContext"; 
+//import { ImageContextProvider } from "./context/ImageContext";
 
 //authentication
 import {
@@ -33,10 +34,11 @@ const App = () => {
       <AuthenticatedTemplate>  
       <VariantsContextProvider>
         <ProductsContextProvider>
-          <OrdersContextProvider>
+          <OrdersContextProvider>  
+        
             <Router>
               <Routes> 
-                <Route exact path="/" element={<Home />} />
+                <Route exact path="/" element={<Home />} /> 
                 <Route
                   exact
                   path="/products/gid://shopify/Product/:id/update"
@@ -51,7 +53,7 @@ const App = () => {
                 <Route path="/updates" element={<Updates/>} />
                 </Routes>
               </Router>
-
+             
           </OrdersContextProvider>
         </ProductsContextProvider>
         </VariantsContextProvider>

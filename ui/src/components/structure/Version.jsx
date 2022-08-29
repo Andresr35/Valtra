@@ -7,7 +7,7 @@ Change certain settings on this page
 import React from "react";
 export const Version = () => {
   //change when version '=' to for change
-  const version = "1.1.1";
+  const version = "1.1.2";
   return <>Version {version}</>;
 };
 //true for local host testing and false for azure deploy

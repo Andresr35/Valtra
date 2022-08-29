@@ -28,7 +28,9 @@ const NavBar = () => {
         name = 'Bozo'; 
     } else if (name === 'Angel Arellano' || name === 'Ramon Martinez') { 
         name = 'Please wait: Downloading Free Ram ...'
-    } 
+    } else if(name === 'Joseph Ramirez') { 
+        name = 'Joe Mama'
+    }
     //Changes NavBar brand to VatraAuto Dev or ValtraAuto
     let DevTitle = ""; 
     if (isproduction === true) { 

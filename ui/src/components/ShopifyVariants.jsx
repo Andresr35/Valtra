@@ -12,7 +12,9 @@ import "../assets/css/Image.css";
 import { useMsal, useAccount } from "@azure/msal-react";
 import { protectedResources } from "../authentication/authConfig";
 import { callApiWithToken } from "../fetch";
-import { InteractionRequiredAuthError } from "@azure/msal-browser";
+import { InteractionRequiredAuthError } from "@azure/msal-browser"; 
+import Dropzone from "./Dropzone"; 
+import Previews from "./preview"; 
 
 /**
  * This page shows one product from shopify and should be able to edit at least the featured
@@ -20,7 +22,7 @@ import { InteractionRequiredAuthError } from "@azure/msal-browser";
  * a new object for them or keep the product state
  *
  */
-const ShopifyVariants = () => {
+export const ShopifyVariants = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -37,9 +39,9 @@ const ShopifyVariants = () => {
   const [sku, setSku] = useState([]);
   const [pic] = useState([]);
   const handleOnChange = (e) => setUrl(e.target.value);
-  const handleImageChange = (e) => setImage(e.target.files[0]);
+  //const handleImageChange = (e) => setImage(e.target.files[0]);
   const { instance, accounts, inProgress } = useMsal();
-  const account = useAccount(accounts[0] || {});
+  const account = useAccount(accounts[0] || {}); 
 
   useEffect(() => {
     try {
@@ -96,7 +98,8 @@ const ShopifyVariants = () => {
     try {
       e.preventDefault();
       const imageData = new FormData();
-      imageData.append("image", image);
+      imageData.append("image", image); 
+      console.log(image)
       const response = await ShopifyRequest.put(`/productVariant`, imageData, {
         headers: {
           "Content-Type": `multipart/form-data`,
@@ -149,22 +152,9 @@ const ShopifyVariants = () => {
     }
   };
 
-  const sendPic = async (e) => {
-    try {
-      const response = await ShopifyRequest.put("/productUpdatePicture", {
-        status: "success",
-        data: pic,
-      });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const send = (e) => {
     //sendTitle(e);
     sendImage(e);
-    sendPic(e);
     sendPrice(e);
     sendSku(e);
   };
@@ -186,7 +176,7 @@ const ShopifyVariants = () => {
           <h3 style={{ textAlign: "center" }}>Featured Image</h3>
           <img
             className="image"
-            style={{ width: "initial", height: "initial" }}
+            style={{ width: "100%", height: "initial" }}
             src={product.featuredImage ? product.featuredImage.url : ""}
             alt="no work"
           />
@@ -284,8 +274,8 @@ const ShopifyVariants = () => {
                       <div className="container">
                         <button
                           style={{ all: "unset", cursor: "pointer" }}
-                          onMouseEnter={() => setImageHover(true)}
-                          onMouseLeave={() => setImageHover(false)}
+                          //onMouseEnter={() => setImageHover(true)}
+                          //onMouseLeave={() => setImageHover(false)}
                         >
                           <div className="brightness">
                             <div className="image-upload">
@@ -293,25 +283,29 @@ const ShopifyVariants = () => {
                                 <form
                                   action="/upload"
                                   encType="multipart/form-data"
-                                >
+                                > 
                                   <input
                                     id="file-input"
                                     type="file"
                                     name="image"
                                     style={{ all: "unset", cursor: "pointer" }}
-                                    onChange={(e) => handleImageChange(e)}
-                                  />
-                                </form>
+                                    //onChange={(e) => handleImageChange(e)}
+                                  />  
+                                </form>     
                                 <img
                                   className="thumbnail image"
                                   src={variant.image && variant.image.url}
                                   alt="Add one?"
                                 />
-                              </label>
-                            </div>
+                              </label> 
+                            </div> 
                           </div>
-                        </button>
-                      </div>
+                        </button> 
+                              <Previews 
+                              value = {variant.image.url}   
+                              />  
+                                    
+                      </div> 
                     </td>
                     <td>
                       <input
@@ -348,8 +342,8 @@ const ShopifyVariants = () => {
                 ))}
             </tbody>
           </Table>
-        </div>
-      </Container>
+        </div> 
+      </Container>  
     </div>
   );
 };
