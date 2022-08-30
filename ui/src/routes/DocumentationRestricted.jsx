@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from 'react-bootstrap/esm/Container'
 import NavBar from '../components/structure/NavBar'
-//TODO put actual documentation
+//TODO: put actual documentation
 //Holds the documentation for the website itself such as how to use it 
 //and holds documentation for other relevent apps such as infor macros 
 // however this is a restricted version that does not reuire a sign in, 

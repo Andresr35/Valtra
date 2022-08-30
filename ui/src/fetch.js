@@ -1,3 +1,6 @@
+/**
+ * Helper function for sending HTTP requests to the backened with Azure Access tokens.
+ */
 
 export const callApiWithToken = async(accessToken, apiEndpoint,method,body) => {
     const headers = new Headers();
@@ -7,7 +10,6 @@ export const callApiWithToken = async(accessToken, apiEndpoint,method,body) => {
     const options = {
         method: method,
         headers: headers,
-        
         body:JSON.stringify(body)
     };
 

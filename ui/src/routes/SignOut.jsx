@@ -1,27 +1,19 @@
-//React
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
-//Other Files
 import "../assets/css/App.css";
-// import logo from '../assets/images/logo.svg'
 import valtra_logo from "../assets/images/valtra_logo.svg";
 import "../App.jsx";
-//Bootstrap
 import Navbar from "react-bootstrap/Navbar";
-
-//components;
 import { Version } from "../components/structure/Version";
-//Azure auth
-// import { useIsAuthenticated } from "@azure/msal-react";
 
 const SignOutPage = (props) => {
+
   let navigate = useNavigate();
-  const redirect = () => {
-    navigate("/");
-  };
-  const redirectUn = () => {
-    navigate("/Documentation");
-  };
+
+  const redirect = () => navigate("/");
+  const redirectUn = () =>navigate("/Documentation");
+
   return (
     <>
       <Navbar bg="primary" variant="dark">

@@ -8,7 +8,8 @@ import { useMsal, useAccount } from "@azure/msal-react";
 import { protectedResources } from "../authentication/authConfig";
 import { callApiWithToken } from "../fetch";
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
-
+//NOTE: I dont think this page is being used anymore or should be used since, they are
+//  connected to the database which grabs from shopify
 const UpdateProduct = (props) => {
   const { instance, accounts, inProgress } = useMsal();
   var account = useAccount(accounts[0] || {});
@@ -114,8 +115,6 @@ const UpdateProduct = (props) => {
     }
     navigate("/");
   };
-
-
 
   return (
     <div>
