@@ -1,3 +1,10 @@
+/*------------------------------------------------------------- 
+____________________//#TODO: Document ANDRES
+* File: App.jsx  
+* Author: Andres
+* Date: 8/31/2022  
+* Description: 
+-------------------------------------------------------------*/
 import React from "react";
 import Home from "./routes/Home";
 import UpdateProducts from "./routes/UpdateProducts";
@@ -78,3 +85,11 @@ const App = () => {
 }; 
 
 export default App;
+//Documentation for file headers 
+
+/*------------------------------------------------------------- 
+* File: Name of file
+* Author:TODO:Who wrote the documentation 
+* Date: day of which documentation was last updated
+* Description: Summary of what the code inside the file does 
+-------------------------------------------------------------*/
