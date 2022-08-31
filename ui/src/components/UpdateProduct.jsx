@@ -6,11 +6,13 @@ import { useEffect } from "react";
 import ProductFinder from "../api/ProductFinder";
 import { useMsal, useAccount } from "@azure/msal-react";
 import { protectedResources } from "../authentication/authConfig";
-import { callApiWithToken } from "../fetch";
+import { callApiWithToken,aquireToken } from "../fetch";
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
 //NOTE: I dont think this page is being used anymore or should be used since, they are
 //  connected to the database which grabs from shopify
+
 const UpdateProduct = (props) => {
+  // Initializing Constants
   const { instance, accounts, inProgress } = useMsal();
   var account = useAccount(accounts[0] || {});
   let navigate = useNavigate();
@@ -18,12 +20,27 @@ const UpdateProduct = (props) => {
   const [ids, setID] = useState("");
   const [description, setDescription] = useState("");
 
-//TODO: Document this code
-
-//FIXME: backend needs to get fixed from new db
+  //FIXME: backend needs to get fixed from new db
   useEffect(() => {
 
-    const fetchData = () => {
+    const fetchData = async() => {
+       //neww
+       
+      const response = await aquireToken()
+
+      const backendResponse = await callApiWithToken(
+        response.accessToken,
+        ProductFinder.getUri() + `/${id}`,
+        "GET")
+
+        console.log(backendResponse);
+        setID(backendResponse.data.products.id);
+        setDescription(backendResponse.data.products.description);
+      
+
+
+
+        //old
       if (account && inProgress === "none") {
         instance
           .acquireTokenSilent({
@@ -35,13 +52,12 @@ const UpdateProduct = (props) => {
               response.accessToken,
               ProductFinder.getUri() + `/${id}`,
               "GET"
-            )
-              .then((response) => {
-                console.log(response)
-                setID(response.data.products.id);
-                setDescription(response.data.products.description);
-              })
-              // .catch((err) => console.log(err));
+            ).then((response) => {
+              console.log(response);
+              setID(response.data.products.id);
+              setDescription(response.data.products.description);
+            });
+            // .catch((err) => console.log(err));
           })
           .catch((error) => {
             if (error instanceof InteractionRequiredAuthError) {
@@ -68,9 +84,8 @@ const UpdateProduct = (props) => {
     };
 
     fetchData();
-  }, [id,account,inProgress,instance]);
 
-
+  }, [id, account, inProgress, instance]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -84,12 +99,13 @@ const UpdateProduct = (props) => {
           callApiWithToken(
             response.accessToken,
             ProductFinder.getUri() + `/${id}`,
-            "PUT",{
+            "PUT",
+            {
               ids,
               description,
             }
-          )
-            // .catch((err) => console.log(err));
+          );
+          // .catch((err) => console.log(err));
         })
         .catch((error) => {
           if (error instanceof InteractionRequiredAuthError) {
@@ -102,11 +118,12 @@ const UpdateProduct = (props) => {
                   callApiWithToken(
                     response.accessToken,
                     ProductFinder.getUri() + `/${id}`,
-                    "PUT",{
+                    "PUT",
+                    {
                       ids,
                       description,
                     }
-                  )
+                  );
                 })
                 .catch((error) => console.log(error));
             }
@@ -116,20 +133,19 @@ const UpdateProduct = (props) => {
     navigate("/");
   };
 
+  const style = { marginLeft: ".7rem", marginRight: ".7rem" };
+
   return (
     <div>
       <Container>
         <form action="">
           {/* This is the form part for changing the id */}
           <div className="form-group">
-            <label
-              style={{ marginLeft: ".7rem", marginRight: ".7rem" }}
-              htmlFor="id"
-            >
+            <label style={style} htmlFor="id">
               ID
             </label>
             <input
-              style={{ marginLeft: ".7rem", marginRight: ".7rem" }}
+              style={style}
               value={ids}
               onChange={(e) => setID(e.target.value)}
               type="text"
@@ -140,14 +156,11 @@ const UpdateProduct = (props) => {
           {/* this is the form part for the description */}
 
           <div className="form-group">
-            <label
-              style={{ marginLeft: ".7rem", marginRight: ".7rem" }}
-              htmlFor="description"
-            >
+            <label style={style} htmlFor="description">
               Description
             </label>
             <input
-              style={{ marginLeft: ".7rem", marginRight: ".7rem" }}
+              style={style}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               type="text"
@@ -156,7 +169,7 @@ const UpdateProduct = (props) => {
             />
           </div>
           <button
-            style={{ marginLeft: ".7rem", marginRight: ".7rem" }}
+            style={style}
             type="submit"
             onClick={handleSubmit}
             className="btn btn-primary"

@@ -13,7 +13,6 @@ import { useMsal, useAccount } from "@azure/msal-react";
 import { protectedResources } from "../authentication/authConfig";
 import { callApiWithToken } from "../fetch";
 import { InteractionRequiredAuthError } from "@azure/msal-browser"; 
-import Dropzone from "./Dropzone"; 
 import Previews from "./preview"; 
 
 /**
@@ -45,6 +44,7 @@ export const ShopifyVariants = () => {
 
   useEffect(() => {
     try {
+
       const fetchData = (id) => {
         if (account && inProgress === "none") {
           instance
