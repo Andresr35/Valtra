@@ -1,8 +1,9 @@
+/**
+ * Main folder for front end that starts the frontend
+ */
 import React from 'react';
-//import ReactDOM from 'react-dom';
 import App from './App';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
- 
+import 'bootstrap/dist/css/bootstrap.min.css';  
 import './assets/css/index.css';
 import reportWebVitals from './authentication/reportWebVitals'; 
 import { PublicClientApplication } from "@azure/msal-browser";
@@ -13,6 +14,8 @@ import { createRoot } from 'react-dom/client';
 const msalInstance = new PublicClientApplication(msalConfig); 
 const container = document.getElementById("root");
 const root = createRoot(container);
+
+// Rendering the main app and adding Azure authentication
 root.render( 
     <React.StrictMode> 
         <MsalProvider instance={msalInstance}>
@@ -22,9 +25,3 @@ root.render(
 );
 
 reportWebVitals();
-
-// ReactDOM.render(
-// <App/>
-
-// ,document.getElementById("root"));
- 

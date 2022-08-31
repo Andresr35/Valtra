@@ -1,3 +1,7 @@
+/**
+ * This holds all the routes for communicating to the shopify API
+ *
+ */
 var express = require("express");
 var router = express.Router();
 const client = require("../../utils/shopify");
@@ -10,7 +14,7 @@ require("dotenv").config();
 /**
  * Just returning a multer's files original name
  *
- * @param   {imageFile}  file  
+ * @param   {imageFile}  file
  *
  * @return  {str}        original file name
  */
@@ -41,6 +45,7 @@ const upload = multer({
  * Is used for "Orders" page.
  *
  * @param   {path}  /orders  /api/shopify/orders
+ * @param   {JSON}  res        returs array of orders
  */
 router.get("/orders", async (req, res) => {
   try {
@@ -59,10 +64,12 @@ router.get("/orders", async (req, res) => {
 /**
  * Gets the fulfillments ID by order name,
  * Loops through all orders and fulfills
- * 
+ *
  * Res sends back object with status of fulfillment orders
  *
  * @param   {route}  /fulfill  /api/shopify/fulfill
+ * @param   {JSON}  req        list of Order names to fulfill and their tracking number
+ * @param   {JSON}  res        Array with list of orders and their new status
  *
  */
 router.put("/fulfill", async (req, res) => {
@@ -205,8 +212,8 @@ router.put("/fulfill", async (req, res) => {
     console.log(" Error at query for fulfillment ID");
     console.log(err.stack);
     res.status(404).json({
-      message:"Something broke on /fulfill route",
-      error: err.stack
+      message: "Something broke on /fulfill route",
+      error: err.stack,
     });
   }
 });
@@ -216,7 +223,7 @@ router.put("/fulfill", async (req, res) => {
  *
  * @param   {route}  /products  /api/shopify/products
  *
- * @return  {json}             TODO
+ * @return  {json}             Grabs all the products from shopify and some main info
  */
 router.get("/products", async (req, res) => {
   try {
@@ -373,11 +380,12 @@ router.post("/products/:id", async (req, res) => {
 });
 
 /**
- * Updating the price of a shopify product. 
- * 
+ * Updating the price of a shopify product.
+ *
  * Requies a new price and ID in req.body
  *
- * @param   {rout}  /productUpdatePrice  [/productUpdatePrice description]
+ * @param   {route}  /productUpdatePrice  [/productUpdatePrice description]
+ * @param   {JSON}  req
  */
 router.put("/productUpdatePrice", async (req, res) => {
   try {
@@ -405,10 +413,10 @@ router.put("/productUpdatePrice", async (req, res) => {
     });
     res.status(200).json({
       message: "Sucess",
-      result:data
-    })
+      result: data,
+    });
   } catch (error) {
-    res.json(error.stack)
+    res.json(error.stack);
   }
 });
 
@@ -418,7 +426,8 @@ router.put("/productUpdatePrice", async (req, res) => {
  * Requires ID and new SKU in req.body
  *
  * @param   {route}  /productUpdateSku  [/productUpdateSku description]
- *
+ * @param   {JSON}  req
+
  */
 router.put("/productUpdateSku", async (req, res) => {
   try {
@@ -446,22 +455,21 @@ router.put("/productUpdateSku", async (req, res) => {
       },
     });
     res.status(200).json({
-      message:"Sucess",
-      result:data
-    })
+      message: "Sucess",
+      result: data,
+    });
   } catch (error) {
-    res.json(error.stack)
+    res.json(error.stack);
   }
-
 });
 
 /**
  * Updating the featured image of a shopify product.
- * 
+ *
  * requires imagefile in body
- * 
+ *
  * uploads to azure container.
- * 
+ *
  * NOTE: No longer in use
  *
  * @param   {[type]}  /productVariant  [/productVariant description]
