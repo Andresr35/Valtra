@@ -1,10 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone'; 
+import ShopifyRequest from "../api/ShopifyRequest";
+
 import '../assets/css/Image.css'  
 
-function Previews(props, value) { 
-  const [image, setImage] = useState([]); 
-  const handleImageChange = (e) => setImage(e.target.files[0]); 
+function Previews(props) { 
+  // const [image, setImage] = useState([]); 
+  // const handleImageChange = (e) => setImage(e.target.files[0]); 
   
 
   const [files, setFiles] = useState([]);  
@@ -18,11 +20,32 @@ function Previews(props, value) {
           }))); 
         } 
       }); 
-      
+  /**
+   * test
+   *
+   * @return  {[type]}  [return description]
+   */
+  const sendImage = async () => {
+    try {
+      const imageData = new FormData();
+      imageData.append("image", files); 
+      console.log(files)
+      const response = await ShopifyRequest.put(`/productVariant`, imageData, {
+        headers: {
+          "Content-Type": `multipart/form-data`,
+        },
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
       const thumbs = files.map(file => (
         <div className='thumb' key={file.name}>
           <div className='thumbInner'>
             <img
+            alt='ok'
               src={file.preview}
               className='img'
               // Revoke data uri after image is loaded
@@ -39,7 +62,7 @@ function Previews(props, value) {
   return ( 
     <>  
       <div {...getRootProps({className: 'dropzone'})}> 
-        <input {...getInputProps() } onChange={(e) => handleImageChange(e)}/> 
+        <input {...getInputProps() } /> 
         <p className='dragNdrop'>Drop File(s) {" "}</p>  
        
       <aside className='thumbsContainer'>

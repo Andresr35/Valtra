@@ -155,6 +155,7 @@ export const ShopifyVariants = () => {
   const send = (e) => {
     //sendTitle(e);
     sendImage(e);
+    Previews.call(sendImage());
     sendPrice(e);
     sendSku(e);
   };
