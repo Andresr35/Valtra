@@ -1,5 +1,5 @@
 /**
- * This should update all the shopify products and put them in our backend
+ * This should update all the shopify products and put them in our database
  */
 
 var CronJob = require("cron").CronJob;
@@ -7,14 +7,9 @@ const client = require("../utils/shopify");
 const db = require("./index");
 const { BlobServiceClient } = require("@azure/storage-blob");
 const container = require("../utils/index");
-const https = require("https");
 const fs = require("fs");
-// const fetch = require('node-fetch');
 const fetch = require("electron-fetch").default;
 const containerClient = container.getContainer();
-const multer = require("multer");
-var MulterAzureStorage = require("multer-azure-storage");
-const streamToBlob = require("stream-to-blob");
 
 /**
  * Uploads a file to azure container
@@ -115,7 +110,7 @@ async function backup() {
     const fetchRes = await fetch(
       "https://storageaccount4valtra.blob.core.windows.net/fireball-images/HAAS%20Grades.png"
     );
-    const dest = fs.createWriteStream("./image.png");
+    const dest = fs.createWriteStream("../public/images/image.png");
     await fetchRes.body.pipe(dest);
 
     const uploadOptions = {
@@ -136,7 +131,7 @@ async function backup() {
       const blobRes = await createBlobFromLocalPath(
         containerClient,
         "test.png",
-        "./image.png",
+        "../public/images/image.png",
         uploadOptions
       );
       console.log(blobRes);

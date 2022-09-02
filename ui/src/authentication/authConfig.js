@@ -1,10 +1,19 @@
+/*------------------------------------------------------------- 
+* File: authConfig.js 
+* Date: 8/30/2022  
+* Description: Authentication input, and 
+* configuration of msal which uses at the moment 
+* microsoft authentecation to login users via an 
+* authenticated state. 
+-------------------------------------------------------------*/  
+
+//Versions Variable: change on version to configure for local or non local use
 import {isLocal } from '../components/structure/Version'; 
-//change const var local to chage from localhost deployment and the azure site deployment
 let url = "";  
-//Web urls associated
+//Web urls {cloud/ local urls} associated
 const webUrl = "https://valtraautomation.azurewebsites.net"; //https://valtra-automation.azurewebsites.net/
 const localUrl = "http://localhost:3005"; 
-//Algorithm that changes the urls 
+//"Algorithm" that changes the urls 
 if (isLocal === false) { 
   url = webUrl; 
 } else { 

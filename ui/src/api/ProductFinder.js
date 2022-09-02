@@ -1,5 +1,6 @@
 import axios from "axios"; 
 
+//Versions Variable: change on version to configure for local or non local use
 import { isLocal } from "../components/structure/Version";   
 let Purl = "";  
 //Web urls associated

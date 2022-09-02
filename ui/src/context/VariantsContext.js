@@ -1,3 +1,4 @@
+// This passes around the current Variants a user is looking at
 import React, { useState, createContext } from "react";
 
 export const VariantsContext = createContext();

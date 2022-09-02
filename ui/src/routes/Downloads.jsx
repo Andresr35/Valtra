@@ -1,28 +1,33 @@
+/*------------------------------------------------------------- 
+____________________//#TODO: Document LUIS
+* File: Downloads.jsx 
+* Author: TODO:Luis 
+* Date: 8/31/2022   
+* Description: This file conatins the code for the Downloads 
+* page, which is a route displaying a box for every available 
+* downloadable item, which conatins a title, description, and 
+* downlaod button for each item. These page requires  
+* authentication: in the future TODO: it should be aimed to 
+* keep downable items in a conatiner and allow downlaods to 
+* occur through varified fetch requests      
+-------------------------------------------------------------*/
 import React from 'react'
 import Container from 'react-bootstrap/esm/Container'
 import NavBar from '../components/structure/NavBar' 
- 
-import Photo from '../dowloadableFiles/valtra_logo.gif'  
-import zip from '../dowloadableFiles/Testzip.zip' 
-import inforInvoicesZip from '../dowloadableFiles/Testzip.zip'//'../dowloadableFiles/shopify_InForOrders (2).zip'
-//TODO actaully app conent that can be downloaded 
-//Allows users to have a centalized place to 
-//downlaod content such as infor apps  
+import { useNavigate } from "react-router-dom"; 
 
-import { useNavigate } from "react-router-dom";
+//downloadable Files
+import ValtraImg from '../dowloadableFiles/valtra_logo.gif'  
+import testZip from '../dowloadableFiles/Testzip.zip' 
+import inforInvoices from '../dowloadableFiles/Testzip.zip'//'../dowloadableFiles/shopify_InForOrders (2).zip' 
 
-//Downloads---------------------------------------- 
-const ValtraImg = Photo; 
-const ValtraImgDescription = '.gif file of Valtra.inc logo'; 
-const testZip = zip; 
+//Descriptions & duplicate assignmnets  
+const ValtraImgDescription = '.gif file of Valtra.inc logo';  
 const testZipDescription = 'Test zip folder with .txt File';
-
-const inforInvoices = inforInvoicesZip;
 const inforInvoicesDescription = 'Version 1.0.0 '; 
-const inforOrders = zip;  
+const inforOrders = testZip;  
 const inforOrdersDescription = 'Version 1.0.0'; 
-
-const ApiValtraImg = Photo; 
+const ApiValtraImg = ValtraImg; 
 const ApiValtraImgDescription = 'For Api testing';   
 
 const Downloads = () => {  
@@ -31,7 +36,9 @@ const Downloads = () => {
   const goToDocum = () => {
   navigate(`../Documentation`); 
   }
-
+//#TODO: all these boxes have the same format but different contents, either 
+// items box into a whole table or make another conainter/ import feature 
+// but this code is far to redundant
   return (  
     <>
     <div>

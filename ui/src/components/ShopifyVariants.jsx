@@ -29,22 +29,26 @@ export const ShopifyVariants = () => {
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handlePriceChange = (e, iden) => setPrice([e.target.value, iden]);
   const handleSkuChange = (e, iden) => setSku([e.target.value, iden]);
-  const [setImageHover] = useState(false);
+  //const [setImageHover] = useState(false);
   const [setUrl] = useState("");
-  const [image, setImage] = useState([]);
   const [product, setProduct] = useState({});
   const { id } = useParams();
   const [setTitle] = useState("");
   const [price, setPrice] = useState([]);
   const [sku, setSku] = useState([]);
   const [pic] = useState([]);
-  const handleOnChange = (e) => setUrl(e.target.value);
-  //const handleImageChange = (e) => setImage(e.target.files[0]);
+  const handleOnChange = (e) => setUrl(e.target.value); 
+
+  const [image, setImage] = useState([]);
+  const handleImageChange = (e) => setImage(e.target.files[0]); 
+   
+
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {}); 
 
   useEffect(() => {
     try {
+
       const fetchData = (id) => {
         if (account && inProgress === "none") {
           instance
@@ -93,7 +97,7 @@ export const ShopifyVariants = () => {
 
 
 
-  //FIXME: All these functions need new routes
+  //FIXME: All these functions need new routes 
   const sendImage = async (e) => {
     try {
       e.preventDefault();
@@ -150,13 +154,14 @@ export const ShopifyVariants = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  };  
 
-  const send = (e) => {
+  const send = (e) => {  
     //sendTitle(e);
-    sendImage(e);
+    sendImage(e); 
+    Previews.call(sendImage());
     sendPrice(e);
-    sendSku(e);
+    sendSku(e);   
   };
 
   //TODO:  Get a page up for the featured image and the variants image....
@@ -300,9 +305,10 @@ export const ShopifyVariants = () => {
                               </label> 
                             </div> 
                           </div>
-                        </button> 
-                              <Previews 
-                              value = {variant.image.url}   
+                        </button>  
+                              <Previews  
+                              value = {variant.image.url} 
+                              // #TODO:    
                               />  
                                     
                       </div> 
