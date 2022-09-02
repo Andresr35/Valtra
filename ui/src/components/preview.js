@@ -31,8 +31,9 @@ function Previews(props, value) {
    *
    * @return  {[type]}  [return description]
    */
-  const sendImage = async () => {
-    try {
+  const sendImages = async (e) => {
+    try { 
+      e.preventDefault();
       const imageData = new FormData();
       imageData.append("image", files); 
       console.log(files)
@@ -70,7 +71,7 @@ function Previews(props, value) {
   return ( 
     <>  
       <div {...getRootProps({className: 'dropzone'})}> 
-        <input {...getInputProps() } onChange={(e) => handleImageChange(e)}/> 
+        <input {...getInputProps() } onChange={console.log("---")}/> 
         <p className='dragNdrop'>Drop File(s) {" "}</p>  
        
       <aside className='thumbsContainer'>
