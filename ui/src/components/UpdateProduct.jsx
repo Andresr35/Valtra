@@ -11,11 +11,7 @@ import { InteractionRequiredAuthError } from "@azure/msal-browser";
 //NOTE: I dont think this page is being used anymore or should be used since, they are
 //  connected to the database which grabs from shopify
 
-<<<<<<< HEAD
-const UpdateProduct = (props) => { 
-=======
 const UpdateProduct = (props) => {
->>>>>>> 6d069bdb525ee21ee0491aa75fc457ebf4ad7c8e
   // Initializing Constants
   const { instance, accounts, inProgress } = useMsal();
   var account = useAccount(accounts[0] || {});
@@ -28,7 +24,6 @@ const UpdateProduct = (props) => {
   useEffect(() => {
 
     const fetchData = async() => {
-<<<<<<< HEAD
       //  //neww
        
       // const response = await aquireToken()
@@ -41,7 +36,7 @@ const UpdateProduct = (props) => {
       //   console.log(backendResponse);
       //   setID(backendResponse.data.products.id);
       //   setDescription(backendResponse.data.products.description);
-=======
+
        //neww
        
       const response = await aquireToken()
@@ -54,10 +49,6 @@ const UpdateProduct = (props) => {
         console.log(backendResponse);
         setID(backendResponse.data.products.id);
         setDescription(backendResponse.data.products.description);
-      
-
-
->>>>>>> 6d069bdb525ee21ee0491aa75fc457ebf4ad7c8e
 
         //old
       if (account && inProgress === "none") {

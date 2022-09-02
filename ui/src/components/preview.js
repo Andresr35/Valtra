@@ -31,14 +31,9 @@ function Previews(props, value) {
    *
    * @return  {[type]}  [return description]
    */
-<<<<<<< HEAD
   const sendImages = async (e) => {
     try { 
       e.preventDefault();
-=======
-  const sendImage = async () => {
-    try {
->>>>>>> 6d069bdb525ee21ee0491aa75fc457ebf4ad7c8e
       const imageData = new FormData();
       imageData.append("image", files); 
       console.log(files)
