@@ -13,7 +13,7 @@ import { useMsal, useAccount } from "@azure/msal-react";
 import { protectedResources } from "../authentication/authConfig";
 import { callApiWithToken } from "../fetch";
 import { InteractionRequiredAuthError } from "@azure/msal-browser"; 
-import Dropzone from "./Dropzone"; 
+//import Dropzone from "./Dropzone";
 import Previews from "./preview"; 
 
 /**
@@ -158,8 +158,8 @@ export const ShopifyVariants = () => {
 
   const send = (e) => {  
     //sendTitle(e);
-    sendImage(e); 
-    Previews.call(sendImage());
+    //sendImage(e); 
+    Previews.call();
     sendPrice(e);
     sendSku(e);   
   };
