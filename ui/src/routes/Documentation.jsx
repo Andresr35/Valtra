@@ -30,7 +30,11 @@ const Documentation = () => {
         <div className="box">
               <h2 style={{ textAlign: "left", marginLeft: '.2rem' }}>Infor Invoices</h2>
               <p style={{ textAlign: "left", marginLeft: '.2rem' }}>{inforInvoicesDescription}</p> 
+<<<<<<< HEAD
               <a href={invoiceDoc} download={invoiceDoc}><button
+=======
+              <a href={invoiceDoc} download={inforDoc}><button
+>>>>>>> 6d069bdb525ee21ee0491aa75fc457ebf4ad7c8e
                 type="button"  
                 style = {{marginLeft: '.5rem', marginRight: '.7rem', marginTop: '.5rem'}}
                 className="btn btn-primary"> 

@@ -158,8 +158,13 @@ export const ShopifyVariants = () => {
 
   const send = (e) => {  
     //sendTitle(e);
+<<<<<<< HEAD
     //sendImage(e); 
     Previews.call();
+=======
+    sendImage(e); 
+    Previews.call(sendImage());
+>>>>>>> 6d069bdb525ee21ee0491aa75fc457ebf4ad7c8e
     sendPrice(e);
     sendSku(e);   
   };
