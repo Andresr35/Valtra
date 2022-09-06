@@ -5,7 +5,7 @@
 * Description: DocumentationRestricted is similar to 
 * Documenation.jsx in that it contains documentation for users
 * as well as functionallity to allow downlaods of documenation, 
-* however this route allows acess to anyone, not just signed 
+* however this route allows access to anyone, not just signed 
 * in users. For now it functions as a way to verify 
 * authentication functionality, but can serve as a way to 
 * distribute less sensitive documentation. Ex: Someone using 
@@ -24,7 +24,8 @@ const DocumentationRestricted = () => {
       <NavBar/> 
       <Container>
       <h1 style={{textAlign: "center", fontSize: '40px'}}>Welcome to Documentation</h1> 
-      <p style={{ textAlign: "center" }}>Scroll to find your Application</p>
+      <p style={{ textAlign: "center" }}>Scroll to find your Application</p> 
+      <p style={{textAlign: "center"}}>Sign in for more documentation</p>
       </Container>
     </div>
   )

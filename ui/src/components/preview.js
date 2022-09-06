@@ -8,12 +8,10 @@ _______________________TODO:DOCUMENT: Luis
 import React, {useContext, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone'; 
 import '../assets/css/Image.css' 
-import ShopifyRequest from "../api/ShopifyRequest";    
+import ShopifyRequest from "../api/ShopifyRequest";  
+import Button from "react-bootstrap/Button";   
 
-function Previews(props, value) { 
-  //const [image, setImage] = useState([]); 
-  //const handleImageChange = (e) => setImage(e.target.files[0]); 
-  
+function Previews(props) { 
 
   const [files, setFiles] = useState([]);  
   const {getRootProps, getInputProps} = useDropzone({
@@ -26,12 +24,8 @@ function Previews(props, value) {
           }))); 
         } 
       }); 
-       /**
-   * test
-   *
-   * @return  {[type]}  [return description]
-   */
-  const sendImages = async (e) => {
+  
+  const sendImage = async (e) => {
     try { 
       e.preventDefault();
       const imageData = new FormData();
@@ -46,8 +40,10 @@ function Previews(props, value) {
     } catch (error) {
       console.log(error);
     }
-  };
-      
+  }; 
+  const Undo = async (e) => { 
+    setFiles([])
+  }
       const thumbs = files.map(file => (
         <div className='thumb' key={file.name}>
           <div className='thumbInner'>
@@ -66,27 +62,31 @@ function Previews(props, value) {
         return () => files.forEach(file => URL.revokeObjectURL(file.preview)); 
       }, []); 
       
-      
-
   return ( 
     <>  
       <div {...getRootProps({className: 'dropzone'})}> 
-        <input {...getInputProps() } onChange={console.log("---")}/> 
-        <p className='dragNdrop'>Drop File(s) {" "}</p>  
-       
-      <aside className='thumbsContainer'>
-        {thumbs} 
-        {!files[0] ? 'No File Chosen':files[0].name}
-      </aside> 
-      <div className='brightness'>   
-      <img
-          className="thumbnail image"
-          src={props.value}
-          alt="Add one?"
-          /> 
-          </div>  
-        </div>   
-      </> 
+        <input {...getInputProps() }/> 
+        <p className='dragNdrop'>Choose File(s) {" "}</p>  
+        <p className='chosenFile'>{!files[0] ? 'No File Chosen':files[0].name}</p> 
+        </div> 
+        <aside className='thumbsContainer'> 
+          {thumbs} 
+          <div> 
+            <div>
+              {!files[0] ? '':<button className='previewButton' onClick={(e) => sendImage(e)}>Save Image</button>} 
+            </div> 
+            <div>
+              {!files[0] ? '':<button className='previewButtons' onClick={(e)=>Undo(e)}>Undo Image</button>}  
+            </div>   
+          </div>   
+        </aside>    
+        <div className='brightness'>   
+          <img
+            className="thumbnail image"
+            src={props.currImage}
+            alt="Add one?"/>   
+        </div>    
+    </> 
   );
 } 
  

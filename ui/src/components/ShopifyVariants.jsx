@@ -39,8 +39,8 @@ export const ShopifyVariants = () => {
   const [pic] = useState([]);
   const handleOnChange = (e) => setUrl(e.target.value); 
 
-  const [image, setImage] = useState([]);
-  const handleImageChange = (e) => setImage(e.target.files[0]); 
+  //const [image, setImage] = useState([]);
+  //const handleImageChange = (e) => setImage(e.target.files[0]); 
    
 
   const { instance, accounts, inProgress } = useMsal();
@@ -98,22 +98,22 @@ export const ShopifyVariants = () => {
 
 
   //FIXME: All these functions need new routes 
-  const sendImage = async (e) => {
-    try {
-      e.preventDefault();
-      const imageData = new FormData();
-      imageData.append("image", image); 
-      console.log(image)
-      const response = await ShopifyRequest.put(`/productVariant`, imageData, {
-        headers: {
-          "Content-Type": `multipart/form-data`,
-        },
-      });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const sendImage = async (e) => {
+  //   try {
+  //     e.preventDefault();
+  //     const imageData = new FormData();
+  //     imageData.append("image", image); 
+  //     console.log(image)
+  //     const response = await ShopifyRequest.put(`/productVariant`, imageData, {
+  //       headers: {
+  //         "Content-Type": `multipart/form-data`,
+  //       },
+  //     });
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // const sendTitle = async(e) => {
   //   try {
@@ -155,11 +155,8 @@ export const ShopifyVariants = () => {
       console.log(error);
     }
   };  
-
+  
   const send = (e) => {  
-    //sendTitle(e);
-    //sendImage(e); 
-    Previews.call();
     sendPrice(e);
     sendSku(e);   
   };
@@ -277,7 +274,7 @@ export const ShopifyVariants = () => {
                   <tr key={index}>
                     <td>
                       <div className="container">
-                        <button
+                        {/* <button
                           style={{ all: "unset", cursor: "pointer" }}
                           //onMouseEnter={() => setImageHover(true)}
                           //onMouseLeave={() => setImageHover(false)}
@@ -305,10 +302,12 @@ export const ShopifyVariants = () => {
                               </label> 
                             </div> 
                           </div>
-                        </button>  
+                        </button>   */}
                               <Previews  
-                              value = {variant.image.url} 
-                              // #TODO:    
+                              currImage = {variant.image.url} 
+                              varID = {variant.id}  
+                              mediaID = {variant.mediaID} 
+                              productID = {product.id} 
                               />  
                                     
                       </div> 

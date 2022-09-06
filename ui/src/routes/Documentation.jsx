@@ -26,7 +26,7 @@ const Documentation = () => {
       <NavBar/> 
       <Container> 
         <h1 style={{textAlign: "center", fontSize: '40px'}}>Welcome to Documentation</h1> 
-        <p style={{textAlign: "center"}}>Scroll to find your Application</p>
+        <p style={{textAlign: "center"}}>Scroll to find your Application</p> 
         <div className="box">
               <h2 style={{ textAlign: "left", marginLeft: '.2rem' }}>Infor Invoices</h2>
               <p style={{ textAlign: "left", marginLeft: '.2rem' }}>{inforInvoicesDescription}</p> 
