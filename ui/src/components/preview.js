@@ -41,9 +41,18 @@ function Previews(props) {
       console.log(error);
     }
   }; 
-  const Undo = async (e) => { 
+  const refreshPage =async (e) => { 
+    window.location.reload(false)
+  } 
+  const UndoButton = async (e) => { 
     setFiles([])
-  }
+  }  
+  const saveImageButton = async (e) => {  
+    sendImage(e)
+    setFiles([]) 
+    //refreshPage(e)
+  } 
+
       const thumbs = files.map(file => (
         <div className='thumb' key={file.name}>
           <div className='thumbInner'>
@@ -66,26 +75,26 @@ function Previews(props) {
     <>  
       <div {...getRootProps({className: 'dropzone'})}> 
         <input {...getInputProps() }/> 
-        <p className='dragNdrop'>Choose File(s) {" "}</p>  
-        <p className='chosenFile'>{!files[0] ? 'No File Chosen':files[0].name}</p> 
-        </div> 
-        <aside className='thumbsContainer'> 
-          {thumbs} 
-          <div> 
-            <div>
-              {!files[0] ? '':<button className='previewButton' onClick={(e) => sendImage(e)}>Save Image</button>} 
-            </div> 
-            <div>
-              {!files[0] ? '':<button className='previewButtons' onClick={(e)=>Undo(e)}>Undo Image</button>}  
-            </div>   
-          </div>   
-        </aside>    
+        <t className='dragNdrop'>Choose File(s)</t>  
+        <t className='chosenFile'>{!files[0] ? 'No File Chosen':files[0].name}</t> 
         <div className='brightness'>   
           <img
             className="thumbnail image"
             src={props.currImage}
             alt="Add one?"/>   
-        </div>    
+        </div>  
+        </div> 
+        <aside className='thumbsContainer'> 
+          {thumbs} 
+          <div> 
+            <div>
+              {!files[0] ? '':<button className='previewButton' onClick={(e) => saveImageButton(e)}>Save Image</button>} 
+            </div> 
+            <div>
+              {!files[0] ? '':<button className='previewButtons' onClick={(e)=>UndoButton(e)}>Undo Image</button>}  
+            </div>   
+          </div>   
+        </aside>       
     </> 
   );
 } 
