@@ -1,3 +1,9 @@
+/*------------------------------------------------------------- 
+____________________//#TODO: Document ANDRES
+* File: NavBar.jsx 
+* Date: 8/31/2022  
+* Description: 
+-------------------------------------------------------------*/
 //react and otehr plugins
 import React from 'react'
 //bootstrap
@@ -22,7 +28,8 @@ const NavBar = () => {
     //     scopes: protectedResources.apiHello.scopes,
     //     account: accounts[0]
     // }).then((res)=>{console.log(res)}).catch((err)=>{console.log(err)})
-    // // console.log(instance)
+    // // console.log(instance) 
+    //#TODO: LUIS document
     let name = accounts[0] && accounts[0].name;  
     if (name === 'Andres Ruiz') { 
         name = 'Bozo'; 

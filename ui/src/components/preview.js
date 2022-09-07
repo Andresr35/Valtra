@@ -1,13 +1,17 @@
+/*-------------------------------------------------------------  
+_______________________TODO:DOCUMENT: Luis
+* File:preview.js
+* Author:TODO:Luis 
+* Date: 08/31/2022
+* Description: Summary of what the code inside the file does 
+-------------------------------------------------------------*/
 import React, {useContext, useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone'; 
-import ShopifyRequest from "../api/ShopifyRequest";
-
-import '../assets/css/Image.css'  
+import '../assets/css/Image.css' 
+import ShopifyRequest from "../api/ShopifyRequest";  
+import Button from "react-bootstrap/Button";   
 
 function Previews(props) { 
-  // const [image, setImage] = useState([]); 
-  // const handleImageChange = (e) => setImage(e.target.files[0]); 
-  
 
   const [files, setFiles] = useState([]);  
   const {getRootProps, getInputProps} = useDropzone({
@@ -20,13 +24,10 @@ function Previews(props) {
           }))); 
         } 
       }); 
-  /**
-   * test
-   *
-   * @return  {[type]}  [return description]
-   */
-  const sendImage = async () => {
-    try {
+  
+  const sendImage = async (e) => {
+    try { 
+      e.preventDefault();
       const imageData = new FormData();
       imageData.append("image", files); 
       console.log(files)
@@ -39,8 +40,10 @@ function Previews(props) {
     } catch (error) {
       console.log(error);
     }
-  };
-  
+  }; 
+  const Undo = async (e) => { 
+    setFiles([])
+  }
       const thumbs = files.map(file => (
         <div className='thumb' key={file.name}>
           <div className='thumbInner'>
@@ -58,27 +61,32 @@ function Previews(props) {
         // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
         return () => files.forEach(file => URL.revokeObjectURL(file.preview)); 
       }, []); 
-
+      
   return ( 
     <>  
       <div {...getRootProps({className: 'dropzone'})}> 
-        <input {...getInputProps() } /> 
-        <p className='dragNdrop'>Drop File(s) {" "}</p>  
-       
-      <aside className='thumbsContainer'>
-        {thumbs} 
-        {!files[0] ? 'No File Chosen':files[0].name}
-      </aside> 
-      <div className='brightness'>   
-      <img
-          className="thumbnail image"
-          src={props.value}
-          alt="Add one?"
-          /> 
-          </div>  
-
-        </div>  
-      </> 
+        <input {...getInputProps() }/> 
+        <p className='dragNdrop'>Choose File(s) {" "}</p>  
+        <p className='chosenFile'>{!files[0] ? 'No File Chosen':files[0].name}</p> 
+        </div> 
+        <aside className='thumbsContainer'> 
+          {thumbs} 
+          <div> 
+            <div>
+              {!files[0] ? '':<button className='previewButton' onClick={(e) => sendImage(e)}>Save Image</button>} 
+            </div> 
+            <div>
+              {!files[0] ? '':<button className='previewButtons' onClick={(e)=>Undo(e)}>Undo Image</button>}  
+            </div>   
+          </div>   
+        </aside>    
+        <div className='brightness'>   
+          <img
+            className="thumbnail image"
+            src={props.currImage}
+            alt="Add one?"/>   
+        </div>    
+    </> 
   );
 } 
  

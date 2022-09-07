@@ -1,3 +1,9 @@
+/*------------------------------------------------------------- 
+____________________//#TODO: Document LUIS
+* File: graph.js 
+* Date: 8/31/2022  
+* Description: 
+-------------------------------------------------------------*/
 import { graphConfig } from "./authConfig";
 /**
  * Attaches a given access token to a Microsoft Graph API call. Returns information about the user 

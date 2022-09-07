@@ -1,3 +1,13 @@
+/*------------------------------------------------------------- 
+* File: Updates.jsx
+* Author:TODO:Luis 
+* Date: 08/31/2022
+* Description: Updates.jsx is a page accessable on the navbar 
+* for signed in users that displays updates and the version
+* number associated with them to have a hsitory for 
+* developers, but as a tool to users to indiacte to them 
+* new features and bug fixes   
+-------------------------------------------------------------*/ 
 import React from 'react'
 import Container from 'react-bootstrap/esm/Container'
 import NavBar from '../components/structure/NavBar' 
