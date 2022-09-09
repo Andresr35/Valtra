@@ -9,7 +9,7 @@ import { useContext } from "react";
 import { VariantsContext } from "../context/VariantsContext"; 
 import { useMsal, useAccount } from "@azure/msal-react";
 import { protectedResources } from "../authentication/authConfig";
-import { callApiWithToken } from "../fetch";
+import { aquireToken, callApiWithToken } from "../fetch";
 import { InteractionRequiredAuthError } from "@azure/msal-browser"; 
 import '../assets/css/Image.css'
 
@@ -20,7 +20,12 @@ const ShopProducts = (props) => {
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  useEffect(() => {
+  useEffect(() => { 
+
+    // const fetchData = async () => { 
+    //   const response = await aquireToken() 
+
+    // }
 
     const fetchData = () => {
       try {

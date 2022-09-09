@@ -24,6 +24,19 @@ const UpdateProduct = (props) => {
   useEffect(() => {
 
     const fetchData = async() => {
+      //  //neww
+       
+      // const response = await aquireToken()
+
+      // const backendResponse = await callApiWithToken(
+      //   response.accessToken,
+      //   ProductFinder.getUri() + `/${id}`,
+      //   "GET")
+
+      //   console.log(backendResponse);
+      //   setID(backendResponse.data.products.id);
+      //   setDescription(backendResponse.data.products.description);
+
        //neww
        
       const response = await aquireToken()
@@ -36,9 +49,6 @@ const UpdateProduct = (props) => {
         console.log(backendResponse);
         setID(backendResponse.data.products.id);
         setDescription(backendResponse.data.products.description);
-      
-
-
 
         //old
       if (account && inProgress === "none") {
@@ -81,7 +91,7 @@ const UpdateProduct = (props) => {
             }
           });
       }
-    };
+    }; 
 
     fetchData();
 
