@@ -38,7 +38,16 @@ const upload = multer({
     containerSecurity: "blob",
     fileName: getFileName,
   }),
-});
+}); 
+
+const upload2 = multer({
+  storage: new MulterAzureStorage({
+    azureStorageConnectionString: process.env.AZURE_STORAGE_CONNECTION_STRING_TU,
+    containerName: "picture",
+    containerSecurity: "blob",
+    fileName: getFileName,
+  }),
+}); 
 
 /**
  * Gets 50 orders from shopify
@@ -478,6 +487,21 @@ router.put("/productUpdateSku", async (req, res) => {
  *
  */
 router.put("/productVariant", upload.single("image"), async (req, res) => {
+  if (req.file) {
+    const { filename, mimetype, size } = req.file;
+    const filepath = req.file.path;
+    console.log(req.file.url);
+    res.status(200).json({
+      status: "success",
+    });
+  } else {
+    console.log("no file");
+  }
+}); 
+
+router.put("/prodVarImg", upload2.single("image"), async (req, res) => { 
+  console.log(req) 
+  console.log(req.headers)
   if (req.file) {
     const { filename, mimetype, size } = req.file;
     const filepath = req.file.path;

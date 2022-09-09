@@ -5,13 +5,19 @@ _______________________TODO:DOCUMENT: Luis
 * Date: 08/31/2022
 * Description: Summary of what the code inside the file does 
 -------------------------------------------------------------*/
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDropzone} from 'react-dropzone'; 
 import '../assets/css/Image.css' 
-import ShopifyRequest from "../api/ShopifyRequest";  
-import Button from "react-bootstrap/Button";   
+import ShopifyRequest from "../api/ShopifyRequest";      
+//auth / token requesting
+import { useMsal, useAccount } from "@azure/msal-react";
+import { protectedResources } from "../authentication/authConfig";
+import { callApiWithToken, aquireToken } from "../fetch";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
-function Previews(props) { 
+function Previews(props) {  
+  const { instance, accounts, inProgress } = useMsal();
+  var account = useAccount(accounts[0] || {});
 
   const [files, setFiles] = useState([]);  
   const {getRootProps, getInputProps} = useDropzone({
@@ -28,19 +34,29 @@ function Previews(props) {
   const sendImage = async (e) => {
     try { 
       e.preventDefault();
-      const imageData = new FormData();
-      imageData.append("image", files); 
-      console.log(files)
-      const response = await ShopifyRequest.put(`/productVariant`, imageData, {
-        headers: {
-          "Content-Type": `multipart/form-data`,
-        },
-      });
+      let imageData = new FormData();
+      imageData.image = files[0]; 
+      console.log(imageData.image)  
+
+      const waitResponse = await aquireToken(account, inProgress, 
+        instance, protectedResources) 
+      console.log(waitResponse) 
+      const response = await callApiWithToken( 
+        waitResponse.accessToken, 
+        ShopifyRequest.getUri() +`/productVariant`, "PUT",  
+          imageData.image, true) 
+        
+      // const response = await ShopifyRequest.put(`/prodVarImg`, imageData, {
+      //   headers: {
+      //     "Content-Type": `multipart/form-data`,
+      //   },
+      // });
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   }; 
+
   const refreshPage =async (e) => { 
     window.location.reload(false)
   } 
@@ -49,7 +65,7 @@ function Previews(props) {
   }  
   const saveImageButton = async (e) => {  
     sendImage(e)
-    setFiles([]) 
+    //setFiles([]) 
     //refreshPage(e)
   } 
 
@@ -74,9 +90,9 @@ function Previews(props) {
   return ( 
     <>  
       <div {...getRootProps({className: 'dropzone'})}> 
-        <input {...getInputProps() }/> 
-        <t className='dragNdrop'>Choose File(s)</t>  
-        <t className='chosenFile'>{!files[0] ? 'No File Chosen':files[0].name}</t> 
+        <input {...getInputProps() } name="image"/> 
+        <p className='dragNdrop'>Choose File(s)</p>  
+        <p className='chosenFile'>{!files[0] ? 'No File Chosen':files[0].name}</p> 
         <div className='brightness'>   
           <img
             className="thumbnail image"
