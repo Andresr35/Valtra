@@ -8,10 +8,9 @@ import { protectedResources } from "../authentication/authConfig";
 import { callApiWithToken } from "../fetch";
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
-
 /**
- * 
- * @returns 
+ *
+ * @returns
  */
 const Fulfill = () => {
   const [running, setRunning] = useState(false);
@@ -23,15 +22,13 @@ const Fulfill = () => {
   const { instance, accounts, inProgress } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-useEffect(()=>{
-  console.log("status changed")
-},[data])
+  useEffect(() => {
+    console.log("status changed");
+  }, [data]);
 
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
   };
-
-
 
   //just the setup of the array
   const csvFileToArray = (string) => {
@@ -55,8 +52,6 @@ useEffect(()=>{
     sendData(array);
   };
 
-
-
   /**
    * function to do stuff when a csv gets imported...changes the text in the file input field
    * @param {String} e
@@ -72,12 +67,8 @@ useEffect(()=>{
     }
   };
 
-
-
   const headerKeys = Object.keys(Object.assign({}, ...data));
 
-
-  
   //this runs when the button is pressed.
   const sendData = (array) => {
     try {
@@ -103,12 +94,14 @@ useEffect(()=>{
               "PUT",
               {
                 sent: "success",
-                data:array,
+                data: array,
               }
-            ).then((response) => {
-              updateStatus(response, array);
-              setDone(true);
-            }).catch(err=>console.log(err));
+            )
+              .then((response) => {
+                updateStatus(response, array);
+                setDone(true);
+              })
+              .catch((err) => console.log(err));
           })
           .catch((error) => {
             if (error instanceof InteractionRequiredAuthError) {
@@ -143,7 +136,7 @@ useEffect(()=>{
   };
 
   const updateStatus = (response, prevArray) => {
-    console.log("updatingg")
+    console.log("updatingg");
     for (const obj in prevArray) {
       for (const order in response.orders) {
         if (
