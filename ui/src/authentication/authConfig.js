@@ -12,9 +12,9 @@ import {isLocal } from '../components/structure/Version';
 let url = "";  
 //Web urls {cloud/ local urls} associated
 const webUrl = "https://valtraautomation.azurewebsites.net"; //https://valtra-automation.azurewebsites.net/
-const localUrl = "http://localhost:3005"; 
+const localUrl = "http://192.168.0.119:3005"; 
 //"Algorithm" that changes the urls 
-if (isLocal === false) { 
+if (isLocal === true) { 
   url = webUrl; 
 } else { 
   url = localUrl;

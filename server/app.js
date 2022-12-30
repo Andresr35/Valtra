@@ -72,7 +72,7 @@ app.use((req, res, next) => {
 app.use(express.static("public"));
 
 // Setting up routes
-app.all("*", passport.authenticate("oauth-bearer", { session: false }));
+app.all("*", passport.authenticate("oauth-bearer", { session: false }));// You can comment this to get rid of auth requirment
 app.use("/api", require("./routes/api"));
 
 //Starting the server

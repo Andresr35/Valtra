@@ -5,7 +5,7 @@ ____________________//#TODO: Document ANDRES
 * Date: 8/31/2022  
 * Description: 
 -------------------------------------------------------------*/
-import React from "react";
+import React, {useState} from "react";
 import Home from "./routes/Home";
 import UpdateProducts from "./routes/UpdateProducts";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -28,16 +28,24 @@ import Variants from "./routes/Variants";
 import SignOutPage from "./routes/SignOut";
 import Downloads from "./routes/Downloads";
 import Documentation from "./routes/Documentation";
+import InsertsTablePage from "./routes/ToolInventory/InsertsTablePage";
 import DocumentationRestricted from "./routes/DocumentationRestricted";
 import Updates from "./routes/Updates";
+import EndmillsTablePage from "./routes/ToolInventory/EndmillsTablePage";
+import InsertPage from "./routes/ToolInventory/InsertsPage";
+import { InsertsContextProvider } from "./context/InsertsContext";
+
 
 const App = () => {
+
+
   return (
     <React.StrictMode>
       <AuthenticatedTemplate>
         <VariantsContextProvider>
           <ProductsContextProvider>
             <OrdersContextProvider>
+              <InsertsContextProvider>
               <Router>
                 <Routes>
                   <Route exact path="/" element={<Home />} />
@@ -48,9 +56,12 @@ const App = () => {
                   />
                   <Route path="/orders" element={<OrderPage />} />
                   <Route path="/fulfill" element={<FulfillingOrders />} />
+                  <Route path="/inserts" element={<InsertsTablePage />} />
                   <Route path="/products" element={<ShopifyProducts />} />
                   <Route path="/downloads" element={<Downloads />} />
                   <Route path="/documentation" element={<Documentation />} />
+                  <Route path="/endmills" element={<EndmillsTablePage />} />
+                  <Route path="/inserts/:id" element={<InsertPage/>}/>
                   <Route
                     path="/product/gid://shopify/Product/:id"
                     element={<Variants />}
@@ -58,6 +69,7 @@ const App = () => {
                   <Route path="/updates" element={<Updates />} />
                 </Routes>
               </Router>
+              </InsertsContextProvider>
             </OrdersContextProvider>
           </ProductsContextProvider>
         </VariantsContextProvider>
@@ -72,6 +84,7 @@ const App = () => {
               element={<SignOutPage />}
             />
             <Route exact path="/products/:id" element={<SignOutPage />} />
+            <Route path="/inserts/:id" element={<SignOutPage/>}/>
             <Route path="/orders" element={<SignOutPage />} />
             <Route path="/products" element={<SignOutPage />} />
             <Route path="/fulfill" element={<SignOutPage />} />

@@ -27,7 +27,7 @@ export const Version = () => {
 }; 
 //true for local host testing and false for azure deploy 
 //Will change redirect paths
-export const isLocal = false; 
+export const isLocal = true; 
 //turn true to signify operational and up to production 
 //Changes certain displays
 export const isproduction = true;

@@ -304,7 +304,7 @@ export const ShopifyVariants = () => {
                           </div>
                         </button>   */}
                               <Previews  
-                              currImage = {variant.image.url} 
+                              currImage = {variant.image &&variant.image.url} 
                               varID = {variant.id}  
                               mediaID = {variant.mediaID} 
                               productID = {product.id} 
