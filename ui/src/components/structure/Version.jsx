@@ -22,12 +22,12 @@ are really up to the developers and to show if a deployemnt was
 successful/ is active */  
 export const Version = () => {
   //change when version '=' to for change
-  const version = "1.1.3";
+  const version = "1.2.1.4"
   return <>Version {version}</>;
 }; 
 //true for local host testing and false for azure deploy 
 //Will change redirect paths
-export const isLocal = true; 
+export const isLocal = false; 
 //turn true to signify operational and up to production 
 //Changes certain displays
 export const isproduction = true;

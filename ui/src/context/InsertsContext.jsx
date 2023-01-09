@@ -3,7 +3,7 @@ import React, { useState, createContext } from "react";
 export const InsertsContext = createContext();
 
 export const InsertsContextProvider = (props) => {
-  const [inserts, setInserts] = useState([]);
+  const [inserts, setInserts] = useState({});
 
   /**
    * will change the state to the new insert you want
@@ -15,7 +15,15 @@ export const InsertsContextProvider = (props) => {
    * @return  {[type]}          [return description]
    */
   const changeInsert = (id,change,event) =>{
-    inserts[id].link = event.target.value
+    if (change === "link"){
+      inserts[id].link = event.target.value
+    }else if(change === "quantity"){
+      inserts[id].quantity = event
+      setInserts(inserts)
+    }else{
+      throw new Error("Change type is not accepted.")
+    }
+    
   }
   
   return (
