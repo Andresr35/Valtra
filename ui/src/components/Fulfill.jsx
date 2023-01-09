@@ -1,8 +1,17 @@
-import React, { useState } from "react";
-import OrderFinder from "../api/OrderFinder";
+import React, { useEffect, useState } from "react";
+import ShopifyRequest from "../api/ShopifyRequest";
 import { CSVLink } from "react-csv";
 import Alert from "react-bootstrap/Alert";
+import Container from "react-bootstrap/esm/Container";
+import { useMsal, useAccount } from "@azure/msal-react";
+import { protectedResources } from "../authentication/authConfig";
+import { callApiWithToken } from "../fetch";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
+/**
+ *
+ * @returns
+ */
 const Fulfill = () => {
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState(false);
@@ -10,6 +19,12 @@ const Fulfill = () => {
   const [file, setFile] = useState();
   const [data, setData] = useState([]);
   const fileReader = new FileReader();
+  const { instance, accounts, inProgress } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
+  useEffect(() => {
+    console.log("status changed");
+  }, [data]);
 
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
@@ -37,7 +52,10 @@ const Fulfill = () => {
     sendData(array);
   };
 
-  //what happens when they press the button
+  /**
+   * function to do stuff when a csv gets imported...changes the text in the file input field to your moms a hoe
+   * @param {String} e
+   */
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     if (file) {
@@ -62,15 +80,55 @@ const Fulfill = () => {
         array[obj]["Tracking"] = value;
       }
       setRunning(true);
-      OrderFinder.put("/orderss", {
-        sent: "success",
-        data: array,
-      })
-        .then((response) => {
-          updateStatus(response.data, array);
-          setDone(true);
-        })
-        .catch((err) => console.log(err));
+
+      if (account && inProgress === "none") {
+        instance
+          .acquireTokenSilent({
+            scopes: protectedResources.apiHello.scopes,
+            account: account,
+          })
+          .then((response) => {
+            callApiWithToken(
+              response.accessToken,
+              ShopifyRequest.getUri() + "/fulfill",
+              "PUT",
+              {
+                sent: "success",
+                data: array,
+              }
+            )
+              .then((response) => {
+                updateStatus(response, array);
+                setDone(true);
+              })
+              .catch((err) => console.log(err));
+          })
+          .catch((error) => {
+            if (error instanceof InteractionRequiredAuthError) {
+              if (account && inProgress === "none") {
+                instance
+                  .acquireTokenPopup({
+                    scopes: protectedResources.apiHello.scopes,
+                  })
+                  .then((response) => {
+                    callApiWithToken(
+                      response.accessToken,
+                      ShopifyRequest.getUri() + "/fulfill",
+                      "PUT",
+                      {
+                        sent: "success",
+                        data: array,
+                      }
+                    ).then((response) => {
+                      updateStatus(response, array);
+                      setDone(true);
+                    });
+                  })
+                  .catch((error) => console.log(error));
+              }
+            }
+          });
+      }
     } catch (err) {
       console.log(err);
       setAlert(true);
@@ -78,6 +136,7 @@ const Fulfill = () => {
   };
 
   const updateStatus = (response, prevArray) => {
+    console.log("updatingg");
     for (const obj in prevArray) {
       for (const order in response.orders) {
         if (
@@ -113,6 +172,7 @@ const Fulfill = () => {
         <div className="row">
           <form>
             <div className="col">
+              <p></p>
               <input
                 type={"file"}
                 className="form-control"
@@ -121,32 +181,50 @@ const Fulfill = () => {
                 accept={".csv"}
               />
             </div>
-            <div className='container'>
-                <div className="row">
-                    <form>
-                        <div className="col">
-                            <input style={{margin: '.7rem'}} type={"file"} className="form-control" id={"csvFileInput"} onChange={handleOnChange} accept={".csv"} />
-                        </div>
-
-                    </form>
-                    <div className="col">
-                        <button style={{margin: '.7rem'}} type='button' className='btn btn-outline-secondary' onClick={(e) => { handleOnSubmit(e) }}>Import CSV</button>
-                    </div>
-
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <CSVLink style={{margin: '.7rem'}} className='btn btn-primary' {...csvReport} >Export</CSVLink>
-                    </div>
-                </div>
-
+          </form>
+          <Container>
+            <div className="col">
+              <center>
+                <button
+                  type="button"
+                  style={{
+                    marginLeft: ".5rem",
+                    marginRight: ".7rem",
+                    marginTop: ".5rem",
+                  }}
+                  className="btn btn-outline-secondary"
+                  onClick={(e) => {
+                    handleOnSubmit(e);
+                  }}
+                >
+                  Import CSV
+                </button>
+                <CSVLink
+                  className="btn btn-primary"
+                  {...csvReport}
+                  style={{
+                    marginLeft: ".7rem",
+                    marginRight: ".5rem",
+                    marginTop: ".5rem",
+                  }}
+                >
+                  Export
+                </CSVLink>
+              </center>
             </div>
-            {/* This is where the alert is for whether a csv is done or not */}
+          </Container>
+        </div>
+      </div>
+      {/* This is where the alert is for whether a csv is done or not */}
 
-            <Alert show={running} variant="success" onClose={() => setRunning(false)} dismissible>
-                Fufilling Orders...
-                {/* <div className="d-flex justify-content-end">
-
+      <Alert
+        show={running}
+        variant="success"
+        onClose={() => setRunning(false)}
+        dismissible
+      >
+        Fufilling Orders...
+        {/* <div className="d-flex justify-content-end">
           <Button onClick={() => setRunning(false)} variant="outline-success">
             Close me y'all!
           </Button>

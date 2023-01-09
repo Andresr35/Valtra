@@ -1,0 +1,112 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.main{
+  background-color:#f6f6f7;
+}
+.box{
+  background-color: #ffffff;
+  box-sizing: border-box;
+  margin: 20px;
+  border: 1px solid rgb(185, 185, 185) ;
+  border-radius: 7px;
+  padding: 15px;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.box#options{
+  padding: 0px;
+}
+.image{
+  border: 1px solid rgb(185, 185, 185);
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: white;
+  border-radius: 10px;
+  margin: 6px;
+  width: 180px;
+  height: 180px;
+}
+.option{
+  /* box-sizing: border-box; */
+  margin: 5px;
+  background-color: rgb(216, 216, 216);
+  border-radius: 10px;
+  padding: 5px;
+  width: 70%;
+}
+.options{
+  border-top:1px solid grey;
+  /* border-bottom:1px solid grey; */
+  padding: 10px;
+  
+}
+.thumbnail{ 
+  max-width: 80px;
+  height: auto; 
+  max-height: 100px;   
+}
+button.image{
+  /* box-shadow: blue; */
+  box-sizing: border-box;
+  color: #3764a5;
+  /* text-shadow: 20px, 20px; */
+  
+  border: dashed;
+  border-color: rgb(185, 185, 185)  ;
+}
+.overlay {
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  left: 0;
+  right: 0;
+  /* height: 100%;
+  width: 100%; */
+  opacity: 0;
+  transition: .25s ease;
+  background-color: #008CBA;
+}
+.container:hover .overlay{
+  opacity: 1;
+}
+.container{
+  position: relative;
+}

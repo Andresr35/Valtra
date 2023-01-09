@@ -1,0 +1,104 @@
+.brightness {
+    background-color: white;
+    display: inline-block;
+
+}
+.brightness img:hover {
+    opacity: .5;
+}  
+.ShopProductsTableImage{  
+    max-height: 10rem;
+    max-width: 100%;  
+    width: auto;
+    min-height: 4rem;   
+    padding: 1px;
+    border: 2px solid black;
+    border-radius: 7px;
+}
+.imageTableWidth{ 
+    width: 10rem;
+} 
+
+.dragNdrop{  
+    background: lightgrey;
+    border: 1px solid #999;
+    border-radius: 3px; 
+    font-size: 15px; 
+    display: inline-block;
+    padding: 3px; 
+    width: 38%; 
+    max-height: 100%; 
+    text-align: center; 
+} 
+.dragNdrop:hover {
+    opacity: .7;
+}  
+.chosenFile{   
+    display: inline-block;
+    padding: 3px;
+    vertical-align:baseline; 
+    width: 50%; 
+    height: 100%;
+}  
+
+.previewButton{  
+    margin-top: 5px;
+    border: 1px solid #999;
+    border-radius: 5px; 
+    font-size: 15px; 
+    width: 100%; 
+    height: 35px; 
+    color: black;  
+    background-color: #00ab66;
+} 
+.previewButton:hover {
+    opacity: .7;
+}
+
+.previewButtons{  
+    margin-top: 5px;
+    border: 1px solid #999;
+    border-radius: 5px; 
+    font-size: 15px; 
+    width: 100%; 
+    height: 35px; 
+    color: black;  
+    background-color: gold;
+} 
+.previewButtons:hover {
+    opacity: .7;
+}
+
+.thumbsContainer{
+    display: flex; 
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 16;
+}
+  
+.thumb {
+    display: inline-flex;
+    border-radius: 2;
+    border: 1px solid #eaeaea;
+    margin-bottom: 8px;
+    margin-right: 8px;
+    max-width: 90px;
+    max-height: 90px;
+    padding: 1%;
+    box-sizing: border-box;
+}
+  
+.thumbInner {
+    display: flex;
+    min-width: 0;
+    overflow: hidden;
+}
+  
+.img{
+    display: block;
+    width: 100;
+    height: 100;
+}
+/*.image-upload>input {
+    display: none;
+  }*/
