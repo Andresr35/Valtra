@@ -110,3 +110,7 @@ button.image{
 .container{
   position: relative;
 }
+/* should prob make this similar to excel instead */
+.toolInput:focus:focus-within{
+  outline:none;
+}
