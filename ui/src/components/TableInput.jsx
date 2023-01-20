@@ -8,10 +8,11 @@ import { useMsal, useAccount } from "@azure/msal-react";
  * @param {object} tool tool objevt that you are referencing 
  * @param {string} handleChange function that handles tool submit 
  * @param {string} description value name of the input text
+ * @param {string} name object attribute to set the name of the input text 
  * 
  * @returns {JSX.Element}
  */
-const TableInput = ({ type, test, tool, handleChange, description }) => {
+const TableInput = ({ type, test, tool, handleChange, description,name}) => {
     const { instance, accounts, inProgress } = useMsal();
     const account = useAccount(accounts[0] || {});
     const [style, setStyle] = useState({
@@ -44,7 +45,7 @@ const TableInput = ({ type, test, tool, handleChange, description }) => {
             <input
                 className="toolInput"
                 type={type}
-                name={tool[key].thread}
+                name={tool[key][name]}
                 id={tool[key].id}
                 defaultValue={tool[key][description]}
                 style={style}

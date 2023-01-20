@@ -1,11 +1,10 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import NavBar from '../../components/structure/NavBar'
 import Container from 'react-bootstrap/esm/Container'
 import { useMsal, useAccount } from "@azure/msal-react";
 import { protectedResources } from "../../authentication/authConfig";
 import { callApiWithToken } from "../../fetch";
 import toolFinder from "../../api/ToolFinder";
-import Modal from "react-bootstrap/Modal";
 import { TapsContext } from "../../context/TapsContext";
 import { useNavigate } from "react-router-dom";
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
@@ -15,7 +14,6 @@ import TableInput from "../../components/TableInput";
 const TapsTablePage = () => {
     const { instance, accounts, inProgress } = useMsal();
     const { taps, setTaps, changeTap } = useContext(TapsContext);
-    const [style, setStyle] = useState("cont");
     const account = useAccount(accounts[0] || {});
     let navigate = useNavigate();
 
@@ -146,6 +144,7 @@ const TapsTablePage = () => {
                                                         tool={taps}
                                                         handleChange={handleTapChange}
                                                         description="thread"
+                                                        name="thread"
                                                     />
                                                 </td>
                                                 <td>
@@ -155,6 +154,7 @@ const TapsTablePage = () => {
                                                         tool={taps}
                                                         handleChange={handleTapChange}
                                                         description="quantity"
+                                                        name = "thread"
                                                     />
                                                 </td>
                                                 <td>
@@ -164,6 +164,7 @@ const TapsTablePage = () => {
                                                         tool={taps}
                                                         handleTapChange={handleTapChange}
                                                         description="loc"
+                                                        name="thread"
                                                     />
                                                 </td>
                                                 <td>
@@ -173,6 +174,7 @@ const TapsTablePage = () => {
                                                         tool={taps}
                                                         handleChange={handleTapChange}
                                                         description="price"
+                                                        name="thread"
                                                     />
                                                 </td>
                                             </tr>

@@ -354,7 +354,38 @@ router.put("/taps/:id/loc", (req, res) => {
   );
 });
 
-//Drils
+router.post("/taps", (req, res) => {
+  db.query(
+    `INSERT INTO "tapsTable" (insertName,quantity,link,price) VALUES ($1, $2 , $3, $4 ); `,
+    [req.body.insertName, req.body.quantity,req.body.link, req.body.price], (err, result) => {
+      if (err) {
+        console.log(err)
+      }
+    }
+  )
+  db.query(`SELECT * FROM "drillsTable ORDER BY diameter ASC";`, (queryErr, queryResult) => {
+    if (queryErr) {
+      console.log(queryErr)
+    } else {
+      let body = {};
+      for (row in queryResult.rows) {
+        Object.assign(body, {
+          [queryResult.rows[row].id]: {
+            diameter: queryResult.rows[row].diameter,
+            quantity: queryResult.rows[row].quantity,
+            price: queryResult.rows[row].price,
+          }
+        });
+      }
+      res.json({
+        sucess: "true",
+        data: body
+      })
+    }
+  })
+});
+
+//Drills
 
 /**
  * gets the drills table from postgrtess datahbase
@@ -366,7 +397,7 @@ router.put("/taps/:id/loc", (req, res) => {
  *
  */
 router.get("/drillsTable", function (req, res) {
-  db.query('SELECT * from "drillsTable"', (err, result) => {
+  db.query('SELECT * from "drillsTable" ORDER BY "diameter" ASC', (err, result) => {
     if (err) {
       console.log(err);
     } else {
@@ -387,7 +418,7 @@ router.get("/drillsTable", function (req, res) {
   });
 });
 
-router.put("/drillsTable/:id/price", (req, res) => {
+router.put("/drills/:id/price", (req, res) => {
   db.query(
     'UPDATE "drillsTable" SET "price" = $2 WHERE id = $1;',
     [req.params.id, req.body.change],
@@ -409,7 +440,7 @@ router.put("/drillsTable/:id/price", (req, res) => {
  * @param   {idk}  res                    send back "hooray"
  *
  */
-router.put("/drillsTable/:id/quantity", (req, res) => {
+router.put("/drills/:id/quantity", (req, res) => {
   db.query(
     'UPDATE "drillsTable" SET quantity = $2 WHERE id = $1;',
     [req.params.id, req.body.change],
@@ -423,7 +454,7 @@ router.put("/drillsTable/:id/quantity", (req, res) => {
   );
 });
 
-router.put("/drillsTable/:id/diameter", (req, res) => {
+router.put("/drills/:id/diameter", (req, res) => {
   db.query(
     'UPDATE "drillsTable" SET diameter = $2 WHERE id = $1;',
     [req.params.id, req.body.change],
@@ -435,6 +466,37 @@ router.put("/drillsTable/:id/diameter", (req, res) => {
       }
     }
   );
+});
+
+router.post("/drills", (req, res) => {
+  db.query(
+    `INSERT INTO "drillsTable" (diameter,quantity,price) VALUES ($1, $2 , $3 ); `,
+    [req.body.diameter, req.body.quantity, req.body.price], (err, result) => {
+      if (err) {
+        console.log(err)
+      }
+    }
+  )
+  db.query(`SELECT * FROM "drillsTable" ORDER BY diameter ASC";`, (queryErr, queryResult) => {
+    if (queryErr) {
+      console.log(queryErr)
+    } else {
+      let body = {};
+      for (row in queryResult.rows) {
+        Object.assign(body, {
+          [queryResult.rows[row].id]: {
+            diameter: queryResult.rows[row].diameter,
+            quantity: queryResult.rows[row].quantity,
+            price: queryResult.rows[row].price,
+          }
+        });
+      }
+      res.json({
+        sucess: "true",
+        data: body
+      })
+    }
+  })
 });
 
 module.exports = router;

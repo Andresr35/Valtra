@@ -1,7 +1,7 @@
 import React, {useState,createContext} from 'react';
 
 
-export const OrdersContext = React.createContext();
+export const OrdersContext = createContext();
 
 export const OrdersContextProvider = props => {
 

@@ -5,7 +5,7 @@ ____________________//#TODO: Document ANDRES
 * Date: 8/31/2022  
 * Description: 
 -------------------------------------------------------------*/
-import React, { useState } from "react";
+import React from "react";
 import Home from "./routes/Home";
 import UpdateProducts from "./routes/UpdateProducts";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -34,8 +34,10 @@ import Updates from "./routes/Updates";
 import EndmillsTablePage from "./routes/ToolInventory/EndmillsTablePage";
 import InsertPage from "./routes/ToolInventory/InsertsPage";
 import { InsertsContextProvider } from "./context/InsertsContext";
-import {TapsContextProvider} from "./context/TapsContext"
+import { TapsContextProvider } from "./context/TapsContext"
 import TapsTablePage from "./routes/ToolInventory/TapsTablePage";
+import DrillsTablePage from "./routes/ToolInventory/DrillsTablePage";
+import { DrillsContextProvider } from "./context/DrillsContext";
 
 
 const App = () => {
@@ -49,30 +51,33 @@ const App = () => {
             <OrdersContextProvider>
               <InsertsContextProvider>
                 <TapsContextProvider>
-                  <Router>
-                    <Routes>
-                      <Route exact path="/" element={<Home />} />
-                      <Route
-                        exact
-                        path="/products/gid://shopify/Product/:id/update"
-                        element={<UpdateProducts />}
-                      />
-                      <Route path="/orders" element={<OrderPage />} />
-                      <Route path="/fulfill" element={<FulfillingOrders />} />
-                      <Route path="/inserts" element={<InsertsTablePage />} />
-                      <Route path="/products" element={<ShopifyProducts />} />
-                      <Route path="/downloads" element={<Downloads />} />
-                      <Route path="/documentation" element={<Documentation />} />
-                      <Route path="/endmills" element={<EndmillsTablePage />} />
-                      <Route path="/inserts/:id" element={<InsertPage />} />
-                      <Route
-                        path="/product/gid://shopify/Product/:id"
-                        element={<Variants />}
-                      />
-                      <Route path="/updates" element={<Updates />} />
-                      <Route path="/taps" element={<TapsTablePage />} />
-                    </Routes>
-                  </Router>
+                  <DrillsContextProvider>
+                    <Router>
+                      <Routes>
+                        <Route exact path="/" element={<Home />} />
+                        <Route
+                          exact
+                          path="/products/gid://shopify/Product/:id/update"
+                          element={<UpdateProducts />}
+                        />
+                        <Route path="/orders" element={<OrderPage />} />
+                        <Route path="/fulfill" element={<FulfillingOrders />} />
+                        <Route path="/inserts" element={<InsertsTablePage />} />
+                        <Route path="/products" element={<ShopifyProducts />} />
+                        <Route path="/downloads" element={<Downloads />} />
+                        <Route path="/documentation" element={<Documentation />} />
+                        <Route path="/endmills" element={<EndmillsTablePage />} />
+                        <Route path="/inserts/:id" element={<InsertPage />} />
+                        <Route
+                          path="/product/gid://shopify/Product/:id"
+                          element={<Variants />}
+                        />
+                        <Route path="/updates" element={<Updates />} />
+                        <Route path="/taps" element={<TapsTablePage />} />
+                        <Route path="/drills" element={<DrillsTablePage />} />
+                      </Routes>
+                    </Router>
+                  </DrillsContextProvider>
                 </TapsContextProvider>
               </InsertsContextProvider>
             </OrdersContextProvider>

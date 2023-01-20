@@ -14,18 +14,17 @@ export const InsertsContextProvider = (props) => {
    *
    * @return  {[type]}          [return description]
    */
-  const changeInsert = (id,change,event) =>{
-    if (change === "link"){
-      inserts[id].link = event.target.value
-    }else if(change === "quantity"){
-      inserts[id].quantity = event
+  const changeInsert = (id, change, event) => {
+    try {
+      inserts[id][change] = event.target.value
       setInserts(inserts)
-    }else{
+
+    } catch (error) {
       throw new Error("Change type is not accepted.")
     }
-    
+
   }
-  
+
   return (
     <InsertsContext.Provider value={{ inserts, setInserts, changeInsert }}>
       {props.children}

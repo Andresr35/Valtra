@@ -1,9 +1,9 @@
 import React, { useState, createContext } from "react";
 
-export const TapsContext = createContext();
+export const DrillsContext = createContext();
 
-export const TapsContextProvider = (props) => {
-  const [taps, setTaps] = useState({});
+export const DrillsContextProvider = (props) => {
+  const [drills, setDrills] = useState({});
 
   /**
    * will change the state to the new insert you want
@@ -14,18 +14,18 @@ export const TapsContextProvider = (props) => {
    *
    * @return  {[type]}          [return description]
    */
-  const changeTap = (id, change, event) => {
+  const changeDrill = (id, change, event) => {
     try {
-      taps[id][change] = event.target.value
-      setTaps(taps)
+      drills[id][change] = event.target.value
+      setDrills(drills)
     } catch (error) {
       throw new Error("Change type is not accepted.")
     }
   }
 
   return (
-    <TapsContext.Provider value={{ taps, setTaps, changeTap }}>
+    <DrillsContext.Provider value={{ drills, setDrills, changeDrill }}>
       {props.children}
-    </TapsContext.Provider>
+    </DrillsContext.Provider>
   );
 };

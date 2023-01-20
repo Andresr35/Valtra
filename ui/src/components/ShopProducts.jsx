@@ -42,7 +42,9 @@ const ShopProducts = (props) => {
                 "GET"
               ).then((response) => {
                 setVariants(response.body.data.products.nodes);
-              });
+              }).catch((error)=>{
+                console.log(error)
+              })
             })
             .catch((error) => {
               if (error instanceof InteractionRequiredAuthError) {
